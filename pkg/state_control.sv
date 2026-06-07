@@ -4,7 +4,7 @@ package state_control;
 	{
 		IDLE = 2'b00;
 		DECISION = 2'b01;
-		FINAL = 2'b10
+		DONE = 2'b10
 	} state_t;
 
 endpackage
