@@ -7,10 +7,10 @@ interface spi_bus_if;
 
     logic [15:0] miso;
 
-	//output
-	logic sdo;		//serial data output
-	logic ss;		//chip selector
-	logic [15:0] mosi;
+    //output
+    logic sdo;		//serial data output
+    logic ss;		//chip selector
+    logic [15:0] mosi;
 
 
     //internal buffers (memory)
@@ -26,9 +26,9 @@ interface spi_bus_if;
 
     modport master(
         input logic data_to_send,		//word
-	    input logic miso,
-	    output logic ss,		//chip selector
-	    output logic mosi,
+	input logic miso,
+	output logic ss,		//chip selector
+	output logic mosi,
         output logic sck,
         output logic data_received		//serial data input
     );

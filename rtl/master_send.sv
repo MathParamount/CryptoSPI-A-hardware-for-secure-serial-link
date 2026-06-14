@@ -87,7 +87,7 @@ module master_send
 					sspbuf <= {machine_mast.sr[15:0], machine_mast.miso};
 
 					//bit counting (stabilization)
-					if(bit_count == 7) begin
+					if(bit_count == 2) begin
 						state <= DONE;
 						sck_en <= 0;
 					end
