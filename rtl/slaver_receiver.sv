@@ -11,11 +11,11 @@ module slaver_receiver
     //output
     wire [15:0] data_received;
 
-    wire [15:0] rx_buffer;
-    wire [15:0] tx_buffer;
+    logic [15:0] rx_buffer;
+    logic [15:0] tx_buffer;
 
-    reg [15:0] sr;
-    wire [15:0] sspbuf;
+    logic [15:0] sr;
+    logic [15:0] sspbuf;
 
 
     //data reception
@@ -40,6 +40,7 @@ module slaver_receiver
 
     end
 
-    assign machine_slav.data_received = rx_buffer;
-
+    assign rx_buffer = machine_slav.data_received;
+   
 endmodule
+

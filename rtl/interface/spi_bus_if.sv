@@ -14,9 +14,9 @@ interface spi_bus_if;
 
 
     //internal buffers (memory)
-	logic [15:0] sr;
-	logic [15:0] buffer_read;
-	logic [15:0] buffer_write;
+     logic [15:0] sr;
+     logic [15:0] buffer_read;
+     logic [15:0] buffer_write;
 
 
     //slaver spec data
@@ -25,21 +25,21 @@ interface spi_bus_if;
 
 
     modport master(
-        input logic data_to_send,		//word
-	input logic miso,
-	output logic ss,		//chip selector
-	output logic mosi,
-        output logic sck,
-        output logic data_received		//serial data input
+        input data_to_send,		//word
+	input miso,
+	output ss,		//chip selector
+	output mosi,
+        output sck,
+        output data_received		//serial data input
     );
 
     modport slave (
-        input logic ss,
-        input logic mosi,
-        input logic sck,
-        input logic data_received,
-        output logic miso,
-        output logic data_to_send
+        input ss,
+        input mosi,
+        input sck,
+        input data_received,
+        output miso,
+        output data_to_send
     );
 
 endinterface

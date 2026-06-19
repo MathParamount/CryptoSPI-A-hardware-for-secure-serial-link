@@ -10,7 +10,7 @@ rm -rf ${BUILD_DIR}
 mkdir -p ${BUILD_DIR}
 
 verilator \
-	--c \
+	--cc \
 	--exe \
 	--build \
 	--trace \
@@ -21,10 +21,12 @@ verilator \
 	--x-initial unique \
 	--top-module ${TOP} \
 	-Irtl \
-	-../Irtl/interface \
-	-../Irtl/pkg \
+	-I../Irtl/interface \
+	-I../pkg \
+	-I../testbench/top \
+	-I../testbench/wrapper\
 	../pkg/state_control.sv \
-	../interface/spi_bus_if.sv \
+	../rtl/interface/spi_bus_if.sv \
 	../rtl/master_send.sv \
 	../rtl/slaver_receiver.sv \
 	../testbench/top/spi_top.sv \

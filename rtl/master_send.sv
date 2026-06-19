@@ -11,13 +11,13 @@ module master_send
 
 
 	//internal data
-	wire start;
+	logic start;
 	static int count = 0;
 	reg ready;
 	
 	//internal buffers (memory)
-	reg [15:0] sr;
-	reg [15:0] sspbuf;
+	logic [15:0] sr;
+	logic [15:0] sspbuf;
 
 	//counting bit
 	reg [2:0] bit_count;
@@ -27,7 +27,7 @@ module master_send
 	logic [1:0] sck_div;
 	logic [1:0] sck_en;
 
-	logic sck_int;
+	logic sck;
 
 			
 	//holding time (2 clock edge)
@@ -48,7 +48,7 @@ module master_send
 		//shifter register
 		if (reset) begin
 			machine_mast.mosi <= 0;
-			sck_int <= 0;
+			sck <= 0;
 			machine_mast.ss <= 1;
 			ready <= 0;
 			state <= IDLE;
@@ -56,27 +56,26 @@ module master_send
 		else begin
 			unique case (state)
 
-				IDLE:
+				IDLE: begin
 					ready <= 0;
 					sspbuf <= 0;
 					machine_mast.ss <= 0;			//activate the slave
 					machine_mast.mosi <= 0;
-					machine_mast.miso <= 1'bz;		//high impedance
 					
 					if(start) state <= DECISION;
 					else state <= IDLE;
-				
-				DECISION:
+				end
+				DECISION: begin
 					//counting clock cycle
 					sck_div <= sck_div + 1;
 					
 					//clock generation
 					if(sck_div == 2'd2) begin
-						sck_int <= ~ sck_int;
+						sck <= ~ sck;
 					end
 
 					//writing data
-					if(sck_int) begin
+					if(sck) begin
 						machine_mast.sr <= {sr[15:0], machine_mast.data_received} ? ready <= 1 : ready <= 0;		//shifter register saving word
 
 						if(ready) machine_mast.mosi <= machine_mast.sr[7];		//loading in output
@@ -94,17 +93,16 @@ module master_send
 					else begin
 						bit_count <= bit_count + 1;
 					end
-
-				DONE:
+				end
+				
+				DONE: begin
 					machine_mast.ss <= 1; 		//deactivate slave
-					sck_int <= 0;
-					machine_mast.data_out <= machine_mast.sr;
+					sck <= 0;
+					machine_mast.sr <= machine_mast.data_to_send;
 					state <= IDLE;
-
+				end
 			endcase
 		end
 	end
-
-	assign sck = sck_int;
 
 endmodule
