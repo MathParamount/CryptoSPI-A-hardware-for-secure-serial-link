@@ -4,12 +4,12 @@ module spi_top
 (
 	input logic clk,
 	input logic reset,
-	input logic data_to_send,
-	input logic miso,
+	input logic [15:0] data_to_send,
+	output logic miso,
 
 	output logic sck,
 	output logic ss,
-	output logic data_receveid,
+	output logic [15:0] data_received,
 	output logic mosi
 );
 
@@ -17,7 +17,7 @@ module spi_top
 	
 	//input signals
 	assign sc_interface.data_to_send = data_to_send;
-	assign  sc_interface.miso = miso;
+	assign miso = sc_interface.miso;
 
 	//output signals
 	assign sck = sc_interface.sck;

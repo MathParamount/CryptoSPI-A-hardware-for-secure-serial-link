@@ -4,12 +4,12 @@ module spi_dut
 (
 	input logic clk,
 	input logic reset,
-	input logic data_to_send,
-	input logic miso,
+	input logic [15:0] data_to_send,
+	output logic miso,
 
 	output logic sck,
 	output logic ss,
-	output logic data_received,
+	output logic [15:0] data_received,
 	output logic mosi
 );
 
@@ -44,8 +44,8 @@ module spi_dut
 	assign ss = sc_interface.ss;
 	assign data_received = sc_interface.data_received;
 	assign mosi = sc_interface.mosi;
-	
+
 	assign sc_interface.data_to_send = data_to_send;
-	assign sc_interface.miso = miso;
+	assign miso = sc_interface.miso;
 
 endmodule

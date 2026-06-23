@@ -1,34 +1,27 @@
 interface spi_bus_if;
 	
     import state_control::*;
-    state_t current_state;
 
     logic sck;
 
-    logic [15:0] miso;
+    logic miso;
 
     //output
-    logic sdo;		//serial data output
     logic ss;		//chip selector
-    logic [15:0] mosi;
+    logic mosi;
 
-
-    //internal buffers (memory)
-     logic [15:0] sr;
-     logic [15:0] buffer_read;
-     logic [15:0] buffer_write;
-
-
-    //slaver spec data
+    //slaver spec data (words)
     logic [15:0] data_received;
     logic [15:0] data_to_send;
+    logic [15:0] slave_data_received;
 
 
     modport master(
         input data_to_send,		//word
-	input miso,
-	output ss,		//chip selector
-	output mosi,
+        input miso,
+        input slave_data_received,
+        output ss,		//chip selector
+        output mosi,
         output sck,
         output data_received		//serial data input
     );
@@ -37,9 +30,10 @@ interface spi_bus_if;
         input ss,
         input mosi,
         input sck,
+        input data_to_send,
         input data_received,
-        output miso,
-        output data_to_send
+        output slave_data_received,
+        output miso
     );
 
 endinterface
