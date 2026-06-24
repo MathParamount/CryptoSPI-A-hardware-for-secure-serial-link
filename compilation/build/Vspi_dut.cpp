@@ -12,6 +12,8 @@ Vspi_dut::Vspi_dut(VerilatedContext* _vcontextp__, const char* _vcname__)
     , vlSymsp{new Vspi_dut__Syms(contextp(), _vcname__, this)}
     , clk{vlSymsp->TOP.clk}
     , reset{vlSymsp->TOP.reset}
+    , start{vlSymsp->TOP.start}
+    , done{vlSymsp->TOP.done}
     , miso{vlSymsp->TOP.miso}
     , sck{vlSymsp->TOP.sck}
     , ss{vlSymsp->TOP.ss}

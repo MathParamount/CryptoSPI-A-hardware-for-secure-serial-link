@@ -2,6 +2,8 @@ module master_send
 (
 	input logic clk,
 	input logic reset,
+	input logic start,
+	output logic done,
 	spi_bus_if.master machine_mast
 );
 
@@ -10,7 +12,6 @@ module master_send
 	state_t state;
 
 	//internal data
-	logic start;
 	static int count = 0;
 	reg ready;
 
@@ -28,11 +29,7 @@ module master_send
 	//holding time (2 clock edge) driven by interface SCK
 	always_ff @(posedge machine_mast.sck) begin
 		if (count < 3) begin
-			start <= 0;
 			count <= count + 1;
-		end
-		else begin
-			start <= 1;
 		end
 	end
 
@@ -44,6 +41,7 @@ module master_send
 			machine_mast.sck <= 0;
 			machine_mast.ss <= 1;
 			ready <= 0;
+			done <= 0;
 			state <= IDLE;
 		end
 		else begin
@@ -51,6 +49,7 @@ module master_send
 
 				IDLE: begin
 					ready <= 0;
+					done <= 0;
 					machine_mast.ss <= 0; // activate the slave
 					machine_mast.mosi <= 0;
 
@@ -94,6 +93,7 @@ module master_send
 					machine_mast.data_received <= machine_mast.slave_data_received;
 					sr <= machine_mast.data_to_send[15:1];
 					state <= IDLE;
+					done <= 1;
 				end
 			endcase
 		end

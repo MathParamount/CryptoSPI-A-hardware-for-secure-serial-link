@@ -53,6 +53,10 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__0(Vspi_dut___024root* 
     __Vdly__spi_dut__DOT__u_slaver__DOT__sr = vlSelf->spi_dut__DOT__u_slaver__DOT__sr;
     __Vdly__spi_dut__DOT__u_slaver__DOT__bit_count 
         = vlSelf->spi_dut__DOT__u_slaver__DOT__bit_count;
+    if (VL_GTS_III(32, 3U, vlSelf->spi_dut__DOT__u_master__DOT__count)) {
+        vlSelf->spi_dut__DOT__u_master__DOT__count 
+            = ((IData)(1U) + vlSelf->spi_dut__DOT__u_master__DOT__count);
+    }
     if (vlSymsp->TOP__spi_dut__DOT__sc_interface.ss) {
         __Vdly__spi_dut__DOT__u_slaver__DOT__tx_buffer 
             = vlSelf->data_to_send;
@@ -109,11 +113,11 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__1(Vspi_dut___024root* 
     if (vlSelf->reset) {
         if ((0U == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__state))) {
             __Vdly__spi_dut__DOT__u_master__DOT__ready = 0U;
+            vlSelf->done = 0U;
             vlSymsp->TOP__spi_dut__DOT__sc_interface.ss = 0U;
             vlSymsp->TOP__spi_dut__DOT__sc_interface.mosi = 0U;
             __Vdly__spi_dut__DOT__u_master__DOT__state 
-                = ((IData)(vlSelf->spi_dut__DOT__u_master__DOT__start)
-                    ? 1U : 0U);
+                = ((IData)(vlSelf->start) ? 1U : 0U);
         } else if ((1U == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__state))) {
             __Vdly__spi_dut__DOT__u_master__DOT__sck_div 
                 = (3U & ((IData)(1U) + (IData)(vlSelf->spi_dut__DOT__u_master__DOT__sck_div)));
@@ -149,6 +153,7 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__1(Vspi_dut___024root* 
                 = (0x7fffU & ((IData)(vlSelf->data_to_send) 
                               >> 1U));
             __Vdly__spi_dut__DOT__u_master__DOT__state = 0U;
+            vlSelf->done = 1U;
         }
         if (VL_UNLIKELY((1U & (~ VL_ONEHOT_I((((2U 
                                                 == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__state)) 
@@ -159,10 +164,10 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__1(Vspi_dut___024root* 
                                                  | (0U 
                                                     == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__state))))))))) {
             if (VL_UNLIKELY(vlSymsp->_vm_contextp__->assertOn())) {
-                VL_WRITEF("[%0t] %%Error: master_send.sv:50: Assertion failed in %Nspi_dut.u_master: synthesis parallel_case, but multiple matches found\n",
+                VL_WRITEF("[%0t] %%Error: master_send.sv:48: Assertion failed in %Nspi_dut.u_master: synthesis parallel_case, but multiple matches found\n",
                           64,VL_TIME_UNITED_Q(1000),
                           -9,vlSymsp->name());
-                VL_STOP_MT("../pkg/../rtl/master_send.sv", 50, "");
+                VL_STOP_MT("../pkg/../rtl/master_send.sv", 48, "");
             }
         }
     } else {
@@ -170,6 +175,7 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__1(Vspi_dut___024root* 
         TOP__spi_dut__DOT__sc_interface__DOT____Vdly__sck = 0U;
         vlSymsp->TOP__spi_dut__DOT__sc_interface.ss = 1U;
         __Vdly__spi_dut__DOT__u_master__DOT__ready = 0U;
+        vlSelf->done = 0U;
         __Vdly__spi_dut__DOT__u_master__DOT__state = 0U;
     }
     vlSelf->spi_dut__DOT__u_master__DOT__ready = __Vdly__spi_dut__DOT__u_master__DOT__ready;
@@ -192,11 +198,4 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
         = vlSymsp->TOP__spi_dut__DOT__sc_interface.__Vdly__slave_data_received;
     vlSymsp->TOP__spi_dut__DOT__sc_interface.miso = vlSymsp->TOP__spi_dut__DOT__sc_interface.__Vdly__miso;
     vlSelf->miso = vlSymsp->TOP__spi_dut__DOT__sc_interface.miso;
-    if (VL_GTS_III(32, 3U, vlSelf->spi_dut__DOT__u_master__DOT__count)) {
-        vlSelf->spi_dut__DOT__u_master__DOT__count 
-            = ((IData)(1U) + vlSelf->spi_dut__DOT__u_master__DOT__count);
-        vlSelf->spi_dut__DOT__u_master__DOT__start = 0U;
-    } else {
-        vlSelf->spi_dut__DOT__u_master__DOT__start = 1U;
-    }
 }

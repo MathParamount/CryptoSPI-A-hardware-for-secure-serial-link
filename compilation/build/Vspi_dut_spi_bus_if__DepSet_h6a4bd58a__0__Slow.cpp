@@ -11,6 +11,8 @@ VL_ATTR_COLD void Vspi_dut_spi_bus_if___ctor_var_reset(Vspi_dut_spi_bus_if* vlSe
     VL_DEBUG_IF(VL_DBG_MSGF("+            Vspi_dut_spi_bus_if___ctor_var_reset\n"); );
     // Body
     vlSelf->sck = VL_RAND_RESET_I(1);
+    vlSelf->__PVT__start = VL_RAND_RESET_I(1);
+    vlSelf->__PVT__done = VL_RAND_RESET_I(1);
     vlSelf->miso = VL_RAND_RESET_I(1);
     vlSelf->ss = VL_RAND_RESET_I(1);
     vlSelf->mosi = VL_RAND_RESET_I(1);

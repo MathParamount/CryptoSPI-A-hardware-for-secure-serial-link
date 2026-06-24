@@ -29,4 +29,7 @@ Vspi_dut__Syms::Vspi_dut__Syms(VerilatedContext* contextp, const char* namep, Vs
     TOP__spi_dut__DOT__sc_interface.__Vconfigure(true);
     // Setup scopes
     __Vscope_spi_dut__u_master.configure(this, name(), "spi_dut.u_master", "u_master", -9, VerilatedScope::SCOPE_OTHER);
+    // Setup export functions
+    for (int __Vfinal = 0; __Vfinal < 2; ++__Vfinal) {
+    }
 }

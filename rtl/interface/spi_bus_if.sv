@@ -3,6 +3,9 @@ interface spi_bus_if;
     import state_control::*;
 
     logic sck;
+    /* verilator lint_off UNUSEDSIGNAL */
+    logic start;
+    logic done;
 
     logic miso;
 
@@ -20,6 +23,8 @@ interface spi_bus_if;
         input data_to_send,		//word
         input miso,
         input slave_data_received,
+        input start,
+        output done,
         output ss,		//chip selector
         output mosi,
         output sck,
@@ -32,6 +37,7 @@ interface spi_bus_if;
         input sck,
         input data_to_send,
         input data_received,
+        input done,
         output slave_data_received,
         output miso
     );

@@ -15,6 +15,8 @@ module spi_top
 
 	spi_bus_if sc_interface();
 	
+	logic start /* verilator public */;
+
 	//input signals
 	assign sc_interface.data_to_send = data_to_send;
 	assign miso = sc_interface.miso;
@@ -30,6 +32,8 @@ module spi_top
 	(
 		.clk(clk),
 		.reset(reset),
+		.start(start),
+		.done(done),
 		.machine_mast(sc_interface.master)
 	);
 

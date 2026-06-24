@@ -9,6 +9,7 @@
 #define VERILATED_VSPI_DUT_H_  // guard
 
 #include "verilated.h"
+#include "svdpi.h"
 
 class Vspi_dut__Syms;
 class Vspi_dut___024root;
@@ -29,6 +30,8 @@ class alignas(VL_CACHE_LINE_BYTES) Vspi_dut VL_NOT_FINAL : public VerilatedModel
     // propagate new values into/out from the Verilated model.
     VL_IN8(&clk,0,0);
     VL_IN8(&reset,0,0);
+    VL_IN8(&start,0,0);
+    VL_OUT8(&done,0,0);
     VL_OUT8(&miso,0,0);
     VL_OUT8(&sck,0,0);
     VL_OUT8(&ss,0,0);

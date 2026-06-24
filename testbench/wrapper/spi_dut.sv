@@ -5,6 +5,8 @@ module spi_dut
 	input logic clk,
 	input logic reset,
 	input logic [15:0] data_to_send,
+	input logic start,
+	output logic done,
 	output logic miso,
 
 	output logic sck,
@@ -18,12 +20,14 @@ module spi_dut
 	spi_dut u_spi_dut 
 	(
 		.clk(clk),
+		.start(start),
 		.reset(reset),
 		.data_to_send(data_to_send),
 		.miso(miso),
 		.sck(sck),
 		.ss(ss),
 		.data_received(data_received),
+		.done(done),
 		.mosi(mosi)
 	);
 
@@ -31,6 +35,8 @@ module spi_dut
 	(
 		.clk(clk),
 		.reset(reset),
+		.start(start),
+		.done(done),
 		.machine_mast(sc_interface.master)
 	);
 

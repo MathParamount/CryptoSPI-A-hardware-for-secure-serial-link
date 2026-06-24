@@ -30,7 +30,6 @@ void Vspi_dut___024root___eval_nba(Vspi_dut___024root* vlSelf) {
     }
     if ((1ULL & vlSelf->__VnbaTriggered.word(0U))) {
         Vspi_dut___024root___nba_sequent__TOP__2(vlSelf);
-        vlSelf->__Vm_traceActivity[3U] = 1U;
     }
 }
 
@@ -127,5 +126,7 @@ void Vspi_dut___024root___eval_debug_assertions(Vspi_dut___024root* vlSelf) {
         Verilated::overWidthError("clk");}
     if (VL_UNLIKELY((vlSelf->reset & 0xfeU))) {
         Verilated::overWidthError("reset");}
+    if (VL_UNLIKELY((vlSelf->start & 0xfeU))) {
+        Verilated::overWidthError("start");}
 }
 #endif  // VL_DEBUG

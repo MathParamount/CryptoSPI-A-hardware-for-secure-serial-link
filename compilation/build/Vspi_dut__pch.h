@@ -19,6 +19,7 @@
 
 
 #include "verilated.h"
+#include "verilated_dpi.h"
 
 #include "Vspi_dut__Syms.h"
 #include "Vspi_dut.h"

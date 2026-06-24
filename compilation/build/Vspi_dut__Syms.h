@@ -17,6 +17,8 @@
 #include "Vspi_dut___024root.h"
 #include "Vspi_dut_spi_bus_if.h"
 
+// DPI TYPES for DPI Export callbacks (Internal use)
+
 // SYMS CLASS (contains all model state)
 class alignas(VL_CACHE_LINE_BYTES)Vspi_dut__Syms final : public VerilatedSyms {
   public:

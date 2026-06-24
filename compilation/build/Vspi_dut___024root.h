@@ -19,12 +19,13 @@ class alignas(VL_CACHE_LINE_BYTES) Vspi_dut___024root final : public VerilatedMo
     // DESIGN SPECIFIC STATE
     VL_IN8(clk,0,0);
     VL_IN8(reset,0,0);
+    VL_IN8(start,0,0);
+    VL_OUT8(done,0,0);
     VL_OUT8(miso,0,0);
     VL_OUT8(sck,0,0);
     VL_OUT8(ss,0,0);
     VL_OUT8(mosi,0,0);
     CData/*1:0*/ spi_dut__DOT__u_master__DOT__state;
-    CData/*0:0*/ spi_dut__DOT__u_master__DOT__start;
     CData/*0:0*/ spi_dut__DOT__u_master__DOT__ready;
     CData/*2:0*/ spi_dut__DOT__u_master__DOT__bit_count;
     CData/*1:0*/ spi_dut__DOT__u_master__DOT__sck_div;
@@ -41,7 +42,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vspi_dut___024root final : public VerilatedMo
     SData/*14:0*/ spi_dut__DOT__u_slaver__DOT__sr;
     IData/*31:0*/ spi_dut__DOT__u_master__DOT__count;
     IData/*31:0*/ __VactIterCount;
-    VlUnpacked<CData/*0:0*/, 4> __Vm_traceActivity;
+    VlUnpacked<CData/*0:0*/, 3> __Vm_traceActivity;
     VlTriggerVec<1> __VstlTriggered;
     VlTriggerVec<2> __VactTriggered;
     VlTriggerVec<2> __VnbaTriggered;
