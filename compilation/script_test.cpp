@@ -21,85 +21,112 @@ void tick(Vspi_dut *top, VerilatedVcdC* pointer);
 //clock count, time unit and generation waves
 void tick(Vspi_dut *top, VerilatedVcdC* pointer)
 {
- cout << "tick start, time=" << main_t << endl;
-
     top->clk = 0;
     top->eval();
-
-    pointer->dump(main_t);
+    pointer->dump(main_t++);
     main_t += clock_half_period;
 
     //rising edge
     top->clk = 1;
     top->eval();
-    pointer->dump(main_t);
+    pointer->dump(main_t++);
     main_t += clock_half_period;
-
-    cout << "tick end, time=" << main_t << endl;
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char** argv)
+{
+    Verilated::commandArgs(argc, argv);
+    Verilated::traceEverOn(true);
 
-  Verilated::commandArgs(argc,argv);
-  Verilated::traceEverOn(true);
-  
-  top = new Vspi_dut;
-  pointer = new VerilatedVcdC;
-  
-  top->trace(pointer,99);
-  pointer->open("wave.vcd");
-  
-  //initial time
-  tick(top, pointer);
+    top = new Vspi_dut;
+    pointer = new VerilatedVcdC;
 
-  top->reset = 1;
-  top->sck = 0;
-  top->start = 0;
-  top->data_to_send = 0;
+    top->trace(pointer, 99);
+    pointer->open("wave.vcd");
 
-  //architecture simulation
-  
-  for(int i = 0; i < 100; i++)
-  {
-	//clock simulation
-	top->sck = !top->sck;
+    // initialization
+    top->reset = 1;
+    top->start = 0;
+    top->master_data = 0;
 
-    if(top->sck == 1)
-	{
-		if(i == 10)
-		{
-			top->reset = 0;
-		}
+    // Reset
+    for(int i = 0; i < 10; i++) tick(top, pointer);
+    top->reset = 0;
 
-		if(i == 40)
-		{
-			top->start = 1;
-			top->data_to_send = 0XA5;		//active transmission
-		}
-
-		if(i == 70)
-		{
-			top->start  = 0;
-		}	
-	}
-
-    //circuit validation
-    top->eval();
-
-    //wave generation
-    tick(top, pointer);
-	
-    if (top->done) {
-        printf("Transference sucessed, received data: 0x%02X\n", top->data_received);
-            
-        if (top->data_received != 0x5A) { // Slave response
-            printf("ERRO: Data didn't received!\n");
+    // =====  main simulation =====
+    bool last_done = false;
+    
+    for(int cycle = 0; cycle < 6000; cycle++)
+    {
+        // first transmission
+        if(cycle == 100) {
+            top->start = 1;
+            top->master_data = 0x00A5;
         }
+        if(cycle == 500) {
+            top->start = 0;  // 1 cycle pulse
+        }
+
+        // second transmission
+        if(cycle == 2000) {
+            top->start = 1;
+            top->master_data = 0x00C5;
+        }
+        if(cycle == 2400) {
+            top->start = 0;
+        }
+
+        // third transmission
+        if(cycle == 3000) {
+            top->start = 1;
+            top->master_data = 0x00F5;
+        }
+        if(cycle == 3400) {
+            top->start = 0;
+        }
+
+        // quarter transmission
+        if(cycle == 3200) {
+            top->start = 1;
+            top->master_data = 0x00D1;
+        }
+        if(cycle == 3800) {
+            top->start = 0;
+        }
+
+        // No loop principal, adicione:
+        if(cycle % 100 == 0) {
+            printf("[%d] State=%d SS=%d SCK=%d MOSI=%d MISO=%d DONE=%d\n",
+                cycle, top->debug_state, top->ss, top->sck, top->mosi, top->miso, top->done);
+        }
+
+        // =====  Slave model =====
+        
+        // ECO (loopback) test:
+        // top->miso = (top->ss == 0) ? top->mosi : 0;
+        
+        // master test with steady data:
+        // top->miso = (top->ss == 0) ? 1 : 0;
+
+        // advance a cycle
+        tick(top, pointer);
+
+        if(top->done && !last_done) {
+            printf(
+                "[%4llu] DONE  RX=0x%04X  SS=%d  SCK=%d  MOSI=%d  MISO=%d\n",
+                (unsigned long long)main_t,
+                (unsigned)top->data_received,
+                (int)top->ss,
+                (int)top->sck,
+                (int)top->mosi,
+                (int)top->miso
+            );
+        }
+        last_done = top->done;
     }
-  }
-	
-  pointer->close();
-  delete top;
-  delete pointer;
-  return 0;
+
+    pointer->close();
+    delete top;
+    delete pointer;
+    return 0;
 }

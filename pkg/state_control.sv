@@ -1,10 +1,12 @@
 package state_control;
 
-	typedef enum [1:0]
+	typedef enum [2:0]
 	{
-		IDLE = 2'b00,
-		DECISION = 2'b01,
-		DONE = 2'b10
+		IDLE = 3'b000,
+		CMD_PARSE = 3'b001,
+		FILL_BUFFER = 3'b010,
+		DRAIN_BUFFER = 3'b011,
+		DONE = 3'b100
 	} state_t;
 
 endpackage

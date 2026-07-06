@@ -4,7 +4,6 @@
 #include "Vspi_dut___024root__DepSet_h90672ce9__0.cpp"
 #include "Vspi_dut___024root__DepSet_hb1e49de0__0.cpp"
 #include "Vspi_dut_spi_bus_if__DepSet_h6a4bd58a__0.cpp"
-#include "Vspi_dut__Dpi.cpp"
 #include "Vspi_dut__Trace__0.cpp"
 #include "Vspi_dut___024root__Slow.cpp"
 #include "Vspi_dut___024root__DepSet_h90672ce9__0__Slow.cpp"

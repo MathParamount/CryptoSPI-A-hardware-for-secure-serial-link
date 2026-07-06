@@ -14,33 +14,44 @@ class Vspi_dut__Syms;
 class alignas(VL_CACHE_LINE_BYTES) Vspi_dut___024root final : public VerilatedModule {
   public:
     // CELLS
-    Vspi_dut_spi_bus_if* __PVT__spi_dut__DOT__sc_interface;
+    Vspi_dut_spi_bus_if* __PVT__spi_dut__DOT__spi_if;
 
     // DESIGN SPECIFIC STATE
     VL_IN8(clk,0,0);
     VL_IN8(reset,0,0);
     VL_IN8(start,0,0);
-    VL_OUT8(done,0,0);
     VL_OUT8(miso,0,0);
+    VL_OUT8(done,0,0);
     VL_OUT8(sck,0,0);
-    VL_OUT8(ss,0,0);
     VL_OUT8(mosi,0,0);
-    CData/*1:0*/ spi_dut__DOT__u_master__DOT__state;
-    CData/*0:0*/ spi_dut__DOT__u_master__DOT__ready;
-    CData/*2:0*/ spi_dut__DOT__u_master__DOT__bit_count;
-    CData/*1:0*/ spi_dut__DOT__u_master__DOT__sck_div;
-    CData/*3:0*/ spi_dut__DOT__u_slaver__DOT__bit_count;
+    VL_OUT8(debug_state,2,0);
+    VL_OUT8(ss,0,0);
+    CData/*2:0*/ spi_dut__DOT__u_master__DOT__state;
+    CData/*6:0*/ spi_dut__DOT__u_master__DOT__bit_count;
+    CData/*0:0*/ spi_dut__DOT__u_master__DOT__done_counter;
+    CData/*6:0*/ spi_dut__DOT__u_slave__DOT__bit_count;
+    CData/*0:0*/ spi_dut__DOT__u_slave__DOT__rx_done;
+    CData/*0:0*/ spi_dut__DOT__u_slave__DOT__tx_load;
+    CData/*6:0*/ __Vdly__spi_dut__DOT__u_slave__DOT__bit_count;
+    CData/*0:0*/ __Vdly__spi_dut__DOT__u_slave__DOT__tx_load;
     CData/*0:0*/ __VstlFirstIteration;
-    CData/*0:0*/ __Vtrigprevexpr___TOP__spi_dut__DOT__sc_interface__sck__0;
     CData/*0:0*/ __Vtrigprevexpr___TOP__clk__0;
     CData/*0:0*/ __Vtrigprevexpr___TOP__reset__0;
+    CData/*0:0*/ __Vtrigprevexpr___TOP__spi_dut__DOT__spi_if__sck__0;
+    CData/*0:0*/ __Vtrigprevexpr___TOP__spi_dut__DOT__spi_if__ss__0;
     CData/*0:0*/ __VactContinue;
-    VL_IN16(data_to_send,15,0);
+    VL_IN16(master_data,15,0);
     VL_OUT16(data_received,15,0);
-    SData/*14:0*/ spi_dut__DOT__u_master__DOT__sr;
-    SData/*15:0*/ spi_dut__DOT__u_slaver__DOT__tx_buffer;
-    SData/*14:0*/ spi_dut__DOT__u_slaver__DOT__sr;
-    IData/*31:0*/ spi_dut__DOT__u_master__DOT__count;
+    SData/*15:0*/ spi_dut__DOT__u_master__DOT__sr;
+    SData/*15:0*/ spi_dut__DOT__u_master__DOT__cmd_reg;
+    SData/*15:0*/ spi_dut__DOT__u_master__DOT__sr_tx;
+    SData/*15:0*/ spi_dut__DOT__u_master__DOT__sr_rx;
+    SData/*15:0*/ spi_dut__DOT__u_master__DOT__sck_div;
+    SData/*15:0*/ spi_dut__DOT__u_slave__DOT__sr;
+    SData/*15:0*/ spi_dut__DOT__u_slave__DOT__sr_tx;
+    SData/*15:0*/ spi_dut__DOT__u_slave__DOT__sr_rx;
+    SData/*15:0*/ __Vdly__spi_dut__DOT__u_slave__DOT__sr_rx;
+    SData/*15:0*/ __Vdly__spi_dut__DOT__u_slave__DOT__sr_tx;
     IData/*31:0*/ __VactIterCount;
     VlUnpacked<CData/*0:0*/, 3> __Vm_traceActivity;
     VlTriggerVec<1> __VstlTriggered;

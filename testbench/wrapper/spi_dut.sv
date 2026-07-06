@@ -1,57 +1,44 @@
 `timescale 1ns/1ps
 
-module spi_dut 
-(
-	input logic clk,
-	input logic reset,
-	input logic [15:0] data_to_send,
-	input logic start,
-	output logic done,
-	output logic miso,
-
-	output logic sck,
-	output logic ss,
-	output logic [15:0] data_received,
-	output logic mosi
+module spi_dut (
+    input  logic clk,
+    input  logic reset,
+    input  logic [15:0] master_data,
+    input  logic start,
+    output  logic miso,
+    output logic done,
+    output logic [15:0] data_received,
+    output logic sck,
+    output logic mosi,
+	output logic [2:0] debug_state,
+    output logic ss
 );
+    // Instancia a interface
+    spi_bus_if spi_if ();
+	
+    import state_control::*;
 
-	spi_bus_if sc_interface();
-
-	spi_dut u_spi_dut 
-	(
-		.clk(clk),
-		.start(start),
-		.reset(reset),
-		.data_to_send(data_to_send),
-		.miso(miso),
-		.sck(sck),
-		.ss(ss),
-		.data_received(data_received),
-		.done(done),
-		.mosi(mosi)
-	);
-
-	master_send u_master
-	(
-		.clk(clk),
-		.reset(reset),
-		.start(start),
-		.done(done),
-		.machine_mast(sc_interface.master)
-	);
-
-	slaver_receiver u_slaver
-	(
-		.machine_slav(sc_interface.slave)
-	);
-
-	//assigns
-	assign sck = sc_interface.sck;
-	assign ss = sc_interface.ss;
-	assign data_received = sc_interface.data_received;
-	assign mosi = sc_interface.mosi;
-
-	assign sc_interface.data_to_send = data_to_send;
-	assign miso = sc_interface.miso;
-
+	//attribute external data to dut
+    assign spi_if.data_to_send = master_data;
+    assign spi_if.start = start;
+    
+    assign miso = spi_if.miso;
+    assign done = spi_if.done;
+    assign data_received = spi_if.data_received;
+    assign sck = spi_if.sck;
+    assign mosi = spi_if.mosi; 
+    assign ss = spi_if.ss;
+    
+	//interface declaration
+    master_send u_master (
+        .clk(clk),
+        .reset(reset),
+		.debug_state(debug_state),
+        .spi_if(spi_if.master_f) 
+    );
+    
+    slaver_receiver u_slave (
+        .spi_if(spi_if.slaver_f)
+    );
+    
 endmodule

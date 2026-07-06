@@ -17,19 +17,14 @@ Vspi_dut__Syms::Vspi_dut__Syms(VerilatedContext* contextp, const char* namep, Vs
     , __Vm_modelp{modelp}
     // Setup module instances
     , TOP{this, namep}
-    , TOP__spi_dut__DOT__sc_interface{this, Verilated::catName(namep, "spi_dut.sc_interface")}
+    , TOP__spi_dut__DOT__spi_if{this, Verilated::catName(namep, "spi_dut.spi_if")}
 {
     // Configure time unit / time precision
     _vm_contextp__->timeunit(-9);
     _vm_contextp__->timeprecision(-12);
     // Setup each module's pointers to their submodules
-    TOP.__PVT__spi_dut__DOT__sc_interface = &TOP__spi_dut__DOT__sc_interface;
+    TOP.__PVT__spi_dut__DOT__spi_if = &TOP__spi_dut__DOT__spi_if;
     // Setup each module's pointer back to symbol table (for public functions)
     TOP.__Vconfigure(true);
-    TOP__spi_dut__DOT__sc_interface.__Vconfigure(true);
-    // Setup scopes
-    __Vscope_spi_dut__u_master.configure(this, name(), "spi_dut.u_master", "u_master", -9, VerilatedScope::SCOPE_OTHER);
-    // Setup export functions
-    for (int __Vfinal = 0; __Vfinal < 2; ++__Vfinal) {
-    }
+    TOP__spi_dut__DOT__spi_if.__Vconfigure(true);
 }

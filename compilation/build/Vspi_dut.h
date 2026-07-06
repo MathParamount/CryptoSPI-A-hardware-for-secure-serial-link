@@ -9,7 +9,6 @@
 #define VERILATED_VSPI_DUT_H_  // guard
 
 #include "verilated.h"
-#include "svdpi.h"
 
 class Vspi_dut__Syms;
 class Vspi_dut___024root;
@@ -31,18 +30,19 @@ class alignas(VL_CACHE_LINE_BYTES) Vspi_dut VL_NOT_FINAL : public VerilatedModel
     VL_IN8(&clk,0,0);
     VL_IN8(&reset,0,0);
     VL_IN8(&start,0,0);
-    VL_OUT8(&done,0,0);
     VL_OUT8(&miso,0,0);
+    VL_OUT8(&done,0,0);
     VL_OUT8(&sck,0,0);
-    VL_OUT8(&ss,0,0);
     VL_OUT8(&mosi,0,0);
-    VL_IN16(&data_to_send,15,0);
+    VL_OUT8(&debug_state,2,0);
+    VL_OUT8(&ss,0,0);
+    VL_IN16(&master_data,15,0);
     VL_OUT16(&data_received,15,0);
 
     // CELLS
     // Public to allow access to /* verilator public */ items.
     // Otherwise the application code can consider these internals.
-    Vspi_dut_spi_bus_if* const __PVT__spi_dut__DOT__sc_interface;
+    Vspi_dut_spi_bus_if* const __PVT__spi_dut__DOT__spi_if;
 
     // Root instance pointer to allow access to model internals,
     // including inlined /* verilator public_flat_* */ items.

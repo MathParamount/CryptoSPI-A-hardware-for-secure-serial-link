@@ -13,14 +13,15 @@ Vspi_dut::Vspi_dut(VerilatedContext* _vcontextp__, const char* _vcname__)
     , clk{vlSymsp->TOP.clk}
     , reset{vlSymsp->TOP.reset}
     , start{vlSymsp->TOP.start}
-    , done{vlSymsp->TOP.done}
     , miso{vlSymsp->TOP.miso}
+    , done{vlSymsp->TOP.done}
     , sck{vlSymsp->TOP.sck}
-    , ss{vlSymsp->TOP.ss}
     , mosi{vlSymsp->TOP.mosi}
-    , data_to_send{vlSymsp->TOP.data_to_send}
+    , debug_state{vlSymsp->TOP.debug_state}
+    , ss{vlSymsp->TOP.ss}
+    , master_data{vlSymsp->TOP.master_data}
     , data_received{vlSymsp->TOP.data_received}
-    , __PVT__spi_dut__DOT__sc_interface{vlSymsp->TOP.__PVT__spi_dut__DOT__sc_interface}
+    , __PVT__spi_dut__DOT__spi_if{vlSymsp->TOP.__PVT__spi_dut__DOT__spi_if}
     , rootp{&(vlSymsp->TOP)}
 {
     // Register model with the context

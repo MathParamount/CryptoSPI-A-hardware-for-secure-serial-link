@@ -17,8 +17,6 @@
 #include "Vspi_dut___024root.h"
 #include "Vspi_dut_spi_bus_if.h"
 
-// DPI TYPES for DPI Export callbacks (Internal use)
-
 // SYMS CLASS (contains all model state)
 class alignas(VL_CACHE_LINE_BYTES)Vspi_dut__Syms final : public VerilatedSyms {
   public:
@@ -31,10 +29,7 @@ class alignas(VL_CACHE_LINE_BYTES)Vspi_dut__Syms final : public VerilatedSyms {
 
     // MODULE INSTANCE STATE
     Vspi_dut___024root             TOP;
-    Vspi_dut_spi_bus_if            TOP__spi_dut__DOT__sc_interface;
-
-    // SCOPE NAMES
-    VerilatedScope __Vscope_spi_dut__u_master;
+    Vspi_dut_spi_bus_if            TOP__spi_dut__DOT__spi_if;
 
     // CONSTRUCTORS
     Vspi_dut__Syms(VerilatedContext* contextp, const char* namep, Vspi_dut* modelp);

@@ -1,50 +1,62 @@
 module slaver_receiver
 (
-    spi_bus_if.slave machine_slav
+    spi_bus_if.slaver_f spi_if
 );
 
     import state_control::*;
 
+	/* verilator lint_off UNUSEDSIGNAL */
+    logic [15:0] sr;
+	/* verilator lint_on UNUSEDSIGNAL */
+
+    logic [6:0] bit_count;
+    
+    logic rx_done, tx_load;
+
+   
     //inputs/outputs handled through interface
-    logic [15:0] tx_buffer;
-
-    logic [14:0] sr;
-
-    logic [3:0] bit_count;
+    logic [15:0] sr_tx, sr_rx;
 
 
-    //data reception
-    always_ff @(posedge machine_slav.sck) begin
-
-        if(!machine_slav.ss) begin
+    //data reception (MOSI -> sr_rx)
+    always_ff @(posedge spi_if.sck or posedge spi_if.ss) begin
+        if(spi_if.ss) begin
+            bit_count <= 0;
+            sr_rx <= '0;
+            rx_done <= 0;
+            //sr_tx <= 16'hA5A5;  // Steady data (test)
+            
+        end else begin
+            sr_rx <= {sr_rx[14:0], spi_if.mosi};
             bit_count <= bit_count + 1;
 
-            sr <= {sr[13:0], machine_slav.mosi};
-        end
-        else begin
-            bit_count <= 0;
-        end
+            spi_if.miso <= spi_if.mosi;
 
-        //counting 15 bit
-        if (bit_count == 4'd15) begin
-            machine_slav.slave_data_received <= {sr, machine_slav.mosi};
+            if(bit_count == 15) begin
+                bit_count <= 0;
+                rx_done <= 1;
+            end else begin
+                bit_count <= bit_count + 1;
+            end
         end
     end
 
-    // data transmission
-    // NOTE: avoid posedge(ss) in sensitivity to prevent async/sync flop inference on ss.
-    always_ff @(posedge machine_slav.sck) begin
-
-        if(!machine_slav.ss) begin
-            machine_slav.miso <= tx_buffer[15];         //loading in output (miso)
-            tx_buffer <= {tx_buffer[14:0], 1'b0};       //flip the transm buffer
+    // data transmission (sr_tx -> MISO)
+    always_ff @(posedge spi_if.sck or posedge spi_if.ss) begin
+        if(spi_if.ss) begin
+            tx_load <= 0;
+            sr_tx <= sr_rx;
+             //sr_tx <= spi_if.data_to_send;  // if data_to_send in slaver
+        end else begin
+            if(rx_done && !tx_load) begin
+                sr_tx <= sr_rx;
+                tx_load <= 1;
+            end else begin
+                sr_tx <= {sr_tx[14:0], 1'b0};
+                spi_if.miso <= sr_tx[15];       //MSB
+            end
         end
-        else begin
-            //load new data (sampled on next SCK edge while SS==1)
-            tx_buffer <= machine_slav.data_to_send;
-        end
-
     end
-   
+
 endmodule
 

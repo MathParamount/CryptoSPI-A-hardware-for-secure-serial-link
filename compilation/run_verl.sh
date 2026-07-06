@@ -35,9 +35,9 @@ verilator \
 	-o sim_${TOP} \
 	--Mdir ${BUILD_DIR}
 
-echo "\t\t SIMULATION...  \t\t"
+echo "       SIMULATION...       "
 
 #Executing binary
 ./${BUILD_DIR}/sim_${TOP}
 
-echo"\t\t FINISHED  \t\t"
+echo "       FINISHED        "
