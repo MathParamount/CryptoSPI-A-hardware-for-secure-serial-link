@@ -165,6 +165,7 @@ VL_ATTR_COLD void Vspi_dut___024root___ctor_var_reset(Vspi_dut___024root* vlSelf
     vlSelf->spi_dut__DOT__u_master__DOT__sr_tx = VL_RAND_RESET_I(16);
     vlSelf->spi_dut__DOT__u_master__DOT__sr_rx = VL_RAND_RESET_I(16);
     vlSelf->spi_dut__DOT__u_master__DOT__bit_count = VL_RAND_RESET_I(7);
+    vlSelf->spi_dut__DOT__u_master__DOT__drain_count = VL_RAND_RESET_I(4);
     vlSelf->spi_dut__DOT__u_master__DOT__sck_div = VL_RAND_RESET_I(16);
     vlSelf->spi_dut__DOT__u_master__DOT__done_counter = VL_RAND_RESET_I(1);
     vlSelf->spi_dut__DOT__u_slave__DOT__sr_rx = VL_RAND_RESET_I(16);
@@ -172,6 +173,7 @@ VL_ATTR_COLD void Vspi_dut___024root___ctor_var_reset(Vspi_dut___024root* vlSelf
     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__state = VL_RAND_RESET_I(3);
     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sck_div = VL_RAND_RESET_I(16);
     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__bit_count = VL_RAND_RESET_I(7);
+    vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__drain_count = VL_RAND_RESET_I(4);
     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__cmd_reg = VL_RAND_RESET_I(16);
     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sr_tx = VL_RAND_RESET_I(16);
     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sr_rx = VL_RAND_RESET_I(16);

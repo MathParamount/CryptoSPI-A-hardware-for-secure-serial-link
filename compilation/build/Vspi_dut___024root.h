@@ -28,10 +28,12 @@ class alignas(VL_CACHE_LINE_BYTES) Vspi_dut___024root final : public VerilatedMo
     VL_OUT8(ss,0,0);
     CData/*2:0*/ spi_dut__DOT__u_master__DOT__state;
     CData/*6:0*/ spi_dut__DOT__u_master__DOT__bit_count;
+    CData/*3:0*/ spi_dut__DOT__u_master__DOT__drain_count;
     CData/*0:0*/ spi_dut__DOT__u_master__DOT__done_counter;
     CData/*3:0*/ spi_dut__DOT__u_slave__DOT__bit_count;
     CData/*2:0*/ __Vdly__spi_dut__DOT__u_master__DOT__state;
     CData/*6:0*/ __Vdly__spi_dut__DOT__u_master__DOT__bit_count;
+    CData/*3:0*/ __Vdly__spi_dut__DOT__u_master__DOT__drain_count;
     CData/*0:0*/ __VstlFirstIteration;
     CData/*0:0*/ __Vtrigprevexpr___TOP__clk__0;
     CData/*0:0*/ __Vtrigprevexpr___TOP__reset__0;

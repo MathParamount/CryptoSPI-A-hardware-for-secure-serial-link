@@ -21,12 +21,13 @@ module master_send
 
 	//counting bit
 	logic [6:0] bit_count;
+	logic [3:0] drain_count;  // DRAIN_BUFFER counter
 		
 	//clock division with (1/4 clock)
 	logic [15:0] sck_div;
 	
-	localparam DIV_MAX = 100;  		// 1 µs / 20 ns = 50 cycles (0 a 49)
-	localparam DIV_HALF = 50;		// 500  ms / 10 ns
+	localparam DIV_MAX = 20;  		// 2 µs / 20 ns = 25 cycles (0 a 49)
+	localparam DIV_HALF = 10;		// 250  ms / 5 ns
 
 
 	logic done_counter = 0;
@@ -49,6 +50,7 @@ module master_send
 			// initialize internal counters and buffers
 			sck_div <= 0;
 			bit_count <= 0;
+			drain_count <= 0;
         	//block_count <= 0;
 			cmd_reg <= 0;
 			sr <= 0;
@@ -134,6 +136,7 @@ module master_send
 						//data block count 
 						if(bit_count == 15) begin
 							bit_count <= 0;
+							drain_count <= 0;
 							state <= DRAIN_BUFFER;
 							$display("State DONE in fill_buffer", );
 						end
@@ -147,12 +150,12 @@ module master_send
 							spi_if.mosi <= 1'b0;	//dummy
 							sr_rx <= {sr_rx[14:0], spi_if.miso};
 							
-							bit_count <= bit_count + 1;
+							drain_count <= drain_count + 1;
 							
-							$display("DEBUG DRAIN: bit_count=%d, miso=%d, sr_rx=0x%04X", bit_count, spi_if.miso, sr_rx);
+							$display("DEBUG DRAIN: drain_count=%d, miso=%d, sr_rx=0x%04X", drain_count, spi_if.miso, sr_rx);
 						
-						if (bit_count == 15) begin
-							bit_count <= 0;
+						if (drain_count == 15) begin
+							drain_count <= 0;
 							spi_if.data_received <= sr_rx;  // store data received
 							state <= DONE;
 							$display("DEBUG DRAIN DONE: data_received=0x%04X", sr_rx);

@@ -47,6 +47,8 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__0(Vspi_dut___024root* 
         = vlSelf->spi_dut__DOT__u_master__DOT__sr_tx;
     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__cmd_reg 
         = vlSelf->spi_dut__DOT__u_master__DOT__cmd_reg;
+    vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__drain_count 
+        = vlSelf->spi_dut__DOT__u_master__DOT__drain_count;
     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__bit_count 
         = vlSelf->spi_dut__DOT__u_master__DOT__bit_count;
     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sck_div 
@@ -99,6 +101,7 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
         vlSymsp->TOP__spi_dut__DOT__spi_if.mosi = 0U;
         vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sck_div = 0U;
         vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__bit_count = 0U;
+        vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__drain_count = 0U;
         vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__cmd_reg = 0U;
         vlSelf->spi_dut__DOT__u_master__DOT__sr = 0U;
         vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sr_tx = 0U;
@@ -107,7 +110,7 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
     } else {
         vlSelf->debug_state = vlSelf->spi_dut__DOT__u_master__DOT__state;
         if ((0U != (IData)(vlSelf->spi_dut__DOT__u_master__DOT__state))) {
-            if ((0x64U == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__sck_div))) {
+            if ((0x14U == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__sck_div))) {
                 vlSymsp->TOP__spi_dut__DOT__spi_if.__Vdly__sck 
                     = (1U & (~ (IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.sck)));
                 vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sck_div = 0U;
@@ -134,22 +137,22 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
         } else if ((2U & (IData)(vlSelf->spi_dut__DOT__u_master__DOT__state))) {
             if ((1U & (IData)(vlSelf->spi_dut__DOT__u_master__DOT__state))) {
                 if (VL_LIKELY((0x10U > (IData)(vlSelf->spi_dut__DOT__u_master__DOT__bit_count)))) {
-                    if (VL_UNLIKELY(((0x32U == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__sck_div)) 
+                    if (VL_UNLIKELY(((0xaU == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__sck_div)) 
                                      & (~ (IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.sck))))) {
                         vlSymsp->TOP__spi_dut__DOT__spi_if.mosi = 0U;
                         vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sr_rx 
                             = ((0xfffeU & ((IData)(vlSelf->spi_dut__DOT__u_master__DOT__sr_rx) 
                                            << 1U)) 
                                | (IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.miso));
-                        vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__bit_count 
-                            = (0x7fU & ((IData)(1U) 
-                                        + (IData)(vlSelf->spi_dut__DOT__u_master__DOT__bit_count)));
-                        VL_WRITEF("DEBUG DRAIN: bit_count=%3#, miso=%1#, sr_rx=0x%04x\n",
-                                  7,vlSelf->spi_dut__DOT__u_master__DOT__bit_count,
+                        vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__drain_count 
+                            = (0xfU & ((IData)(1U) 
+                                       + (IData)(vlSelf->spi_dut__DOT__u_master__DOT__drain_count)));
+                        VL_WRITEF("DEBUG DRAIN: drain_count=%2#, miso=%1#, sr_rx=0x%04x\n",
+                                  4,vlSelf->spi_dut__DOT__u_master__DOT__drain_count,
                                   1,(IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.miso),
                                   16,vlSelf->spi_dut__DOT__u_master__DOT__sr_rx);
-                        if (VL_UNLIKELY((0xfU == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__bit_count)))) {
-                            vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__bit_count = 0U;
+                        if (VL_UNLIKELY((0xfU == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__drain_count)))) {
+                            vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__drain_count = 0U;
                             vlSymsp->TOP__spi_dut__DOT__spi_if.data_received 
                                 = vlSelf->spi_dut__DOT__u_master__DOT__sr_rx;
                             vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__state = 4U;
@@ -162,7 +165,7 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
                     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__bit_count = 0U;
                     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__state = 4U;
                 }
-            } else if (VL_UNLIKELY(((0x32U == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__sck_div)) 
+            } else if (VL_UNLIKELY(((0xaU == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__sck_div)) 
                                     & (~ (IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.sck))))) {
                 vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sr_rx 
                     = ((0xfffeU & ((IData)(vlSelf->spi_dut__DOT__u_master__DOT__sr_rx) 
@@ -182,12 +185,13 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
                 if (VL_UNLIKELY((0xfU == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__bit_count)))) {
                     VL_WRITEF("State DONE in fill_buffer \n");
                     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__bit_count = 0U;
+                    vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__drain_count = 0U;
                     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__state = 3U;
                 }
             }
         } else if ((1U & (IData)(vlSelf->spi_dut__DOT__u_master__DOT__state))) {
             vlSymsp->TOP__spi_dut__DOT__spi_if.ss = 0U;
-            if (((0x32U == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__sck_div)) 
+            if (((0xaU == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__sck_div)) 
                  & (~ (IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.sck)))) {
                 vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sr_rx 
                     = ((0xfffeU & ((IData)(vlSelf->spi_dut__DOT__u_master__DOT__sr_rx) 
@@ -227,6 +231,8 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
     vlSelf->spi_dut__DOT__u_master__DOT__sck_div = vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sck_div;
     vlSelf->spi_dut__DOT__u_master__DOT__bit_count 
         = vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__bit_count;
+    vlSelf->spi_dut__DOT__u_master__DOT__drain_count 
+        = vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__drain_count;
     vlSelf->spi_dut__DOT__u_master__DOT__cmd_reg = vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__cmd_reg;
     vlSelf->spi_dut__DOT__u_master__DOT__sr_tx = vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sr_tx;
     vlSelf->spi_dut__DOT__u_master__DOT__sr_rx = vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sr_rx;

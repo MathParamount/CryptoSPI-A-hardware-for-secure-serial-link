@@ -8,9 +8,9 @@
 
 using namespace std;
 
-const vluint64_t clock_half_period = 10;
+const vluint64_t clock_half_period = 5;		//half period of clock
 const int START_PULSE_CYCLES = 100;			//Remain active by 100 cycles
-const int SIMUL_CYCLES = 10000;
+const int SIMUL_CYCLES = 3000;			//total cycles
 
 
 //Transmission structure
