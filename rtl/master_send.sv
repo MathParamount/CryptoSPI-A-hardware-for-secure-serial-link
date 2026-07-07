@@ -85,7 +85,7 @@ module master_send
 					spi_if.done <= 0;
 					bit_count <= 0;
                 	sck_div <= 0;
-				
+
 					if (spi_if.start) begin
                     	sr <= spi_if.data_to_send;  // load data			
                     	state <= CMD_PARSE;
@@ -104,7 +104,7 @@ module master_send
 							cmd_reg <= sr_rx[7:0];
 							/* verilator lint_off WIDTHEXPAND */
 
-							$display("DEBUG (CMD_PARSE): data_to_send = 0x%04X", spi_if.data_to_send);
+							$display("\nDEBUG (CMD_PARSE): data_to_send = 0x%04X", spi_if.data_to_send);
 
 							//LSB verfing if odd or even
 							if (cmd_reg[0] == 0) begin      // EVEN: WRITE
@@ -126,34 +126,43 @@ module master_send
 						spi_if.mosi <= sr_tx[15];			//send MSB
 						sr_tx <= {sr_tx[14:0], 1'b0};
 						
+						sr_rx <= {sr_rx[14:0], spi_if.miso};  // full-duplex
+						
+						bit_count <= bit_count + 1;
 						$display("DEBUG (FILL_BUFFER): bit_count=%d, sck_div=%d, sck=%d", bit_count, sck_div, spi_if.sck);
 
 						//data block count 
-						if(bit_count == 16) begin
+						if(bit_count == 15) begin
 							bit_count <= 0;
-							state <= DONE;
+							state <= DRAIN_BUFFER;
 							$display("State DONE in fill_buffer", );
-						end
-						else begin
-							bit_count <= bit_count + 1;
 						end
 					end
 				end
 				
 				DRAIN_BUFFER: begin
-					if(sck_div == DIV_HALF && !spi_if.sck) begin
-						sr_rx <= {sr_rx[14:0], spi_if.miso};
-
-						$display("DEBUG (DRAIN_BUFFER): data_received = 0x%04X", spi_if.data_received);
-
+					//if(bit_count == 0) $display("DEBUG DRAIN: INICIANDO RECEPÇÃO, bit_count=0");
+					if (bit_count < 16) begin
+						if(sck_div == DIV_HALF && !spi_if.sck) begin
+							spi_if.mosi <= 1'b0;	//dummy
+							sr_rx <= {sr_rx[14:0], spi_if.miso};
+							
+							bit_count <= bit_count + 1;
+							
+							$display("DEBUG DRAIN: bit_count=%d, miso=%d, sr_rx=0x%04X", bit_count, spi_if.miso, sr_rx);
+						
 						if (bit_count == 15) begin
 							bit_count <= 0;
 							spi_if.data_received <= sr_rx;  // store data received
 							state <= DONE;
+							$display("DEBUG DRAIN DONE: data_received=0x%04X", sr_rx);
+							end
 						end
 					end
 					else begin
-						bit_count <= bit_count + 1;
+						bit_count <= 0;
+						state <= DONE;
+						$display("DEBUG: bit_count fora dos limites, indo para DONE");
 					end
 				end
 				
@@ -161,6 +170,7 @@ module master_send
 					spi_if.ss <= 1'b1;
 					// present received word to the interface and load tx word
 					spi_if.done <= 1'b1;
+					bit_count <= 0;
 					
 					if(done_counter == 5) begin
 						if(!spi_if.start) begin

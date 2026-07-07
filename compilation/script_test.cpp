@@ -1,18 +1,31 @@
 #include <iostream>
 #include "verilated.h"
 #include "Vspi_dut.h"
+#include <vector>
 
 #include "verilated_vcd_c.h"
 
 
 using namespace std;
 
-VerilatedVcdC* pointer = nullptr;
+const vluint64_t clock_half_period = 10;
+const int START_PULSE_CYCLES = 100;			//Remain active by 100 cycles
+const int SIMUL_CYCLES = 10000;
+
+
+//Transmission structure
+struct Transmission {
+	int start_cycle;
+	uint64_t data;
+	int expected_response;
+	const char* description;
+};
+
+//Global variables
 Vspi_dut* top = nullptr;
-
-const vluint64_t clock_half_period = 500000;	// period of 1us
-
+VerilatedVcdC* pointer = nullptr;
 vluint64_t main_t = 0;
+int transm_count = 0;
 
 //prototype
 void tick(Vspi_dut *top, VerilatedVcdC* pointer);
@@ -33,6 +46,19 @@ void tick(Vspi_dut *top, VerilatedVcdC* pointer)
     main_t += clock_half_period;
 }
 
+void start_transmission (uint16_t data, int start_cycle, const char* desc = "") {
+	if(start_cycle < 0 ) return;
+    
+   // Ativa start
+   top->start = 1;
+   top->master_data = data;
+
+	// waiting pulse of start
+	for(int i =0; i < 5; i++) tick(top,pointer);
+
+	top->start = 0;
+}
+
 int main(int argc, char** argv)
 {
     Verilated::commandArgs(argc, argv);
@@ -51,55 +77,48 @@ int main(int argc, char** argv)
 
     // Reset
     for(int i = 0; i < 10; i++) tick(top, pointer);
-    top->reset = 0;
-
-    // =====  main simulation =====
-    bool last_done = false;
     
-    for(int cycle = 0; cycle < 6000; cycle++)
-    {
-        // first transmission
-        if(cycle == 100) {
-            top->start = 1;
-            top->master_data = 0x00A5;
-        }
-        if(cycle == 500) {
-            top->start = 0;  // 1 cycle pulse
-        }
+	 top->reset = 0;
+	 printf("Made the reset\n");
 
-        // second transmission
-        if(cycle == 2000) {
-            top->start = 1;
-            top->master_data = 0x00C5;
-        }
-        if(cycle == 2400) {
-            top->start = 0;
-        }
+	 std::vector<Transmission> transmissions = {
+        {100,  0x00A5, 0, "First transmission - A5"},
+        {2000, 0x00C5, 0, "second transmission - C5"},
+        {4000, 0x00F5, 0, "Third transmission - F5"},
+        {6000, 0x00D1, 0, "Quarter transmission - D1"},
+        {8000, 0x5A5A, 0, "thith transmission - 5A5A"},
+        {10000, 0x00FF, 0, "sixth transmission - FF"},
+    };
 
-        // third transmission
-        if(cycle == 3000) {
-            top->start = 1;
-            top->master_data = 0x00F5;
-        }
-        if(cycle == 3400) {
-            top->start = 0;
-        }
+    //==========  main simulation ============ 
 
-        // quarter transmission
-        if(cycle == 3200) {
-            top->start = 1;
-            top->master_data = 0x00D1;
-        }
-        if(cycle == 3800) {
-            top->start = 0;
-        }
+    int next_transmission_idx = 0;
+    bool transmission_active = false;
+    int start_cycle_active = 0;
 
-        // No loop principal, adicione:
-        if(cycle % 100 == 0) {
-            printf("[%d] State=%d SS=%d SCK=%d MOSI=%d MISO=%d DONE=%d\n",
-                cycle, top->debug_state, top->ss, top->sck, top->mosi, top->miso, top->done);
-        }
+	 printf("======== Starting simulation ===========");
 
+    for (int cycle = 0; cycle < SIMUL_CYCLES; cycle++) 
+	 {
+        if (next_transmission_idx < transmissions.size()) 
+		  {
+            Transmission& t = transmissions[next_transmission_idx];
+
+            if (cycle == t.start_cycle && !top->done)
+				{
+                start_transmission(t.data, cycle, t.description);
+                transmission_active = true;
+                start_cycle_active = cycle;
+                next_transmission_idx++;
+            }
+      	}
+
+	 		//deactivate after pulse
+	 		if (transmission_active && cycle == start_cycle_active + 5) {
+      		top->start = 0;
+      		transmission_active = false;
+    		}
+	 
         // =====  Slave model =====
         
         // ECO (loopback) test:
@@ -108,10 +127,12 @@ int main(int argc, char** argv)
         // master test with steady data:
         // top->miso = (top->ss == 0) ? 1 : 0;
 
-        // advance a cycle
-        tick(top, pointer);
+        	// advance a cycle
+       	tick(top, pointer);
+			
+			static bool last_done = false;
 
-        if(top->done && !last_done) {
+        	if(top->done && !last_done) {
             printf(
                 "[%4llu] DONE  RX=0x%04X  SS=%d  SCK=%d  MOSI=%d  MISO=%d\n",
                 (unsigned long long)main_t,
@@ -124,6 +145,10 @@ int main(int argc, char** argv)
         }
         last_done = top->done;
     }
+
+	 //Final result
+	 printf("Total cycles: %d\n", SIMUL_CYCLES);
+    printf("Transmissions initialized: %zu\n", transmissions.size());
 
     pointer->close();
     delete top;

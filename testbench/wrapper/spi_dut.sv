@@ -33,7 +33,7 @@ module spi_dut (
     master_send u_master (
         .clk(clk),
         .reset(reset),
-		.debug_state(debug_state),
+	.debug_state(debug_state),
         .spi_if(spi_if.master_f) 
     );
     
