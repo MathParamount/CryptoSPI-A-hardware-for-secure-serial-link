@@ -41,7 +41,8 @@ git clone https://github.com/MathParamount/CryptoSPI-A-hardware-for-secure-seria
 ```
 
 # Compilation
-	The compilation is find in the root path of this project which is find the run_verl.sh, script_test.cpp and wave.vcd. To be able to test the compilation you need to go to this folder and run bash file.
+The compilation is find in the root path of this project which is find the run_verl.sh, script_test.cpp and wave.vcd. 
+To be able to test the compilation you need to go to this folder and run bash file.
 
 Correct path to compilation:
 ```
