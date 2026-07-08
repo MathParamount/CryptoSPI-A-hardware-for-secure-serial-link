@@ -1,5 +1,7 @@
 # Initialization
-	This project was developed using Verilator and C++ for digital design simulation. Before running the project, make sure these tools are installed on your machine. Verilator’s official installation guide recommends either using a package manager or building from source, and its source repository is available on GitHub.
+
+This project was developed using Verilator and C++ for digital design simulation. Before running the project, make sure these tools are installed on your machine. 
+Verilator’s official installation guide recommends either using a package manager or building from source, and its source repository is available on GitHub.
 	
 - Ubuntu/Linux:
 
