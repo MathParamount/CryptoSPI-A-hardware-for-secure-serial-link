@@ -1,9 +1,30 @@
 # Overview
+  The SPI is a full-duplex serial protocol which is used in short-distance to data transfers. The main architecture of this protocol involved a master block sending data to slavers with a handshake protocol.
+It's widely used in,e.g, sensors, motherboard to transfer high important data. Moreover, it has been used extensively, such as Trusted Platform Module (TPM) that store and generate cryptographic keys.
+However, the actual model of the security systems has been developed by proprietary company which the code and digital design are not publically available.
+There are different kinds of TPMs and the major use is firware TPM (fTPM) which the control logic system runs involuntary inside of computer main processors, due to high-security exigencies some enterprise servers 
+prefer to use a discrete TPM (dTPM) which is soldered onto the motherboard.
+  Hence, this project try to solve some emergency demand which ringes on of a open-source digital control system and application of classic/quantum cryptography in a most useful hardware communication protocol nowadays.
 
 # Architecture
+  
 
-# Tackling real issues
+# Status (development)
 
-# Observations
+SPI architecture design (completed)
+RTL SPI (completed)
+Testbench & waveform SPI (completed)
+SPI + crypto architecture (completed)
+Documentation SPI RTL (In progress)
+Formal verification (In progress)
+SVA (In progress)
+LFSR implementation (In progress)
+Simon core (In progress)
+LFSR key mix SIMON (In progress)
+Validation architecture with side-channel attacks (In progress)
+FPGA implementation (In progress)
+side-channel attacks (power analyses, time analyses,...) in FPGA (In progress)
+Universal Handshake protocol to multiple slavers (In progress)
+Site creation looking to documentation, real case use, call to action (In progress)
 
 # Conclusion
