@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps  // T_SCK = 504 ns
+
 module slaver_receiver (
     spi_bus_if.slaver_f spi_if
 );

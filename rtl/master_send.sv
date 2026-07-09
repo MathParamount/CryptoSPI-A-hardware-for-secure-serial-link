@@ -1,3 +1,5 @@
+`timescale 1ns / 1ps  // T_SCK = 504 ns
+
 module master_send
 (
 	input logic clk,
@@ -46,7 +48,7 @@ module master_send
 			// initialize interface signals
 			spi_if.ss <= 1;
 			spi_if.mosi <= 1'b0;
-				
+			spi_if.sck <= 0;
 			// initialize internal counters and buffers
 			sck_div <= 0;
 			bit_count <= 0;
@@ -74,7 +76,7 @@ module master_send
 				end
 			end
 			else  begin
-				spi_if.sck <= 0;  // SCK em 0 quando IDLE
+				spi_if.sck <= 0;  // SCK 0 if IDLE
 				sck_div <= 0;
 			end
 		

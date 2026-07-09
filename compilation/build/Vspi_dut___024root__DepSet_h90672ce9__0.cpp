@@ -99,6 +99,7 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
         vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__state = 0U;
         vlSymsp->TOP__spi_dut__DOT__spi_if.ss = 1U;
         vlSymsp->TOP__spi_dut__DOT__spi_if.mosi = 0U;
+        vlSymsp->TOP__spi_dut__DOT__spi_if.__Vdly__sck = 0U;
         vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sck_div = 0U;
         vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__bit_count = 0U;
         vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__drain_count = 0U;
@@ -239,8 +240,8 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
     vlSymsp->TOP__spi_dut__DOT__spi_if.sck = vlSymsp->TOP__spi_dut__DOT__spi_if.__Vdly__sck;
     vlSelf->ss = vlSymsp->TOP__spi_dut__DOT__spi_if.ss;
     vlSelf->mosi = vlSymsp->TOP__spi_dut__DOT__spi_if.mosi;
-    vlSelf->done = vlSymsp->TOP__spi_dut__DOT__spi_if.done;
     vlSelf->sck = vlSymsp->TOP__spi_dut__DOT__spi_if.sck;
+    vlSelf->done = vlSymsp->TOP__spi_dut__DOT__spi_if.done;
     vlSelf->data_received = vlSymsp->TOP__spi_dut__DOT__spi_if.data_received;
 }
 
