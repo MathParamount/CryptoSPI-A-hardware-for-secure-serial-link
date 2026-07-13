@@ -1,4 +1,4 @@
-`timescale 1ns / 1ps  // T_SCK = 504 ns
+`timescale 1ns/1ps  // T_SCK = 500 ns
 
 module master_send
 (

@@ -1,12 +1,12 @@
 // Verilated -*- C++ -*-
 // DESCRIPTION: Verilator output: Tracing implementation internals
-#include "verilated_vcd_c.h"
+#include "verilated_fst_c.h"
 #include "Vspi_dut__Syms.h"
 
 
-void Vspi_dut___024root__trace_chg_0_sub_0(Vspi_dut___024root* vlSelf, VerilatedVcd::Buffer* bufp);
+void Vspi_dut___024root__trace_chg_0_sub_0(Vspi_dut___024root* vlSelf, VerilatedFst::Buffer* bufp);
 
-void Vspi_dut___024root__trace_chg_0(void* voidSelf, VerilatedVcd::Buffer* bufp) {
+void Vspi_dut___024root__trace_chg_0(void* voidSelf, VerilatedFst::Buffer* bufp) {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vspi_dut___024root__trace_chg_0\n"); );
     // Init
     Vspi_dut___024root* const __restrict vlSelf VL_ATTR_UNUSED = static_cast<Vspi_dut___024root*>(voidSelf);
@@ -16,7 +16,7 @@ void Vspi_dut___024root__trace_chg_0(void* voidSelf, VerilatedVcd::Buffer* bufp)
     Vspi_dut___024root__trace_chg_0_sub_0((&vlSymsp->TOP), bufp);
 }
 
-void Vspi_dut___024root__trace_chg_0_sub_0(Vspi_dut___024root* vlSelf, VerilatedVcd::Buffer* bufp) {
+void Vspi_dut___024root__trace_chg_0_sub_0(Vspi_dut___024root* vlSelf, VerilatedFst::Buffer* bufp) {
     if (false && vlSelf) {}  // Prevent unused
     Vspi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vspi_dut___024root__trace_chg_0_sub_0\n"); );
@@ -55,7 +55,7 @@ void Vspi_dut___024root__trace_chg_0_sub_0(Vspi_dut___024root* vlSelf, Verilated
     bufp->chgBit(oldp+27,(vlSymsp->TOP__spi_dut__DOT__spi_if.miso));
 }
 
-void Vspi_dut___024root__trace_cleanup(void* voidSelf, VerilatedVcd* /*unused*/) {
+void Vspi_dut___024root__trace_cleanup(void* voidSelf, VerilatedFst* /*unused*/) {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vspi_dut___024root__trace_cleanup\n"); );
     // Init
     Vspi_dut___024root* const __restrict vlSelf VL_ATTR_UNUSED = static_cast<Vspi_dut___024root*>(voidSelf);

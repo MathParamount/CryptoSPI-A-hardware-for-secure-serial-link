@@ -13,7 +13,7 @@ verilator \
 	--cc \
 	--exe \
 	--build \
-	--trace \
+	--trace-fst \
 	--timescale "1ns/1ps" \
 	-Wall \
 	--assert \

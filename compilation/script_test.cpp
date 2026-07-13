@@ -3,12 +3,13 @@
 #include "Vspi_dut.h"
 #include <vector>
 
-#include "verilated_vcd_c.h"
+#include "verilated_fst_c.h"
 
 
 using namespace std;
 
-const vluint64_t clock_half_period = 5;		//half period of clock
+const vluint64_t scale_factor = 1000;			//1ns = 1000ps
+const vluint64_t clock_half_period = 5 * scale_factor;		//half period of clock (5ns)
 const int START_PULSE_CYCLES = 100;			//Remain active by 100 cycles
 const int SIMUL_CYCLES = 3000;			//total cycles
 
@@ -23,26 +24,26 @@ struct Transmission {
 
 //Global variables
 Vspi_dut* top = nullptr;
-VerilatedVcdC* pointer = nullptr;
+VerilatedFstC* pointer = nullptr;
 vluint64_t main_t = 0;
 int transm_count = 0;
 
 //prototype
-void tick(Vspi_dut *top, VerilatedVcdC* pointer);
+void tick(Vspi_dut *top, VerilatedFstC* pointer);
 
 
 //clock count, time unit and generation waves
-void tick(Vspi_dut *top, VerilatedVcdC* pointer)
+void tick(Vspi_dut *top, VerilatedFstC* pointer)
 {
     top->clk = 0;
     top->eval();
-    pointer->dump(main_t++);
+    pointer->dump(main_t);
     main_t += clock_half_period;
 
     //rising edge
     top->clk = 1;
     top->eval();
-    pointer->dump(main_t++);
+    pointer->dump(main_t);
     main_t += clock_half_period;
 }
 
@@ -65,7 +66,7 @@ int main(int argc, char** argv)
     Verilated::traceEverOn(true);
 
     top = new Vspi_dut;
-    pointer = new VerilatedVcdC;
+    pointer = new VerilatedFstC;
 
     top->trace(pointer, 99);
     pointer->open("wave.vcd");

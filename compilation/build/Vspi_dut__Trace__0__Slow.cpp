@@ -1,12 +1,12 @@
 // Verilated -*- C++ -*-
 // DESCRIPTION: Verilator output: Tracing implementation internals
-#include "verilated_vcd_c.h"
+#include "verilated_fst_c.h"
 #include "Vspi_dut__Syms.h"
 
 
-VL_ATTR_COLD void Vspi_dut___024root__trace_init_sub__TOP__spi_dut__DOT__spi_if__0(Vspi_dut___024root* vlSelf, VerilatedVcd* tracep);
+VL_ATTR_COLD void Vspi_dut___024root__trace_init_sub__TOP__spi_dut__DOT__spi_if__0(Vspi_dut___024root* vlSelf, VerilatedFst* tracep);
 
-VL_ATTR_COLD void Vspi_dut___024root__trace_init_sub__TOP__0(Vspi_dut___024root* vlSelf, VerilatedVcd* tracep) {
+VL_ATTR_COLD void Vspi_dut___024root__trace_init_sub__TOP__0(Vspi_dut___024root* vlSelf, VerilatedFst* tracep) {
     if (false && vlSelf) {}  // Prevent unused
     Vspi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vspi_dut___024root__trace_init_sub__TOP__0\n"); );
@@ -46,7 +46,7 @@ VL_ATTR_COLD void Vspi_dut___024root__trace_init_sub__TOP__0(Vspi_dut___024root*
     tracep->pushPrefix("spi_if", VerilatedTracePrefixType::SCOPE_INTERFACE);
     Vspi_dut___024root__trace_init_sub__TOP__spi_dut__DOT__spi_if__0(vlSelf, tracep);
     tracep->popPrefix();
-    tracep->declBus(c+1,0,"state",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 2,0);
+    tracep->declBus(c+1,0,"state",1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 2,0);
     tracep->declBus(c+2,0,"sr",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 15,0);
     tracep->declBus(c+3,0,"cmd_reg",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 15,0);
     tracep->declBus(c+4,0,"sr_tx",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 15,0);
@@ -68,7 +68,7 @@ VL_ATTR_COLD void Vspi_dut___024root__trace_init_sub__TOP__0(Vspi_dut___024root*
     tracep->popPrefix();
 }
 
-VL_ATTR_COLD void Vspi_dut___024root__trace_init_sub__TOP__spi_dut__DOT__spi_if__0(Vspi_dut___024root* vlSelf, VerilatedVcd* tracep) {
+VL_ATTR_COLD void Vspi_dut___024root__trace_init_sub__TOP__spi_dut__DOT__spi_if__0(Vspi_dut___024root* vlSelf, VerilatedFst* tracep) {
     if (false && vlSelf) {}  // Prevent unused
     Vspi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vspi_dut___024root__trace_init_sub__TOP__spi_dut__DOT__spi_if__0\n"); );
@@ -85,7 +85,7 @@ VL_ATTR_COLD void Vspi_dut___024root__trace_init_sub__TOP__spi_dut__DOT__spi_if_
     tracep->declBit(c+14,0,"done",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1);
 }
 
-VL_ATTR_COLD void Vspi_dut___024root__trace_init_top(Vspi_dut___024root* vlSelf, VerilatedVcd* tracep) {
+VL_ATTR_COLD void Vspi_dut___024root__trace_init_top(Vspi_dut___024root* vlSelf, VerilatedFst* tracep) {
     if (false && vlSelf) {}  // Prevent unused
     Vspi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vspi_dut___024root__trace_init_top\n"); );
@@ -93,12 +93,12 @@ VL_ATTR_COLD void Vspi_dut___024root__trace_init_top(Vspi_dut___024root* vlSelf,
     Vspi_dut___024root__trace_init_sub__TOP__0(vlSelf, tracep);
 }
 
-VL_ATTR_COLD void Vspi_dut___024root__trace_const_0(void* voidSelf, VerilatedVcd::Buffer* bufp);
-VL_ATTR_COLD void Vspi_dut___024root__trace_full_0(void* voidSelf, VerilatedVcd::Buffer* bufp);
-void Vspi_dut___024root__trace_chg_0(void* voidSelf, VerilatedVcd::Buffer* bufp);
-void Vspi_dut___024root__trace_cleanup(void* voidSelf, VerilatedVcd* /*unused*/);
+VL_ATTR_COLD void Vspi_dut___024root__trace_const_0(void* voidSelf, VerilatedFst::Buffer* bufp);
+VL_ATTR_COLD void Vspi_dut___024root__trace_full_0(void* voidSelf, VerilatedFst::Buffer* bufp);
+void Vspi_dut___024root__trace_chg_0(void* voidSelf, VerilatedFst::Buffer* bufp);
+void Vspi_dut___024root__trace_cleanup(void* voidSelf, VerilatedFst* /*unused*/);
 
-VL_ATTR_COLD void Vspi_dut___024root__trace_register(Vspi_dut___024root* vlSelf, VerilatedVcd* tracep) {
+VL_ATTR_COLD void Vspi_dut___024root__trace_register(Vspi_dut___024root* vlSelf, VerilatedFst* tracep) {
     if (false && vlSelf) {}  // Prevent unused
     Vspi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vspi_dut___024root__trace_register\n"); );
@@ -109,9 +109,9 @@ VL_ATTR_COLD void Vspi_dut___024root__trace_register(Vspi_dut___024root* vlSelf,
     tracep->addCleanupCb(&Vspi_dut___024root__trace_cleanup, vlSelf);
 }
 
-VL_ATTR_COLD void Vspi_dut___024root__trace_const_0_sub_0(Vspi_dut___024root* vlSelf, VerilatedVcd::Buffer* bufp);
+VL_ATTR_COLD void Vspi_dut___024root__trace_const_0_sub_0(Vspi_dut___024root* vlSelf, VerilatedFst::Buffer* bufp);
 
-VL_ATTR_COLD void Vspi_dut___024root__trace_const_0(void* voidSelf, VerilatedVcd::Buffer* bufp) {
+VL_ATTR_COLD void Vspi_dut___024root__trace_const_0(void* voidSelf, VerilatedFst::Buffer* bufp) {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vspi_dut___024root__trace_const_0\n"); );
     // Init
     Vspi_dut___024root* const __restrict vlSelf VL_ATTR_UNUSED = static_cast<Vspi_dut___024root*>(voidSelf);
@@ -120,7 +120,7 @@ VL_ATTR_COLD void Vspi_dut___024root__trace_const_0(void* voidSelf, VerilatedVcd
     Vspi_dut___024root__trace_const_0_sub_0((&vlSymsp->TOP), bufp);
 }
 
-VL_ATTR_COLD void Vspi_dut___024root__trace_const_0_sub_0(Vspi_dut___024root* vlSelf, VerilatedVcd::Buffer* bufp) {
+VL_ATTR_COLD void Vspi_dut___024root__trace_const_0_sub_0(Vspi_dut___024root* vlSelf, VerilatedFst::Buffer* bufp) {
     if (false && vlSelf) {}  // Prevent unused
     Vspi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vspi_dut___024root__trace_const_0_sub_0\n"); );
@@ -131,9 +131,9 @@ VL_ATTR_COLD void Vspi_dut___024root__trace_const_0_sub_0(Vspi_dut___024root* vl
     bufp->fullIData(oldp+30,(0xaU),32);
 }
 
-VL_ATTR_COLD void Vspi_dut___024root__trace_full_0_sub_0(Vspi_dut___024root* vlSelf, VerilatedVcd::Buffer* bufp);
+VL_ATTR_COLD void Vspi_dut___024root__trace_full_0_sub_0(Vspi_dut___024root* vlSelf, VerilatedFst::Buffer* bufp);
 
-VL_ATTR_COLD void Vspi_dut___024root__trace_full_0(void* voidSelf, VerilatedVcd::Buffer* bufp) {
+VL_ATTR_COLD void Vspi_dut___024root__trace_full_0(void* voidSelf, VerilatedFst::Buffer* bufp) {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vspi_dut___024root__trace_full_0\n"); );
     // Init
     Vspi_dut___024root* const __restrict vlSelf VL_ATTR_UNUSED = static_cast<Vspi_dut___024root*>(voidSelf);
@@ -142,7 +142,7 @@ VL_ATTR_COLD void Vspi_dut___024root__trace_full_0(void* voidSelf, VerilatedVcd:
     Vspi_dut___024root__trace_full_0_sub_0((&vlSymsp->TOP), bufp);
 }
 
-VL_ATTR_COLD void Vspi_dut___024root__trace_full_0_sub_0(Vspi_dut___024root* vlSelf, VerilatedVcd::Buffer* bufp) {
+VL_ATTR_COLD void Vspi_dut___024root__trace_full_0_sub_0(Vspi_dut___024root* vlSelf, VerilatedFst::Buffer* bufp) {
     if (false && vlSelf) {}  // Prevent unused
     Vspi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vspi_dut___024root__trace_full_0_sub_0\n"); );

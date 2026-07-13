@@ -2,7 +2,7 @@
 // DESCRIPTION: Verilator output: Model implementation (design independent parts)
 
 #include "Vspi_dut__pch.h"
-#include "verilated_vcd_c.h"
+#include "verilated_fst_c.h"
 
 //============================================================
 // Constructors
@@ -114,11 +114,11 @@ std::unique_ptr<VerilatedTraceConfig> Vspi_dut::traceConfig() const {
 //============================================================
 // Trace configuration
 
-void Vspi_dut___024root__trace_decl_types(VerilatedVcd* tracep);
+void Vspi_dut___024root__trace_decl_types(VerilatedFst* tracep);
 
-void Vspi_dut___024root__trace_init_top(Vspi_dut___024root* vlSelf, VerilatedVcd* tracep);
+void Vspi_dut___024root__trace_init_top(Vspi_dut___024root* vlSelf, VerilatedFst* tracep);
 
-VL_ATTR_COLD static void trace_init(void* voidSelf, VerilatedVcd* tracep, uint32_t code) {
+VL_ATTR_COLD static void trace_init(void* voidSelf, VerilatedFst* tracep, uint32_t code) {
     // Callback from tracep->open()
     Vspi_dut___024root* const __restrict vlSelf VL_ATTR_UNUSED = static_cast<Vspi_dut___024root*>(voidSelf);
     Vspi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
@@ -133,11 +133,11 @@ VL_ATTR_COLD static void trace_init(void* voidSelf, VerilatedVcd* tracep, uint32
     tracep->popPrefix();
 }
 
-VL_ATTR_COLD void Vspi_dut___024root__trace_register(Vspi_dut___024root* vlSelf, VerilatedVcd* tracep);
+VL_ATTR_COLD void Vspi_dut___024root__trace_register(Vspi_dut___024root* vlSelf, VerilatedFst* tracep);
 
-VL_ATTR_COLD void Vspi_dut::trace(VerilatedVcdC* tfp, int levels, int options) {
+VL_ATTR_COLD void Vspi_dut::trace(VerilatedFstC* tfp, int levels, int options) {
     if (tfp->isOpen()) {
-        vl_fatal(__FILE__, __LINE__, __FILE__,"'Vspi_dut::trace()' shall not be called after 'VerilatedVcdC::open()'.");
+        vl_fatal(__FILE__, __LINE__, __FILE__,"'Vspi_dut::trace()' shall not be called after 'VerilatedFstC::open()'.");
     }
     if (false && levels && options) {}  // Prevent unused
     tfp->spTrace()->addModel(this);
