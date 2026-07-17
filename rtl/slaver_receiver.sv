@@ -6,23 +6,47 @@ module slaver_receiver (
     /* verilator lint_off UNUSEDSIGNAL */
     logic [15:0] sr_rx;
     /* verilator lint_off UNUSEDSIGNAL */
+
+    logic [15:0] data_to_send;   // buffer
+    logic [15:0] sr_tx;
     
     logic [3:0] bit_count;
+    logic ss_prev;
     
-    // ECO model
+
+    // transmission model
     always_ff @(posedge spi_if.sck or posedge spi_if.ss) begin
         if(spi_if.ss) begin
             bit_count <= 0;
             sr_rx <= '0;
         end else begin
-            // store bits from MISO
+
+            // load bits from MISO
             sr_rx <= {sr_rx[14:0], spi_if.mosi};
             bit_count <= bit_count + 1;
 
-            spi_if.miso <= spi_if.mosi;  
-
             if(bit_count == 15) begin
                 bit_count <= 0;
+                $display("SLAVE: data_received=0x%04X", sr_rx);   // debug
+            end
+
+        end
+    end
+
+    always_ff @(negedge spi_if.sck or posedge spi_if.ss) begin
+        
+        if(spi_if.ss) begin
+            spi_if.miso <= 0;
+            ss_prev <= 1;
+        end
+        else begin
+            if(ss_prev) begin
+                sr_tx  <= spi_if.data_to_send;
+                ss_prev <= 0;
+            end
+            else begin
+                spi_if.miso <= sr_tx[15];      // envia bit
+                sr_tx <= {sr_tx[14:0], 1'b0};  // desloca
             end
         end
     end

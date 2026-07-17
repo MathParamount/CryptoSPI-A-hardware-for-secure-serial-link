@@ -30,9 +30,9 @@ void Vspi_dut___024root__trace_chg_0_sub_0(Vspi_dut___024root* vlSelf, Verilated
         bufp->chgSData(oldp+3,(vlSelf->spi_dut__DOT__u_master__DOT__sr_tx),16);
         bufp->chgSData(oldp+4,(vlSelf->spi_dut__DOT__u_master__DOT__sr_rx),16);
         bufp->chgCData(oldp+5,(vlSelf->spi_dut__DOT__u_master__DOT__bit_count),7);
-        bufp->chgCData(oldp+6,(vlSelf->spi_dut__DOT__u_master__DOT__drain_count),4);
-        bufp->chgSData(oldp+7,(vlSelf->spi_dut__DOT__u_master__DOT__sck_div),16);
-        bufp->chgBit(oldp+8,(vlSelf->spi_dut__DOT__u_master__DOT__done_counter));
+        bufp->chgSData(oldp+6,(vlSelf->spi_dut__DOT__u_master__DOT__sck_div),16);
+        bufp->chgBit(oldp+7,(vlSelf->spi_dut__DOT__u_master__DOT__sck_prev));
+        bufp->chgCData(oldp+8,(vlSelf->spi_dut__DOT__u_master__DOT__done_counter),3);
         bufp->chgBit(oldp+9,(vlSymsp->TOP__spi_dut__DOT__spi_if.sck));
         bufp->chgBit(oldp+10,(vlSymsp->TOP__spi_dut__DOT__spi_if.mosi));
         bufp->chgBit(oldp+11,(vlSymsp->TOP__spi_dut__DOT__spi_if.ss));
@@ -51,8 +51,10 @@ void Vspi_dut___024root__trace_chg_0_sub_0(Vspi_dut___024root* vlSelf, Verilated
     bufp->chgCData(oldp+23,(vlSelf->debug_state),3);
     bufp->chgBit(oldp+24,(vlSelf->ss));
     bufp->chgSData(oldp+25,(vlSelf->spi_dut__DOT__u_slave__DOT__sr_rx),16);
-    bufp->chgCData(oldp+26,(vlSelf->spi_dut__DOT__u_slave__DOT__bit_count),4);
-    bufp->chgBit(oldp+27,(vlSymsp->TOP__spi_dut__DOT__spi_if.miso));
+    bufp->chgSData(oldp+26,(vlSelf->spi_dut__DOT__u_slave__DOT__sr_tx),16);
+    bufp->chgCData(oldp+27,(vlSelf->spi_dut__DOT__u_slave__DOT__bit_count),4);
+    bufp->chgBit(oldp+28,(vlSelf->spi_dut__DOT__u_slave__DOT__ss_prev));
+    bufp->chgBit(oldp+29,(vlSymsp->TOP__spi_dut__DOT__spi_if.miso));
 }
 
 void Vspi_dut___024root__trace_cleanup(void* voidSelf, VerilatedFst* /*unused*/) {

@@ -16,6 +16,8 @@ VL_ATTR_COLD void Vspi_dut_spi_bus_if___ctor_var_reset(Vspi_dut_spi_bus_if* vlSe
     vlSelf->ss = VL_RAND_RESET_I(1);
     vlSelf->data_received = VL_RAND_RESET_I(16);
     vlSelf->done = VL_RAND_RESET_I(1);
+    vlSelf->__Vdly__mosi = VL_RAND_RESET_I(1);
     vlSelf->__Vdly__sck = VL_RAND_RESET_I(1);
+    vlSelf->__Vdly__done = VL_RAND_RESET_I(1);
     vlSelf->__Vdly__miso = VL_RAND_RESET_I(1);
 }

@@ -19,7 +19,9 @@ class alignas(VL_CACHE_LINE_BYTES) Vspi_dut_spi_bus_if final : public VerilatedM
     CData/*0:0*/ mosi;
     CData/*0:0*/ miso;
     CData/*0:0*/ done;
+    CData/*0:0*/ __Vdly__mosi;
     CData/*0:0*/ __Vdly__sck;
+    CData/*0:0*/ __Vdly__done;
     CData/*0:0*/ __Vdly__miso;
     SData/*15:0*/ data_received;
 

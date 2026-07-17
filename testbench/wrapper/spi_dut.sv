@@ -10,7 +10,7 @@ module spi_dut (
     output logic [15:0] data_received,
     output logic sck,
     output logic mosi,
-	output logic [2:0] debug_state,
+    output logic [2:0] debug_state,
     output logic ss
 );
     // Instancia a interface
@@ -18,13 +18,13 @@ module spi_dut (
 	
     import state_control::*;
 
-	//attribute external data to dut
+   //attribute external data to dut
     assign spi_if.data_to_send = master_data;
     assign spi_if.start = start;
-    
+
+    assign data_received = spi_if.data_received;
     assign miso = spi_if.miso;
     assign done = spi_if.done;
-    assign data_received = spi_if.data_received;
     assign sck = spi_if.sck;
     assign mosi = spi_if.mosi; 
     assign ss = spi_if.ss;
@@ -33,7 +33,7 @@ module spi_dut (
     master_send u_master (
         .clk(clk),
         .reset(reset),
-	.debug_state(debug_state),
+	    .debug_state(debug_state),
         .spi_if(spi_if.master_f) 
     );
     

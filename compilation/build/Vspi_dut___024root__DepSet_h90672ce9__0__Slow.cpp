@@ -41,9 +41,9 @@ VL_ATTR_COLD void Vspi_dut___024root___stl_sequent__TOP__0(Vspi_dut___024root* v
     Vspi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vspi_dut___024root___stl_sequent__TOP__0\n"); );
     // Body
+    vlSelf->data_received = vlSymsp->TOP__spi_dut__DOT__spi_if.data_received;
     vlSelf->miso = vlSymsp->TOP__spi_dut__DOT__spi_if.miso;
     vlSelf->done = vlSymsp->TOP__spi_dut__DOT__spi_if.done;
-    vlSelf->data_received = vlSymsp->TOP__spi_dut__DOT__spi_if.data_received;
     vlSelf->sck = vlSymsp->TOP__spi_dut__DOT__spi_if.sck;
     vlSelf->mosi = vlSymsp->TOP__spi_dut__DOT__spi_if.mosi;
     vlSelf->ss = vlSymsp->TOP__spi_dut__DOT__spi_if.ss;

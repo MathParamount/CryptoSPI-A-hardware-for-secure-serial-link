@@ -122,6 +122,9 @@ VL_ATTR_COLD void Vspi_dut___024root___dump_triggers__act(Vspi_dut___024root* vl
     if ((2ULL & vlSelf->__VactTriggered.word(0U))) {
         VL_DBG_MSGF("         'act' region trigger index 1 is active: @(posedge spi_dut.spi_if.sck or posedge spi_dut.spi_if.ss)\n");
     }
+    if ((4ULL & vlSelf->__VactTriggered.word(0U))) {
+        VL_DBG_MSGF("         'act' region trigger index 2 is active: @(negedge spi_dut.spi_if.sck or posedge spi_dut.spi_if.ss)\n");
+    }
 }
 #endif  // VL_DEBUG
 
@@ -139,6 +142,9 @@ VL_ATTR_COLD void Vspi_dut___024root___dump_triggers__nba(Vspi_dut___024root* vl
     }
     if ((2ULL & vlSelf->__VnbaTriggered.word(0U))) {
         VL_DBG_MSGF("         'nba' region trigger index 1 is active: @(posedge spi_dut.spi_if.sck or posedge spi_dut.spi_if.ss)\n");
+    }
+    if ((4ULL & vlSelf->__VnbaTriggered.word(0U))) {
+        VL_DBG_MSGF("         'nba' region trigger index 2 is active: @(negedge spi_dut.spi_if.sck or posedge spi_dut.spi_if.ss)\n");
     }
 }
 #endif  // VL_DEBUG
@@ -165,18 +171,23 @@ VL_ATTR_COLD void Vspi_dut___024root___ctor_var_reset(Vspi_dut___024root* vlSelf
     vlSelf->spi_dut__DOT__u_master__DOT__sr_tx = VL_RAND_RESET_I(16);
     vlSelf->spi_dut__DOT__u_master__DOT__sr_rx = VL_RAND_RESET_I(16);
     vlSelf->spi_dut__DOT__u_master__DOT__bit_count = VL_RAND_RESET_I(7);
-    vlSelf->spi_dut__DOT__u_master__DOT__drain_count = VL_RAND_RESET_I(4);
     vlSelf->spi_dut__DOT__u_master__DOT__sck_div = VL_RAND_RESET_I(16);
-    vlSelf->spi_dut__DOT__u_master__DOT__done_counter = VL_RAND_RESET_I(1);
+    vlSelf->spi_dut__DOT__u_master__DOT__sck_prev = VL_RAND_RESET_I(1);
+    vlSelf->spi_dut__DOT__u_master__DOT__done_counter = VL_RAND_RESET_I(3);
     vlSelf->spi_dut__DOT__u_slave__DOT__sr_rx = VL_RAND_RESET_I(16);
+    vlSelf->spi_dut__DOT__u_slave__DOT__data_to_send = VL_RAND_RESET_I(16);
+    vlSelf->spi_dut__DOT__u_slave__DOT__sr_tx = VL_RAND_RESET_I(16);
     vlSelf->spi_dut__DOT__u_slave__DOT__bit_count = VL_RAND_RESET_I(4);
+    vlSelf->spi_dut__DOT__u_slave__DOT__ss_prev = VL_RAND_RESET_I(1);
     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__state = VL_RAND_RESET_I(3);
     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sck_div = VL_RAND_RESET_I(16);
     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__bit_count = VL_RAND_RESET_I(7);
-    vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__drain_count = VL_RAND_RESET_I(4);
     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__cmd_reg = VL_RAND_RESET_I(16);
+    vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sr = VL_RAND_RESET_I(16);
     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sr_tx = VL_RAND_RESET_I(16);
     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sr_rx = VL_RAND_RESET_I(16);
+    vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sck_prev = VL_RAND_RESET_I(1);
+    vlSelf->__Vdly__debug_state = VL_RAND_RESET_I(3);
     vlSelf->__Vtrigprevexpr___TOP__clk__0 = VL_RAND_RESET_I(1);
     vlSelf->__Vtrigprevexpr___TOP__reset__0 = VL_RAND_RESET_I(1);
     vlSelf->__Vtrigprevexpr___TOP__spi_dut__DOT__spi_if__sck__0 = VL_RAND_RESET_I(1);

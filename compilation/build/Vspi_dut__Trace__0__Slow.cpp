@@ -52,18 +52,20 @@ VL_ATTR_COLD void Vspi_dut___024root__trace_init_sub__TOP__0(Vspi_dut___024root*
     tracep->declBus(c+4,0,"sr_tx",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 15,0);
     tracep->declBus(c+5,0,"sr_rx",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 15,0);
     tracep->declBus(c+6,0,"bit_count",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 6,0);
-    tracep->declBus(c+7,0,"drain_count",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 3,0);
-    tracep->declBus(c+8,0,"sck_div",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 15,0);
-    tracep->declBus(c+29,0,"DIV_MAX",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::PARAMETER, VerilatedTraceSigType::LOGIC, false,-1, 31,0);
-    tracep->declBus(c+30,0,"DIV_HALF",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::PARAMETER, VerilatedTraceSigType::LOGIC, false,-1, 31,0);
-    tracep->declBit(c+9,0,"done_counter",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1);
+    tracep->declBus(c+7,0,"sck_div",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 15,0);
+    tracep->declBit(c+8,0,"sck_prev",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1);
+    tracep->declBus(c+31,0,"DIV_MAX",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::PARAMETER, VerilatedTraceSigType::LOGIC, false,-1, 31,0);
+    tracep->declBus(c+9,0,"done_counter",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 2,0);
     tracep->popPrefix();
     tracep->pushPrefix("u_slave", VerilatedTracePrefixType::SCOPE_MODULE);
     tracep->pushPrefix("spi_if", VerilatedTracePrefixType::SCOPE_INTERFACE);
     Vspi_dut___024root__trace_init_sub__TOP__spi_dut__DOT__spi_if__0(vlSelf, tracep);
     tracep->popPrefix();
     tracep->declBus(c+26,0,"sr_rx",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 15,0);
-    tracep->declBus(c+27,0,"bit_count",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 3,0);
+    tracep->declBus(c+32,0,"data_to_send",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 15,0);
+    tracep->declBus(c+27,0,"sr_tx",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 15,0);
+    tracep->declBus(c+28,0,"bit_count",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 3,0);
+    tracep->declBit(c+29,0,"ss_prev",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1);
     tracep->popPrefix();
     tracep->popPrefix();
 }
@@ -77,7 +79,7 @@ VL_ATTR_COLD void Vspi_dut___024root__trace_init_sub__TOP__spi_dut__DOT__spi_if_
     // Body
     tracep->declBit(c+10,0,"sck",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1);
     tracep->declBit(c+11,0,"mosi",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1);
-    tracep->declBit(c+28,0,"miso",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1);
+    tracep->declBit(c+30,0,"miso",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1);
     tracep->declBit(c+12,0,"ss",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1);
     tracep->declBus(c+17,0,"data_to_send",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 15,0);
     tracep->declBus(c+13,0,"data_received",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 15,0);
@@ -127,8 +129,8 @@ VL_ATTR_COLD void Vspi_dut___024root__trace_const_0_sub_0(Vspi_dut___024root* vl
     // Init
     uint32_t* const oldp VL_ATTR_UNUSED = bufp->oldp(vlSymsp->__Vm_baseCode);
     // Body
-    bufp->fullIData(oldp+29,(0x14U),32);
-    bufp->fullIData(oldp+30,(0xaU),32);
+    bufp->fullIData(oldp+31,(0x63U),32);
+    bufp->fullSData(oldp+32,(vlSelf->spi_dut__DOT__u_slave__DOT__data_to_send),16);
 }
 
 VL_ATTR_COLD void Vspi_dut___024root__trace_full_0_sub_0(Vspi_dut___024root* vlSelf, VerilatedFst::Buffer* bufp);
@@ -155,9 +157,9 @@ VL_ATTR_COLD void Vspi_dut___024root__trace_full_0_sub_0(Vspi_dut___024root* vlS
     bufp->fullSData(oldp+4,(vlSelf->spi_dut__DOT__u_master__DOT__sr_tx),16);
     bufp->fullSData(oldp+5,(vlSelf->spi_dut__DOT__u_master__DOT__sr_rx),16);
     bufp->fullCData(oldp+6,(vlSelf->spi_dut__DOT__u_master__DOT__bit_count),7);
-    bufp->fullCData(oldp+7,(vlSelf->spi_dut__DOT__u_master__DOT__drain_count),4);
-    bufp->fullSData(oldp+8,(vlSelf->spi_dut__DOT__u_master__DOT__sck_div),16);
-    bufp->fullBit(oldp+9,(vlSelf->spi_dut__DOT__u_master__DOT__done_counter));
+    bufp->fullSData(oldp+7,(vlSelf->spi_dut__DOT__u_master__DOT__sck_div),16);
+    bufp->fullBit(oldp+8,(vlSelf->spi_dut__DOT__u_master__DOT__sck_prev));
+    bufp->fullCData(oldp+9,(vlSelf->spi_dut__DOT__u_master__DOT__done_counter),3);
     bufp->fullBit(oldp+10,(vlSymsp->TOP__spi_dut__DOT__spi_if.sck));
     bufp->fullBit(oldp+11,(vlSymsp->TOP__spi_dut__DOT__spi_if.mosi));
     bufp->fullBit(oldp+12,(vlSymsp->TOP__spi_dut__DOT__spi_if.ss));
@@ -175,6 +177,8 @@ VL_ATTR_COLD void Vspi_dut___024root__trace_full_0_sub_0(Vspi_dut___024root* vlS
     bufp->fullCData(oldp+24,(vlSelf->debug_state),3);
     bufp->fullBit(oldp+25,(vlSelf->ss));
     bufp->fullSData(oldp+26,(vlSelf->spi_dut__DOT__u_slave__DOT__sr_rx),16);
-    bufp->fullCData(oldp+27,(vlSelf->spi_dut__DOT__u_slave__DOT__bit_count),4);
-    bufp->fullBit(oldp+28,(vlSymsp->TOP__spi_dut__DOT__spi_if.miso));
+    bufp->fullSData(oldp+27,(vlSelf->spi_dut__DOT__u_slave__DOT__sr_tx),16);
+    bufp->fullCData(oldp+28,(vlSelf->spi_dut__DOT__u_slave__DOT__bit_count),4);
+    bufp->fullBit(oldp+29,(vlSelf->spi_dut__DOT__u_slave__DOT__ss_prev));
+    bufp->fullBit(oldp+30,(vlSymsp->TOP__spi_dut__DOT__spi_if.miso));
 }

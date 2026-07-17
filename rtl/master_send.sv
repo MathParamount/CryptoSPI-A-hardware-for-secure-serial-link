@@ -15,7 +15,7 @@ module master_send
 
 	//internal buffers (memory)
 	/* verilator lint_off UNUSEDSIGNAL */
-	logic [15:0] sr;
+	logic [15:0] sr;			//buffer
 	logic [15:0] cmd_reg;
 	logic [15:0] sr_tx, sr_rx;
 	/* verilator lint_on UNUSEDSIGNAL */
@@ -23,22 +23,23 @@ module master_send
 
 	//counting bit
 	logic [6:0] bit_count;
-	logic [3:0] drain_count;  // DRAIN_BUFFER counter
 		
 	//clock division with (1/4 clock)
 	logic [15:0] sck_div;
 	
-	localparam DIV_MAX = 20;  		// 2 µs / 20 ns = 25 cycles (0 a 49)
-	localparam DIV_HALF = 10;		// 250  ms / 5 ns
+	logic sck_prev;       // edge detection
+	
+	localparam DIV_MAX = 99;  		// 100 ciclos = 1us (99 = 0-99) ; (To 199 -> 2 us/10 ns = 200 cycles)
+	//localparam DIV_HALF = 49;		// (0-49 = baixo, 50-99 = alto); (To 99 -> 1 us/10 ns = 100 cycles)
 
 
-	logic done_counter = 0;
+	logic [2:0] done_counter = 0;
 
 	/*
 	logic [3:0] block_count;
 	localparam TOTAL_BLOCK = 16;		//An word of 16 bits (1 byte)
 	*/
-
+	
 	//general synchronous block
 	always_ff @(posedge clk or negedge reset) begin
 		//Default attribute (reset cycle)
@@ -52,12 +53,12 @@ module master_send
 			// initialize internal counters and buffers
 			sck_div <= 0;
 			bit_count <= 0;
-			drain_count <= 0;
         	//block_count <= 0;
 			cmd_reg <= 0;
 			sr <= 0;
 			sr_tx <= 0;
 			sr_rx <= 0;
+			sck_prev <= 0;
 			spi_if.done <= 0;
 		end
 		
@@ -79,6 +80,9 @@ module master_send
 				spi_if.sck <= 0;  // SCK 0 if IDLE
 				sck_div <= 0;
 			end
+			
+			//edge detection
+			sck_prev <= spi_if.sck;
 		
 			//FSM architecture
 			unique case (state)
@@ -89,34 +93,33 @@ module master_send
 					spi_if.done <= 0;
 					bit_count <= 0;
                 	sck_div <= 0;
+					//spi_if.miso <= 0;
 
 					if (spi_if.start) begin
-                    	sr <= spi_if.data_to_send;  // load data			
-                    	state <= CMD_PARSE;
+					    	sr <= spi_if.data_to_send;  // load data (buffer)
+							$display("DEBUG (IDLE): sr_rx=0x%04X, debug_state=%b, buffer_sr=x%04X", sr_rx[7:0], debug_state, sr);
+					    	state <= CMD_PARSE;
                     end
 				end
 
 				CMD_PARSE: begin
 				    spi_if.ss <= 1'b0;		//slave activation
 					
-					if(sck_div == DIV_HALF && !spi_if.sck) begin
-						sr_rx <= {sr_rx[14:0], spi_if.miso};
+					if(spi_if.sck && !sck_prev) begin
+						sr_rx <= {sr[14:0], spi_if.miso};		//from buffer to shf_reg
 
 						if(bit_count == 7) begin
 							bit_count <= 0;
-							/* verilator lint_off WIDTHEXPAND */
-							cmd_reg <= sr_rx[7:0];
-							/* verilator lint_off WIDTHEXPAND */
-
-							$display("\nDEBUG (CMD_PARSE): data_to_send = 0x%04X", spi_if.data_to_send);
-
+							cmd_reg <= {8'b0, sr_rx[7:0]};     // future use (zero-padding)
+							
+							
 							//LSB verfing if odd or even
 							if (cmd_reg[0] == 0) begin      // EVEN: WRITE
 								sr_tx <= spi_if.data_to_send;
 								state <= FILL_BUFFER;  // Write/Encrypt
 							end
 							else begin		// ODD: READ
-								state <= DRAIN_BUFFER; // Read/Decrypt (dados prontos)
+								state <= DRAIN_BUFFER; // Read/Decrypt
 							end		
 						end
 						else bit_count <= bit_count + 1;
@@ -124,50 +127,41 @@ module master_send
 				end
 
 				FILL_BUFFER: begin
-				 	// Divisor of clock
-					if (sck_div == DIV_HALF && !spi_if.sck) begin						
-						// In the edge of sck
-						spi_if.mosi <= sr_tx[15];			//send MSB
-						sr_tx <= {sr_tx[14:0], 1'b0};
-						
-						sr_rx <= {sr_rx[14:0], spi_if.miso};  // full-duplex
-						
+				    //MISO sampling
+				    if (spi_if.sck && !sck_prev) begin
+						sr_rx <= {sr_rx[14:0], spi_if.miso};
 						bit_count <= bit_count + 1;
-						$display("DEBUG (FILL_BUFFER): bit_count=%d, sck_div=%d, sck=%d", bit_count, sck_div, spi_if.sck);
+						$display("DEBUG FILL: bit_count=%d, miso=%b, sr_rx=0x%04X", bit_count, spi_if.miso, sr_rx);
+				    end
 
-						//data block count 
-						if(bit_count == 15) begin
-							bit_count <= 0;
-							drain_count <= 0;
-							state <= DRAIN_BUFFER;
-							$display("State DONE in fill_buffer", );
-						end
-					end
+				    // negedge clock detection
+				    if (!spi_if.sck && sck_prev) begin
+						spi_if.mosi <= sr_tx[15];
+						sr_tx <= {sr_tx[14:0], 1'b0};
+				    end
+
+				    if (bit_count == 15) begin
+						state <= DONE;
+				    end
 				end
 				
 				DRAIN_BUFFER: begin
-					//if(bit_count == 0) $display("DEBUG DRAIN: INICIANDO RECEPÇÃO, bit_count=0");
-					if (bit_count < 16) begin
-						if(sck_div == DIV_HALF && !spi_if.sck) begin
-							spi_if.mosi <= 1'b0;	//dummy
-							sr_rx <= {sr_rx[14:0], spi_if.miso};
-							
-							drain_count <= drain_count + 1;
-							
-							$display("DEBUG DRAIN: drain_count=%d, miso=%d, sr_rx=0x%04X", drain_count, spi_if.miso, sr_rx);
-						
-						if (drain_count == 15) begin
-							drain_count <= 0;
-							spi_if.data_received <= sr_rx;  // store data received
-							state <= DONE;
-							$display("DEBUG DRAIN DONE: data_received=0x%04X", sr_rx);
-							end
-						end
+					//if(bit_count == 0) $display("DEBUG DRAIN: Starting reception, bit_count=0");
+					if(spi_if.sck && !sck_prev) begin
+						sr_rx <= {sr_rx[14:0], spi_if.miso};
+						bit_count <= bit_count + 1;
 					end
-					else begin
+		
+					// update mosi in the negedge clock
+					if (!spi_if.sck && sck_prev) begin
+						spi_if.mosi <= sr_tx[15];   // send next bit
+						sr_tx <= {sr_tx[14:0], 1'b0};
+					end
+						
+					if (bit_count == 15) begin
 						bit_count <= 0;
 						state <= DONE;
-						$display("DEBUG: bit_count fora dos limites, indo para DONE");
+						$display("DEBUG DRAIN DONE: data_received=0x%04X", sr_rx);
 					end
 				end
 				
@@ -175,15 +169,25 @@ module master_send
 					spi_if.ss <= 1'b1;
 					// present received word to the interface and load tx word
 					spi_if.done <= 1'b1;
+					spi_if.mosi <= 1'b0;	//clean mosi
+					
+					spi_if.data_received <= sr_rx;
+
 					bit_count <= 0;
 					
-					if(done_counter == 5) begin
-						if(!spi_if.start) begin
-							state <= IDLE;
-							spi_if.done <= 1'b0;	//clean done
-						end
+					$display("DEBUG DONE: data_received=0x%04X bit_count=%d mosi=%b  done=%d", sr_rx, bit_count,spi_if.mosi, spi_if.done);
+
+					if(done_counter == 0) begin
+						done_counter <= 1;
 					end
-					else done_counter <= done_counter + 1;
+					else begin
+						done_counter <= 0;
+						spi_if.done <= 1'b0; 	//clean done
+
+						//spi_if.data_received <= 0;
+
+						state <= IDLE;
+					end
 				end
 
 				default: state <= IDLE;

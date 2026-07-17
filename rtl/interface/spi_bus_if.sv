@@ -12,23 +12,23 @@ interface spi_bus_if;
     logic done;
     
     modport master_f (
+        input  start,
+        input  miso,
+        input  data_to_send,
         output sck,
         output mosi,
-        input  miso,
         output ss,
-        input  data_to_send,
-        input  start,
         output done,
         output data_received
     );
     
     modport slaver_f (
+        output miso,
         input  sck,
         input  mosi,
-        output miso,
         input  ss,
-        //input  data_to_send   /*with existency of data in slaver to send*/
-        output data_received
+        input  done,
+        input  data_to_send   /*with existency of data in slaver to send*/
     );
     
 endinterface
