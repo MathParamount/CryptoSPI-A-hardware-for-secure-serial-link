@@ -11,6 +11,9 @@ interface spi_bus_if;
     logic start;
     logic done;
     
+    //cryptographic signals
+
+    
     modport master_f (
         input  start,
         input  miso,

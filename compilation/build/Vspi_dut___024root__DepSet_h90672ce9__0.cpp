@@ -177,11 +177,12 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__3(Vspi_dut___024root* 
                 vlSymsp->TOP__spi_dut__DOT__spi_if.ss = 1U;
                 vlSymsp->TOP__spi_dut__DOT__spi_if.data_received 
                     = vlSelf->spi_dut__DOT__u_master__DOT__sr_rx;
-                VL_WRITEF("DEBUG DONE: data_received=0x%04x bit_count=%3# mosi=%b  done=%1#\n",
+                VL_WRITEF("DEBUG DONE: data_received=0x%04x bit_count=%3# mosi=%b, miso=%b, done=%1#\n",
                           16,vlSelf->spi_dut__DOT__u_master__DOT__sr_rx,
                           7,(IData)(vlSelf->spi_dut__DOT__u_master__DOT__bit_count),
                           1,vlSymsp->TOP__spi_dut__DOT__spi_if.mosi,
-                          1,(IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.done));
+                          1,(IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.miso),
+                          1,vlSymsp->TOP__spi_dut__DOT__spi_if.done);
                 vlSymsp->TOP__spi_dut__DOT__spi_if.__Vdly__done = 1U;
                 vlSymsp->TOP__spi_dut__DOT__spi_if.__Vdly__mosi = 0U;
                 vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__bit_count = 0U;
@@ -226,10 +227,11 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__3(Vspi_dut___024root* 
                                        << 1U)) | (IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.miso));
                     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__bit_count 
                         = (0x7fU & ((IData)(1U) + (IData)(vlSelf->spi_dut__DOT__u_master__DOT__bit_count)));
-                    VL_WRITEF("DEBUG FILL: bit_count=%3#, miso=%b, sr_rx=0x%04x\n",
+                    VL_WRITEF("DEBUG FILL: bit_count=%3#, mosi=%b, miso=%b, sr_rx=0x%04x\n",
                               7,vlSelf->spi_dut__DOT__u_master__DOT__bit_count,
-                              1,(IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.miso),
-                              16,vlSelf->spi_dut__DOT__u_master__DOT__sr_rx);
+                              1,(IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.mosi),
+                              1,vlSymsp->TOP__spi_dut__DOT__spi_if.miso,
+                              16,(IData)(vlSelf->spi_dut__DOT__u_master__DOT__sr_rx));
                 }
                 if (((~ (IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.sck)) 
                      & (IData)(vlSelf->spi_dut__DOT__u_master__DOT__sck_prev))) {
