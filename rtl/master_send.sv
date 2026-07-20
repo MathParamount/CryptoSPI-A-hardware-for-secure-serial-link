@@ -131,7 +131,7 @@ module master_send
 				    if (spi_if.sck && !sck_prev) begin
 						sr_rx <= {sr_rx[14:0], spi_if.miso};
 						bit_count <= bit_count + 1;
-						$display("DEBUG FILL: bit_count=%d, miso=%b, sr_rx=0x%04X", bit_count, spi_if.miso, sr_rx);
+						$display("DEBUG FILL: bit_count=%d, mosi=%b, miso=%b, sr_rx=0x%04X", bit_count, spi_if.mosi, spi_if.miso, sr_rx);
 				    end
 
 				    // negedge clock detection
@@ -141,6 +141,7 @@ module master_send
 				    end
 
 				    if (bit_count == 15) begin
+				    		block_ready <= 1;
 						state <= DONE;
 				    end
 				end
@@ -175,7 +176,7 @@ module master_send
 
 					bit_count <= 0;
 					
-					$display("DEBUG DONE: data_received=0x%04X bit_count=%d mosi=%b  done=%d", sr_rx, bit_count,spi_if.mosi, spi_if.done);
+					$display("DEBUG DONE: data_received=0x%04X bit_count=%d mosi=%b, miso=%b, done=%d", sr_rx, bit_count,spi_if.mosi, spi_if.miso, spi_if.done);
 
 					if(done_counter == 0) begin
 						done_counter <= 1;

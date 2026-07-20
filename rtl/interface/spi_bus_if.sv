@@ -11,6 +11,12 @@ interface spi_bus_if;
     logic start;
     logic done;
     
+    //cryptographic signals
+    logic block_ready;
+    logic [63:0] nonce;
+    logic [31:0] cipher_text;
+    
+    
     modport master_f (
         input  start,
         input  miso,
@@ -29,6 +35,16 @@ interface spi_bus_if;
         input  ss,
         input  done,
         input  data_to_send   /*with existency of data in slaver to send*/
+    );
+    
+    modport crypto_f (
+    	input data_to_send,
+    	input done,
+    	input ss,
+    	input mosi,
+    	input block_ready,
+    	output cipher_text,
+    	output nonce
     );
     
 endinterface
