@@ -141,7 +141,6 @@ module master_send
 				    end
 
 				    if (bit_count == 15) begin
-				    		//block_ready <= 1;
 						state <= DONE;
 				    end
 				end
