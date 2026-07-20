@@ -4,7 +4,7 @@ module crypto_spi_core
 (
 	input logic clk,
 	input logic reset,
-
+	spi_bus_if.crypto_f crypto_if
 );
 
 	import state_control::*;
@@ -13,37 +13,36 @@ module crypto_spi_core
 	localparam TOTAL_BLOCK = 16;		//total transmission count
 
 	//internal buffers
-	logic [31:0] epherm_key;
+	logic [31:0] plain_text, 	// shift register SPI
 	logic [31:0] lfsr_cipher;
-	logic [31:0] lfsr_plaintext;
-
-	logic [63:0] nonce;		//seeds
-	logic [15:0] simon_cipher;
+	
 	logic [15:0] simon_plaintext;
 
 	//LFSR core
 	always_ff @(posedge clk or negedge reset)
 		if(reset) begin
 			lfsr_cipher <= 32'hCAD1;
-			lfsr_plaintext <= '0;
-			epherm_key <= '0;
-			nonce <= 64'h0000000000000001;  // initial seed
+			plain_text <= crypto_if.mosi;
+			crypto_if.epherm_key <= '0;
+			crypto_if.nonce <= 64'h0000000000000001;  // initial seed
 		end
 		else begin
 			if(state == EXEC_ENCRYPT) begin
-				lfsr_plaintext <= spi_if.sr_rx;
+				plain_text <= spi_if.sr_rx;
 
-				for (int i = 0; i < $size(lfsr_plaintext); i++) begin
-						//1 keystream by cycle
-						lfsr_plaintext <= {lfsr_plaintext[30:0], lfsr_plaintext[31] ^ lfsr_plaintext[21] ^ lfsr_plaintext[11] ^ lfsr_plaintext[1] ^ lfsr_plaintext[0]};
+				for (int i = 0; i < $size(crypto_if.plain_text); i++) begin
+					//1 keystream by cycle
+					plain_text <= {plain_text[30:0], plain_text[31] ^ plain_text[21] ^ plain_text[11] ^ plain_text[1] ^ plain_text[0]};
 
-						//accumulation and key join (serial transmission)
-						epherm_key <= {epherm_key[30:0], lfsr_plaintext[31] ^ lfsr_plaintext[21] ^ lfsr_plaintext[11] ^ lfsr_plaintext[1] ^ lfsr_plaintext[0]};
+					//accumulation and key join (serial transmission)
+					crypto_if.epherm_key <= {crypto_if.epherm_key[30:0], plain_text[31] ^ plain_text[21] ^ plain_text[11] ^ plain_text[1] ^ plain_text[0]};
 				end
 			end
+			
+			crypto_if.crypto_done <= 1;
 		end
 
-	   assign lfsr_cipher = lfsr_plaintext ^ epherm_key;
+	   assign lfsr_cipher = plain_text ^ crypto_if.epherm_key;
 
 	//SIMON
 
