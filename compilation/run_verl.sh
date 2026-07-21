@@ -29,6 +29,7 @@ verilator \
 	../rtl/interface/spi_bus_if.sv \
 	../rtl/master_send.sv \
 	../rtl/slaver_receiver.sv \
+	../rtl/crypto_spi_core.sv \
 	../testbench/top/spi_top.sv \
 	../testbench/wrapper/spi_dut.sv \
 	script_test.cpp \
