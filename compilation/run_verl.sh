@@ -31,8 +31,8 @@ verilator \
 	../rtl/slaver_receiver.sv \
 	../rtl/crypto_spi_core.sv \
 	../testbench/top/spi_top.sv \
-	../testbench/wrapper/spi_dut.sv \
-	script_test.cpp \
+	../testbench/wrapper/crypt_spi_dut.sv \
+	crypt_script_test.cpp \
 	-o sim_${TOP} \
 	--Mdir ${BUILD_DIR}
 
