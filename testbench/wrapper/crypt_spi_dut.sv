@@ -11,7 +11,8 @@ module crypt_spi_dut (
     output logic sck,
     output logic mosi,
     output logic [2:0] debug_state,
-    output logic ss
+    output logic ss,
+	output logic [63:0] lfsr_cipher
 );
     // Instancia a interface
     spi_bus_if spi_if ();
@@ -34,7 +35,8 @@ module crypt_spi_dut (
 	assign nonce = spi_if.nonce;
 	assign crypto_done = spi_if.crypto_done;
 	assign block_ready = spi_if.block_ready;
-	
+
+	assign lfsr_cipher = spi_if.lfsr_cipher;
 	
 	//interface declaration
     master_send u_master (
