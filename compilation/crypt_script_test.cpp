@@ -67,7 +67,7 @@ int main(int argc, char** argv)
     pointer = new VerilatedFstC;
 
     top->trace(pointer, 99);
-    pointer->open("wave.vcd");
+    pointer->open("Cryptwave.vcd");
 
     // initialization
     top->reset = 1;
