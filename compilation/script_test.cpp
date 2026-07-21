@@ -27,6 +27,11 @@ VerilatedFstC* pointer = nullptr;
 vluint64_t main_t = 0;				//ps time
 int transm_count = 0;
 
+//LFSR data tracking
+uint64_t last_lfsr = 0;
+int lfsr_change_count = 0;
+
+
 //clock count, time unit and generation waves
 void tick()
 {
@@ -38,10 +43,19 @@ void tick()
     //rising edge
     top->clk = 1;
     top->eval();
+
+	//Displaying LFSR signals & time running
+	if(top->lfsr_cipher != last_lfsr)
+	{
+		$display("[%.3f us] LFSR data changed from: 0X%016llx --> 0X016llx", main_t/1000000.0, (unsigned long long)top->lfsr_cipher, (unsigned long long)last_lfsr);
+		last_lfsr = top->lfsr_cipher;
+		lfsr_change_count++;
+	}
+	
     pointer->dump(main_t);
     main_t += clock_half_period;
 
-	 transm_count++;
+	transm_count++;
 }
 
 int main(int argc, char** argv)
@@ -92,7 +106,7 @@ int main(int argc, char** argv)
     printf("======== Starting simulation ===========\n");
 
     while (main_t < SIMUL_CYCLES * 1000) {
-    // --- Inicia nova transmissão se programada ---
+    // --- Starting new transmission ---
     if (!transmission_active && !start_pending && next_idx < transmissions.size()) {
         Transmission& t = transmissions[next_idx];
         if (main_t >= t.start_time_ns * 1000) {
@@ -103,7 +117,7 @@ int main(int argc, char** argv)
         }
     }
 
-    // --- Aplica pulso de start (3 ciclos) ---
+    // --- Applying start pulse (3 cycles) ---
     if (start_pending) {
         top->start = 1;
         top->master_data = pending_data;
@@ -117,7 +131,17 @@ int main(int argc, char** argv)
     // --- Tick normal ---
     tick();
 
-    // --- Detecta borda de subida de done ---
+		
+	// LFSR functionality check
+	if (i % 100 == 0) {
+        printf("[%.3f us] LFSR current: 0x%016llX (changes: %d)\n", 
+               main_t/1000000.0,
+               (unsigned long long)top->lfsr_cipher,
+               lfsr_change_count);
+	}
+		
+
+    // --- Detect posedge signal of done ---
     if (top->done && !last_done) {
         if (transmission_active) {
             printf("[%lu ns] DONE! RX=0x%04X\n", main_t/1000, top->data_received);
@@ -129,7 +153,7 @@ int main(int argc, char** argv)
     }
     last_done = top->done;
 
-    // --- Se todas as transmissões foram concluídas, encerra ---
+    // --- Transmission finality ---
     if (next_idx >= transmissions.size()) {
         printf("All transmissions completed at %lu ns\n", main_t/1000);
         break;
