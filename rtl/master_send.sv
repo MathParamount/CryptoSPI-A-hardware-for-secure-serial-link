@@ -151,9 +151,8 @@ module master_send
 				    end
 
 				    if (bit_count == 15) begin
-				    	lock_ready <= 1;
-					last_block <= 1;
-					state <= EXEC_ENCRYPT;
+				    	block_ready <= 1;
+						state <= EXEC_ENCRYPT;
 				    end
 				end
 				
