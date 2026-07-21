@@ -10,25 +10,26 @@ module crypto_spi_core
 	import state_control::*;
 	state_t state;
 	
-	localparam TOTAL_BLOCK = 16;		//total transmission count
+	//localparam TOTAL_BLOCK = 16;		//total transmission count
 
 	//internal buffers
-	logic [31:0] plain_text, 	// shift register SPI
-	logic [31:0] lfsr_cipher;
+	logic [63:0] plain_text, 	// shift register SPI
+	logic [63:0] lfsr_cipher;
 	
-	logic [15:0] simon_plaintext;
+	logic [63:0] epherm_key,        // LFSR key
+	logic [63:0] simon_plaintext;
 
 	//LFSR core
 	always_ff @(posedge clk or negedge reset)
 		if(reset) begin
-			lfsr_cipher <= 32'hCAD1;
-			plain_text <= crypto_if.mosi;
+			lfsr_cipher <= 64'hCAD1;		// default cipher text 
+			plain_text <= 64'hDABF;			// default original text
 			crypto_if.epherm_key <= '0;
 			crypto_if.nonce <= 64'h0000000000000001;  // initial seed
 		end
 		else begin
 			if(state == EXEC_ENCRYPT) begin
-				plain_text <= spi_if.sr_rx;
+				plain_text <= spi_if.mosi;
 
 				for (int i = 0; i < $size(crypto_if.plain_text); i++) begin
 					//1 keystream by cycle
@@ -44,6 +45,8 @@ module crypto_spi_core
 
 	   assign lfsr_cipher = plain_text ^ crypto_if.epherm_key;
 
+	   $display("lfsr_cipher generated: 0x%04X , done_signal: %b", lfsr_cipher, crypto_if.crypto_done);
+	   
 	//SIMON
 
 endmodule
