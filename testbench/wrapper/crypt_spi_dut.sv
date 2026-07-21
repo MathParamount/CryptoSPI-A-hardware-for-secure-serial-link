@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module spi_dut (
+module crypt_spi_dut (
     input  logic clk,
     input  logic reset,
     input  logic [15:0] master_data,
@@ -28,7 +28,14 @@ module spi_dut (
     assign sck = spi_if.sck;
     assign mosi = spi_if.mosi; 
     assign ss = spi_if.ss;
-    
+
+	//attribution to crypto dut
+	assign cipher_text = spi_if.cipher_text;
+	assign nonce = spi_if.nonce;
+	assign crypto_done = spi_if.crypto_done;
+	assign block_ready = spi_if.block_ready;
+	
+	
 	//interface declaration
     master_send u_master (
         .clk(clk),
@@ -40,5 +47,11 @@ module spi_dut (
     slaver_receiver u_slave (
         .spi_if(spi_if.slaver_f)
     );
+
+	crypto_spi_core u_crypt (
+		.clk(clk),
+        .reset(reset),
+		.crypto_if(spi_if.crypto_f)
+	);
     
 endmodule
