@@ -2,7 +2,7 @@
 
 set -e
 
-TOP=spi_dut
+TOP=crypt_spi_dut
 BUILD_DIR=build
 
 #Auto-clean build

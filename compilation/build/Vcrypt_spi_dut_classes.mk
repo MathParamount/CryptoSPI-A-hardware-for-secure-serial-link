@@ -2,7 +2,7 @@
 # DESCRIPTION: Verilator output: Make include file with class lists
 #
 # This file lists generated Verilated files, for including in higher level makefiles.
-# See Vspi_dut.mk for the caller.
+# See Vcrypt_spi_dut.mk for the caller.
 
 ### Switches...
 # C11 constructs required?  0/1 (always on now)
@@ -23,28 +23,28 @@ VM_TRACE_FST = 1
 ### Object file lists...
 # Generated module classes, fast-path, compile with highest optimization
 VM_CLASSES_FAST += \
-	Vspi_dut \
-	Vspi_dut___024root__DepSet_h90672ce9__0 \
-	Vspi_dut___024root__DepSet_hb1e49de0__0 \
-	Vspi_dut_spi_bus_if__DepSet_h6a4bd58a__0 \
+	Vcrypt_spi_dut \
+	Vcrypt_spi_dut___024root__DepSet_h4aa5be84__0 \
+	Vcrypt_spi_dut___024root__DepSet_hc5430b84__0 \
+	Vcrypt_spi_dut_spi_bus_if__DepSet_hafba25cc__0 \
 
 # Generated module classes, non-fast-path, compile with low/medium optimization
 VM_CLASSES_SLOW += \
-	Vspi_dut___024root__Slow \
-	Vspi_dut___024root__DepSet_h90672ce9__0__Slow \
-	Vspi_dut___024root__DepSet_hb1e49de0__0__Slow \
-	Vspi_dut_spi_bus_if__Slow \
-	Vspi_dut_spi_bus_if__DepSet_h6a4bd58a__0__Slow \
+	Vcrypt_spi_dut___024root__Slow \
+	Vcrypt_spi_dut___024root__DepSet_h4aa5be84__0__Slow \
+	Vcrypt_spi_dut___024root__DepSet_hc5430b84__0__Slow \
+	Vcrypt_spi_dut_spi_bus_if__Slow \
+	Vcrypt_spi_dut_spi_bus_if__DepSet_hafba25cc__0__Slow \
 
 # Generated support classes, fast-path, compile with highest optimization
 VM_SUPPORT_FAST += \
-	Vspi_dut__Trace__0 \
+	Vcrypt_spi_dut__Trace__0 \
 
 # Generated support classes, non-fast-path, compile with low/medium optimization
 VM_SUPPORT_SLOW += \
-	Vspi_dut__Syms \
-	Vspi_dut__Trace__0__Slow \
-	Vspi_dut__TraceDecls__0__Slow \
+	Vcrypt_spi_dut__Syms \
+	Vcrypt_spi_dut__Trace__0__Slow \
+	Vcrypt_spi_dut__TraceDecls__0__Slow \
 
 # Global classes, need linked once per executable, fast-path, compile with highest optimization
 VM_GLOBAL_FAST += \

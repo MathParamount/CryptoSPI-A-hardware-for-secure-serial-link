@@ -6,7 +6,8 @@ package state_control;
 		CMD_PARSE = 3'b001,
 		FILL_BUFFER = 3'b010,
 		DRAIN_BUFFER = 3'b011,
-		DONE = 3'b100
+		EXEC_ENCRYPT = 3'b100,
+		DONE = 3'b101
 	} state_t;
 
 endpackage

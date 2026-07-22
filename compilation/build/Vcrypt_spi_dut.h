@@ -5,22 +5,22 @@
 // The class here is then constructed to instantiate the design.
 // See the Verilator manual for examples.
 
-#ifndef VERILATED_VSPI_DUT_H_
-#define VERILATED_VSPI_DUT_H_  // guard
+#ifndef VERILATED_VCRYPT_SPI_DUT_H_
+#define VERILATED_VCRYPT_SPI_DUT_H_  // guard
 
 #include "verilated.h"
 
-class Vspi_dut__Syms;
-class Vspi_dut___024root;
+class Vcrypt_spi_dut__Syms;
+class Vcrypt_spi_dut___024root;
 class VerilatedFstC;
-class Vspi_dut_spi_bus_if;
+class Vcrypt_spi_dut_spi_bus_if;
 
 
 // This class is the main interface to the Verilated model
-class alignas(VL_CACHE_LINE_BYTES) Vspi_dut VL_NOT_FINAL : public VerilatedModel {
+class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut VL_NOT_FINAL : public VerilatedModel {
   private:
     // Symbol table holding complete model state (owned by this class)
-    Vspi_dut__Syms* const vlSymsp;
+    Vcrypt_spi_dut__Syms* const vlSymsp;
 
   public:
 
@@ -36,29 +36,34 @@ class alignas(VL_CACHE_LINE_BYTES) Vspi_dut VL_NOT_FINAL : public VerilatedModel
     VL_OUT8(&mosi,0,0);
     VL_OUT8(&debug_state,2,0);
     VL_OUT8(&ss,0,0);
-    VL_IN16(&master_data,15,0);
-    VL_OUT16(&data_received,15,0);
+    VL_OUT8(&crypto_done,0,0);
+    VL_OUT8(&block_ready,0,0);
+    VL_IN64(&master_data,63,0);
+    VL_OUT64(&data_received,63,0);
+    VL_OUT64(&cipher_text,63,0);
+    VL_OUT64(&nonce,63,0);
+    VL_OUT64(&lfsr_cipher,63,0);
 
     // CELLS
     // Public to allow access to /* verilator public */ items.
     // Otherwise the application code can consider these internals.
-    Vspi_dut_spi_bus_if* const __PVT__spi_dut__DOT__spi_if;
+    Vcrypt_spi_dut_spi_bus_if* const __PVT__crypt_spi_dut__DOT__spi_if;
 
     // Root instance pointer to allow access to model internals,
     // including inlined /* verilator public_flat_* */ items.
-    Vspi_dut___024root* const rootp;
+    Vcrypt_spi_dut___024root* const rootp;
 
     // CONSTRUCTORS
     /// Construct the model; called by application code
     /// If contextp is null, then the model will use the default global context
     /// If name is "", then makes a wrapper with a
     /// single model invisible with respect to DPI scope names.
-    explicit Vspi_dut(VerilatedContext* contextp, const char* name = "TOP");
-    explicit Vspi_dut(const char* name = "TOP");
+    explicit Vcrypt_spi_dut(VerilatedContext* contextp, const char* name = "TOP");
+    explicit Vcrypt_spi_dut(const char* name = "TOP");
     /// Destroy the model; called (often implicitly) by application code
-    virtual ~Vspi_dut();
+    virtual ~Vcrypt_spi_dut();
   private:
-    VL_UNCOPYABLE(Vspi_dut);  ///< Copying not allowed
+    VL_UNCOPYABLE(Vcrypt_spi_dut);  ///< Copying not allowed
 
   public:
     // API METHODS

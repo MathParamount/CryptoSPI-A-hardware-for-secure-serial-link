@@ -5,19 +5,17 @@ interface spi_bus_if;
     logic miso;
     logic ss;
     
-    logic [15:0] data_to_send;
-    logic [15:0] data_received;
+    logic [63:0] data_to_send;
+    logic [63:0] data_received;
     
     logic start;
     logic done;
     
     //cryptographic signals
     logic block_ready;
-    logic [63:0] plain_text, 	// shift register SPI
-    logic [63:0] epherm_key,        // SIMON key
-    logic [63:0] cipher_text,	// shift register SPI
-    logic [63:0] nonce,      	// IV generated or received
-    logic crypto_done         	// processed block
+    logic [63:0] cipher_text;	// shift register SPI
+    logic [63:0] nonce;      	// IV generated or received
+    logic crypto_done;        	// processed block
     
     
     modport master_f (
@@ -28,6 +26,7 @@ interface spi_bus_if;
         output mosi,
         output ss,
         output done,
+        output block_ready,
         output data_received		//from slaver to master
     );
     
@@ -37,19 +36,17 @@ interface spi_bus_if;
         input  mosi,
         input  ss,
         input  done,
-        input  data_to_send   /*with existency of data in slaver to send*/
+        input  data_to_send,   /*with existency of data in slaver to send*/
+        input  cipher_text
     );
     
     modport crypto_f (
-       input  clk,
-       input  reset,
        input  block_ready,
        input  mosi,
        input  ss,
        input  done,
-       input  [63:0] epherm_key,
-       output [63:0] cipher_text,
-       output [63:0] nonce, 
+       output cipher_text,
+       output nonce, 
        output crypto_done         
     );
     

@@ -3,11 +3,11 @@
 //
 // Internal details; most user sources do not need this header,
 // unless using verilator public meta comments.
-// Suggest use Vspi_dut.h instead.
+// Suggest use Vcrypt_spi_dut.h instead.
 
 
-#ifndef VERILATED_VSPI_DUT__PCH_H_
-#define VERILATED_VSPI_DUT__PCH_H_  // guard
+#ifndef VERILATED_VCRYPT_SPI_DUT__PCH_H_
+#define VERILATED_VCRYPT_SPI_DUT__PCH_H_  // guard
 
 // GCC and Clang only will precompile headers (PCH) for the first header.
 // So, make sure this is the one and only PCH.
@@ -20,7 +20,7 @@
 
 #include "verilated.h"
 
-#include "Vspi_dut__Syms.h"
-#include "Vspi_dut.h"
+#include "Vcrypt_spi_dut__Syms.h"
+#include "Vcrypt_spi_dut.h"
 
 #endif  // guard
