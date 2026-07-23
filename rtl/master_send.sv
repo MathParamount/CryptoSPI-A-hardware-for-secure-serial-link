@@ -10,7 +10,6 @@ module master_send
 );
 
 	import state_control::*;
-
 	state_t state;
 
 	//internal buffers (memory)
@@ -37,8 +36,11 @@ module master_send
 
 	//crypto internal signals
 	logic last_block;
+	
+	/* verilator lint_off UNDRIVEN */
 	logic [15:0] block_count;
 	logic [15:0] total_blocks;
+	/* verilator lint_off UNDRIVEN */
 
 	always_ff @(posedge clk) begin
 	    	if (state == IDLE) begin

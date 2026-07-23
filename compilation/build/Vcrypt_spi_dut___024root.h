@@ -35,6 +35,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut___024root final : public Veril
     CData/*6:0*/ crypt_spi_dut__DOT__u_slave__DOT__bit_count;
     CData/*0:0*/ crypt_spi_dut__DOT__u_slave__DOT__ss_prev;
     CData/*2:0*/ crypt_spi_dut__DOT__u_crypt__DOT__state;
+    CData/*5:0*/ crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt;
     CData/*2:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__state;
     CData/*6:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__bit_count;
     CData/*0:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__sck_prev;
@@ -49,7 +50,6 @@ class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut___024root final : public Veril
     SData/*15:0*/ crypt_spi_dut__DOT__u_master__DOT__block_count;
     SData/*15:0*/ crypt_spi_dut__DOT__u_master__DOT__total_blocks;
     SData/*15:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__block_count;
-    IData/*31:0*/ crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__i;
     IData/*31:0*/ __VactIterCount;
     VL_IN64(master_data,63,0);
     VL_OUT64(data_received,63,0);
@@ -67,7 +67,6 @@ class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut___024root final : public Veril
     QData/*63:0*/ crypt_spi_dut__DOT__u_crypt__DOT__plain_text;
     QData/*63:0*/ crypt_spi_dut__DOT__u_crypt__DOT__lfsr_cipher;
     QData/*63:0*/ crypt_spi_dut__DOT__u_crypt__DOT__epherm_key;
-    QData/*63:0*/ crypt_spi_dut__DOT__u_crypt__DOT__simon_plaintext;
     QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__sck_div;
     QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__cmd_reg;
     QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__sr;

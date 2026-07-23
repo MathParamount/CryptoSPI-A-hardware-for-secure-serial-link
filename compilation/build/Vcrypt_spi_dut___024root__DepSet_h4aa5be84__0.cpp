@@ -66,13 +66,31 @@ VL_INLINE_OPT void Vcrypt_spi_dut___024root___nba_sequent__TOP__0(Vcrypt_spi_dut
     // Init
     QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text;
     __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text = 0;
+    CData/*2:0*/ __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__state;
+    __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__state = 0;
     QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key;
     __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key = 0;
+    CData/*5:0*/ __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt;
+    __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt = 0;
+    CData/*0:0*/ TOP__crypt_spi_dut__DOT__spi_if__DOT____Vdly__crypto_done;
+    TOP__crypt_spi_dut__DOT__spi_if__DOT____Vdly__crypto_done = 0;
     // Body
+    __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt 
+        = vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt;
     __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
         = vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key;
+    __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__state 
+        = vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__state;
     __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
         = vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text;
+    TOP__crypt_spi_dut__DOT__spi_if__DOT____Vdly__crypto_done 
+        = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.crypto_done;
+    if (VL_UNLIKELY(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.crypto_done)) {
+        VL_WRITEF("lfsr_cipher generated: 0x%04x , plain_text: 0x%04x%1#\n",
+                  64,vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__lfsr_cipher,
+                  64,vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text,
+                  1,(IData)(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.crypto_done));
+    }
     vlSelf->__Vdly__debug_state = vlSelf->debug_state;
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__sck_prev 
         = vlSelf->crypt_spi_dut__DOT__u_master__DOT__sck_prev;
@@ -96,669 +114,54 @@ VL_INLINE_OPT void Vcrypt_spi_dut___024root___nba_sequent__TOP__0(Vcrypt_spi_dut
         = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.sck;
     vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.__Vdly__mosi 
         = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.mosi;
-    if ((1U & (~ (IData)(vlSelf->reset)))) {
-        if ((4U == (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__state))) {
-            vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__i = 0x40U;
-        }
-        vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.crypto_done = 1U;
-    }
     if (vlSelf->reset) {
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text = 0xdabfULL;
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key = 0ULL;
-        vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__lfsr_cipher = 0xcad1ULL;
-        vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.nonce = 1ULL;
-    } else if ((4U == (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__state))) {
+        vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__lfsr_cipher = 0ULL;
         __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
             = vlSelf->master_data;
+        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__state = 0U;
+        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key = 0ULL;
+        vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.nonce = 1ULL;
+        TOP__crypt_spi_dut__DOT__spi_if__DOT____Vdly__crypto_done = 0U;
+        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt = 0U;
+    } else if (VL_UNLIKELY(((4U == (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__state)) 
+                            & (~ (IData)(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.crypto_done))))) {
         __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
             = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
                 << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
                                                             (0x8000080200400801ULL 
                                                              & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
+        VL_WRITEF("plain_text: 0x%04x epherem_key: 0x%04x\n",
+                  64,vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text,
+                  64,vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key);
         __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
             = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
                 << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
+                                                            (0xc080000000400801ULL 
                                                              & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400801ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
-        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-            = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
-                << 1U) | (QData)((IData)((1U & VL_REDXOR_64(
-                                                            (0x8000080200400003ULL 
-                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text))))));
+        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt 
+            = (0x3fU & ((IData)(1U) + (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt)));
+        if (VL_UNLIKELY((9U == (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt)))) {
+            TOP__crypt_spi_dut__DOT__spi_if__DOT____Vdly__crypto_done = 1U;
+            vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__lfsr_cipher 
+                = vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key;
+            VL_WRITEF("CRYPTO DONE: lfsr_cipher=0x%016x\n",
+                      64,vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key);
+        }
+    } else if ((4U != (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__state))) {
+        TOP__crypt_spi_dut__DOT__spi_if__DOT____Vdly__crypto_done = 0U;
+        __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt = 0U;
     }
-    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
-        = __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text;
+    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__state 
+        = __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__state;
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key 
         = __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key;
+    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt 
+        = __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt;
+    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
+        = __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text;
+    vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.crypto_done 
+        = TOP__crypt_spi_dut__DOT__spi_if__DOT____Vdly__crypto_done;
     vlSelf->nonce = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.nonce;
-    VL_WRITEF("lfsr_cipher generated: 0x%04x , done_signal: %b\n",
-              64,vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__lfsr_cipher,
-              1,(IData)(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.crypto_done));
     vlSelf->crypto_done = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.crypto_done;
 }
 

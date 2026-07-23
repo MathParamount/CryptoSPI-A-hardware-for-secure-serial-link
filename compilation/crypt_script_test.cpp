@@ -1,6 +1,6 @@
 #include <iostream>
 #include "verilated.h"
-#include "Vspi_dut.h"
+#include "Vcrypt_spi_dut.h"
 #include <vector>
 
 #include "verilated_fst_c.h"
@@ -22,7 +22,7 @@ struct Transmission {
 };
 
 //Global variables
-Vspi_dut* top = nullptr;
+Vcrypt_spi_dut* top = nullptr;
 VerilatedFstC* pointer = nullptr;
 vluint64_t main_t = 0;				//ps time
 int transm_count = 0;
@@ -47,7 +47,7 @@ void tick()
 	//Displaying LFSR signals & time running
 	if(top->lfsr_cipher != last_lfsr)
 	{
-		$display("[%.3f us] LFSR data changed from: 0X%016llx --> 0X016llx", main_t/1000000.0, (unsigned long long)top->lfsr_cipher, (unsigned long long)last_lfsr);
+		printf("[%.3f us] LFSR data changed from: 0X%016llx --> 0X016llx", main_t/1000000.0, (unsigned long long)top->lfsr_cipher, (unsigned long long)last_lfsr);
 		last_lfsr = top->lfsr_cipher;
 		lfsr_change_count++;
 	}
@@ -63,7 +63,7 @@ int main(int argc, char** argv)
     Verilated::commandArgs(argc, argv);
     Verilated::traceEverOn(true);
 
-    top = new Vspi_dut;
+    top = new Vcrypt_spi_dut;
     pointer = new VerilatedFstC;
 
     top->trace(pointer, 99);
@@ -97,7 +97,7 @@ int main(int argc, char** argv)
 
     //==========  main simulation ============ 
 
-    int next_idx = 0;
+    int next_idx, i = 0;
     bool transmission_active = false;
     bool start_pending = false;
     uint16_t pending_data = 0;
@@ -121,7 +121,7 @@ int main(int argc, char** argv)
     if (start_pending) {
         top->start = 1;
         top->master_data = pending_data;
-        for (int i = 0; i < 3; i++) tick();
+        for (i = 0; i < 3; i++) tick();
         top->start = 0;
         start_pending = false;
         transmission_active = true;

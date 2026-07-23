@@ -26,6 +26,14 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___eval_static__TOP(Vcrypt_spi_dut___0
     vlSelf->crypt_spi_dut__DOT__u_master__DOT__done_counter = 0U;
 }
 
+VL_ATTR_COLD void Vcrypt_spi_dut___024root___eval_initial__TOP(Vcrypt_spi_dut___024root* vlSelf) {
+    if (false && vlSelf) {}  // Prevent unused
+    Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vcrypt_spi_dut___024root___eval_initial__TOP\n"); );
+    // Body
+    VL_WRITEF("Crypto module instantiated\nplain_text bits: 64\nlfsr_cipher bits: 64\n");
+}
+
 VL_ATTR_COLD void Vcrypt_spi_dut___024root___eval_final(Vcrypt_spi_dut___024root* vlSelf) {
     if (false && vlSelf) {}  // Prevent unused
     Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
@@ -212,8 +220,7 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___ctor_var_reset(Vcrypt_spi_dut___024
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text = VL_RAND_RESET_Q(64);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__lfsr_cipher = VL_RAND_RESET_Q(64);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key = VL_RAND_RESET_Q(64);
-    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__simon_plaintext = VL_RAND_RESET_Q(64);
-    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__i = 0;
+    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt = VL_RAND_RESET_I(6);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__block_count = VL_RAND_RESET_I(16);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__state = VL_RAND_RESET_I(3);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__sck_div = VL_RAND_RESET_Q(64);
