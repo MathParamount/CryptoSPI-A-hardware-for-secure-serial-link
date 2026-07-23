@@ -66,7 +66,7 @@ module master_send
 			// initialize internal counters and buffers
 			sck_div <= 0;
 			bit_count <= 0;
-        	//block_count <= 0;
+        		//block_count <= 0;
 			cmd_reg <= 0;
 			sr <= 0;
 			sr_tx <= 0;
@@ -119,7 +119,7 @@ module master_send
 				    spi_if.ss <= 1'b0;		//slave activation
 					
 					if(spi_if.sck && !sck_prev) begin
-						sr_rx <= {sr[62:0], spi_if.miso};		//from buffer to shf_reg
+						sr_rx <= {sr[62:0], spi_if.miso_encrypted};		//from buffer to shf_reg
 
 						if(bit_count == 7) begin
 							bit_count <= 0;
@@ -141,7 +141,7 @@ module master_send
 				FILL_BUFFER: begin
 				    //MISO sampling
 				    if (spi_if.sck && !sck_prev) begin
-					sr_rx <= {sr_rx[62:0], spi_if.miso};
+					sr_rx <= {sr_rx[62:0], spi_if.miso_encrypted};
 					bit_count <= bit_count + 1;
 					$display("DEBUG FILL: bit_count=%d, mosi=%b, miso=%b, sr_rx=0x%016X", bit_count, spi_if.mosi, spi_if.miso, sr_rx);
 				    end
@@ -161,7 +161,7 @@ module master_send
 				DRAIN_BUFFER: begin
 					//if(bit_count == 0) $display("DEBUG DRAIN: Starting reception, bit_count=0");
 					if(spi_if.sck && !sck_prev) begin
-						sr_rx <= {sr_rx[62:0], spi_if.miso};
+						sr_rx <= {sr_rx[62:0], spi_if.miso_encrypted};
 						bit_count <= bit_count + 1;
 					end
 		
@@ -199,7 +199,7 @@ module master_send
 
 					bit_count <= 0;
 					
-					$display("DEBUG DONE: data_received=0x%016X bit_count=%d mosi=%b, miso=%b, done=%d", sr_rx, bit_count,spi_if.mosi, spi_if.miso, spi_if.done);
+					$display("DEBUG DONE: data_received=0x%016X bit_count=%d mosi=%b, miso=%b, done=%d", sr_rx, bit_count,spi_if.mosi, spi_if.miso_encrypted, spi_if.done);
 
 					if(done_counter == 0) begin
 						done_counter <= 1;

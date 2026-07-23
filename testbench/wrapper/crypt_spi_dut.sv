@@ -25,14 +25,14 @@ module crypt_spi_dut (
 
    //attribute external data to dut
     assign spi_if.data_to_send = master_data;
-    assign spi_if.start = start;
+    assign spi_if.start = start;    
 
     assign data_received = spi_if.data_received;
-    assign miso = spi_if.miso;
     assign done = spi_if.done;
     assign sck = spi_if.sck;
-    assign mosi = spi_if.mosi; 
     assign ss = spi_if.ss;
+    assign mosi = spi_if.mosi_encrypted;		//assign mosi = spi_if.mosi; 
+    assign miso = spi_if.miso_encrypted;		//assign miso = spi_if.miso;
 
     //attribution to crypto dut
     assign cipher_text = spi_if.cipher_text;

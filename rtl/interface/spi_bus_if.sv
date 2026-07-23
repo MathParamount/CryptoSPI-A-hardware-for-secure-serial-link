@@ -13,6 +13,7 @@ interface spi_bus_if;
     
     //cryptographic signals
     logic block_ready;
+    
     /* verilator lint_off UNDRIVEN */
     logic [63:0] cipher_text;	// shift register SPI
     logic [63:0] nonce;      	// IV generated or received
@@ -24,6 +25,8 @@ interface spi_bus_if;
         input  start,
         input  miso,
         input  data_to_send,
+        input  crypto_done,
+        input  miso_encrypted,
         output sck,
         output mosi,
         output ss,
@@ -32,8 +35,21 @@ interface spi_bus_if;
         output data_received		//from slaver to master
     );
     
+    modport crypto_f (
+       input  block_ready,
+       input  ss,
+       input  sck,
+       input  mosi,		//plaintext master
+       input  miso,		//plaintext slaver
+       output mosi_encrypted,   // to slaver
+       output miso_encrypted,   // to master
+       output nonce, 
+       output crypto_done         
+    );
+    
     modport slaver_f (
         output miso,
+        input  mosi_encrypted,
         input  sck,
         input  mosi,
         input  ss,
@@ -42,16 +58,6 @@ interface spi_bus_if;
         input  nonce,
         input  data_to_send,   /*with existency of data in slaver to send*/
         input  cipher_text
-    );
-    
-    modport crypto_f (
-       input  block_ready,
-       input  mosi,
-       input  ss,
-       input  done,
-       output cipher_text,
-       output nonce, 
-       output crypto_done         
     );
     
 endinterface
