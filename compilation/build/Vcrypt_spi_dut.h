@@ -35,6 +35,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut VL_NOT_FINAL : public Verilate
     VL_OUT8(&sck,0,0);
     VL_OUT8(&mosi,0,0);
     VL_OUT8(&debug_state,2,0);
+    VL_OUT8(&debug_state_crypt,2,0);
     VL_OUT8(&ss,0,0);
     VL_OUT8(&crypto_done,0,0);
     VL_OUT8(&block_ready,0,0);

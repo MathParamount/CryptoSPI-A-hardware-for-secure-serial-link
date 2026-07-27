@@ -11,6 +11,7 @@ module crypt_spi_dut (
     output logic sck,
     output logic mosi,
     output logic [2:0] debug_state,
+    output logic [2:0] debug_state_crypt,
     output logic ss,
     output logic crypto_done,
     output logic block_ready,
@@ -38,7 +39,7 @@ module crypt_spi_dut (
     assign mosi = spi_if.mosi;		//assign mosi = spi_if.mosi; 
     assign miso = spi_if.miso;		//assign miso = spi_if.miso;
     
-    // --- Encrypted parallel data outputs (from crypto core) ---
+    // Encrypted parallel data outputs (from crypto core) ---
     assign mosi_encrypted = spi_if.crypto_f.mosi_encrypted;
     assign miso_encrypted = spi_if.crypto_f.miso_encrypted;
 
@@ -63,6 +64,7 @@ module crypt_spi_dut (
 
     crypto_spi_core u_crypt (
         .reset_n(reset_n),
+        .debug_state_crypt(debug_state_crypt),
 	.crypto_if(spi_if.crypto_f)
     );
     

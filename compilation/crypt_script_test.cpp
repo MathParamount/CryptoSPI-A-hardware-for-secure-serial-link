@@ -81,7 +81,7 @@ int main(int argc, char** argv)
 	 top->reset_n = 1;
 	 printf("Made the reset\n");
 
-	std::vector<Transmission> transmissions = {
+	 std::vector<Transmission> transmissions = {
         // basic test
         {100,  0x0000, 0, "Zero"},
         {2000, 0xFFFF, 0, "All ones"},
@@ -120,7 +120,7 @@ int main(int argc, char** argv)
         }
     }
 
-    printf("[DEBUG] Ativando start para idx %d, data=0x%04X\n", next_idx, pending_data);
+    //printf("[DEBUG] Ativando start para idx %d, data=0x%04X\n", next_idx, pending_data);
 
     // --- Applying start pulse (3 cycles) ---
     if (start_pending) {

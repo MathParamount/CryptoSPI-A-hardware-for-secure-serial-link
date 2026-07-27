@@ -9,5 +9,14 @@ package state_control;
 		EXEC_ENCRYPT = 3'b100,
 		DONE = 3'b101
 	} state_t;
+	
+	typedef enum [2:0]
+	{
+		IDLE_CRYPT,
+		RECEPTION,
+		ENCRYPT,
+		TRANSMISSION,
+		DONE_CRYPT
+	} encrypt_state;
 
 endpackage

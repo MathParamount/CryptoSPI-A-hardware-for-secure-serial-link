@@ -18,6 +18,7 @@ Vcrypt_spi_dut::Vcrypt_spi_dut(VerilatedContext* _vcontextp__, const char* _vcna
     , sck{vlSymsp->TOP.sck}
     , mosi{vlSymsp->TOP.mosi}
     , debug_state{vlSymsp->TOP.debug_state}
+    , debug_state_crypt{vlSymsp->TOP.debug_state_crypt}
     , ss{vlSymsp->TOP.ss}
     , crypto_done{vlSymsp->TOP.crypto_done}
     , block_ready{vlSymsp->TOP.block_ready}
