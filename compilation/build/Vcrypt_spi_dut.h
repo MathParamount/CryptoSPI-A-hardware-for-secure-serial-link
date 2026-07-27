@@ -28,7 +28,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut VL_NOT_FINAL : public Verilate
     // The application code writes and reads these signals to
     // propagate new values into/out from the Verilated model.
     VL_IN8(&clk,0,0);
-    VL_IN8(&reset,0,0);
+    VL_IN8(&reset_n,0,0);
     VL_IN8(&start,0,0);
     VL_OUT8(&miso,0,0);
     VL_OUT8(&done,0,0);
@@ -43,6 +43,8 @@ class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut VL_NOT_FINAL : public Verilate
     VL_OUT64(&cipher_text,63,0);
     VL_OUT64(&nonce,63,0);
     VL_OUT64(&lfsr_cipher,63,0);
+    VL_OUT64(&mosi_encrypted,63,0);
+    VL_OUT64(&miso_encrypted,63,0);
 
     // CELLS
     // Public to allow access to /* verilator public */ items.

@@ -45,6 +45,7 @@ void tick()
     top->eval();
 
 	//Displaying LFSR signals & time running
+	
 	if(top->lfsr_cipher != last_lfsr)
 	{
 		printf("[%.3f us] LFSR data changed from: 0X%016llx --> 0X016llx", main_t/1000000.0, (unsigned long long)top->lfsr_cipher, (unsigned long long)last_lfsr);
@@ -70,14 +71,14 @@ int main(int argc, char** argv)
     pointer->open("Cryptwave.vcd");
 
     // initialization
-    top->reset = 1;
+    top->reset_n = 0;
     top->start = 0;
     top->master_data = 0;
 
     // Reset
-    for(int i = 0; i < 10; i++) tick();
+    for(int j = 0; j < 10; j++) tick();
     
-	 top->reset = 0;
+	 top->reset_n = 1;
 	 printf("Made the reset\n");
 
 	std::vector<Transmission> transmissions = {
@@ -97,8 +98,8 @@ int main(int argc, char** argv)
 
     //==========  main simulation ============ 
 
-    int next_idx, i = 0;
-    bool transmission_active = false;
+    static int next_idx = 0, i = 0;
+    static bool transmission_active = false;
     bool start_pending = false;
     uint16_t pending_data = 0;
     bool last_done = false;
@@ -106,8 +107,10 @@ int main(int argc, char** argv)
     printf("======== Starting simulation ===========\n");
 
     while (main_t < SIMUL_CYCLES * 1000) {
-    // --- Starting new transmission ---
-    if (!transmission_active && !start_pending && next_idx < transmissions.size()) {
+    	// --- Starting new transmission ---
+    	if (!transmission_active && !start_pending && next_idx < transmissions.size()) {
+		  printf("[DEBUG] Iniciando transmissão %d\n", next_idx);
+
         Transmission& t = transmissions[next_idx];
         if (main_t >= t.start_time_ns * 1000) {
             pending_data = t.data;
@@ -116,6 +119,8 @@ int main(int argc, char** argv)
                    main_t/1000, t.description, (unsigned long long)t.data);
         }
     }
+
+    printf("[DEBUG] Ativando start para idx %d, data=0x%04X\n", next_idx, pending_data);
 
     // --- Applying start pulse (3 cycles) ---
     if (start_pending) {
@@ -130,35 +135,38 @@ int main(int argc, char** argv)
 
     // --- Tick normal ---
     tick();
-
+    
+	 if( main_t % 1000000 == 0) {
+    	printf("[DEBUG] main_t=%lu, active=%d, pending=%d, next_idx=%d, done=%d\n",
+    main_t, transmission_active, start_pending, next_idx, top->done);
 		
-	// LFSR functionality check
-	if (i % 100 == 0) {
-        printf("[%.3f us] LFSR current: 0x%016llX (changes: %d)\n", 
+		// LFSR functionality check
+  		printf("[%.3f us] LFSR current: 0x%016llX (changes: %d)\n", 
                main_t/1000000.0,
                (unsigned long long)top->lfsr_cipher,
                lfsr_change_count);
-	}
-		
+	 }
 
     // --- Detect posedge signal of done ---
-    if (top->done && !last_done) {
-        if (transmission_active) {
-            printf("[%lu ns] DONE! RX=0x%04X\n", main_t/1000, top->data_received);
-            transmission_active = false;
-            next_idx++;
+	 if(top->done && !last_done) {
+    	if (transmission_active) {
+    		printf("[%lu ns] DONE! RX=0x%04X\n", main_t/1000, top->data_received);
+    		transmission_active = false;
+    		next_idx++;
+    		printf("[DEBUG] next_idx DEPOIS = %d\n", next_idx);
 
-            for (int i = 0; i < 10; i++) tick();
-        }
-    }
-    last_done = top->done;
+			//stabilization stop
+			for (int w=0; w<5; w++) tick();
+		}
+	 }
+    	
+    	last_done = top->done;
 
-    // --- Transmission finality ---
-    if (next_idx >= transmissions.size()) {
+    	// --- Transmission finality ---
+    	if (next_idx >= transmissions.size()) {
         printf("All transmissions completed at %lu ns\n", main_t/1000);
-        break;
-    }
-    } 
+    	}
+	 }
 
     printf("Simulation finished at %lu ns\n", main_t/1000);
     printf("Transmissions completed: %d / %zu\n", next_idx, transmissions.size());

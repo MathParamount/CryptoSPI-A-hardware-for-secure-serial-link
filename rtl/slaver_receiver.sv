@@ -15,14 +15,14 @@ module slaver_receiver (
     
 
     // transmission model
-    always_ff @(posedge spi_if.sck or posedge spi_if.ss) begin
+    always_ff @(posedge spi_if.sck) begin
         if(spi_if.ss) begin
             bit_count <= 0;
             sr_rx <= '0;
         end else begin
-
+	
             // load bits from MISO
-            sr_rx <= {sr_rx[62:0], spi_if.mosi_encrypted};
+	        sr_rx <= {sr_rx[62:0], spi_if.mosi_encrypted[0]};
             bit_count <= bit_count + 1;
 
             if(bit_count == 63) begin
@@ -33,7 +33,7 @@ module slaver_receiver (
         end
     end
 
-    always_ff @(negedge spi_if.sck or posedge spi_if.ss) begin
+    always_ff @(negedge spi_if.sck) begin
         
         if(spi_if.ss) begin
             spi_if.miso <= 0;

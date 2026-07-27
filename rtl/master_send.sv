@@ -3,7 +3,7 @@
 module master_send
 (
 	input logic clk,
-	input logic reset,
+	input logic reset_n,
 	output logic [2:0] debug_state,
 
     spi_bus_if.master_f spi_if
@@ -31,11 +31,11 @@ module master_send
 	localparam DIV_MAX = 99;  		// 100 ciclos = 1us (99 = 0-99) ; (To 199 -> 2 us/10 ns = 200 cycles)
 	//localparam DIV_HALF = 49;		// (0-49 = baixo, 50-99 = alto); (To 99 -> 1 us/10 ns = 100 cycles)
 
-
-	logic [2:0] done_counter = 0;
+	logic sck_en;
 
 	//crypto internal signals
 	logic last_block;
+	logic [1:0] done_flag;
 	
 	/* verilator lint_off UNDRIVEN */
 	logic [15:0] block_count;
@@ -48,17 +48,21 @@ module master_send
 		end
 	    	else if (spi_if.block_ready && state == EXEC_ENCRYPT) begin
         		block_count <= block_count + 1;
+				$display("block_count  value: %d", block_count);
         	end
 	end
 	
-	assign last_block = (block_count == total_blocks - 1);
+	always_comb begin
+    	last_block = (block_count == total_blocks - 1);
+	end
 
 	//general synchronous block
-	always_ff @(posedge clk or negedge reset) begin
+	always_ff @(posedge clk or negedge reset_n) begin
 		//Default attribute (reset cycle)
-		if (reset) begin
+		if (!reset_n) begin
 			state <= IDLE;
-    			spi_if.block_ready <= 0;
+	    		spi_if.block_ready <= 0;
+	    		spi_if.data_received <= 0;
 			// initialize interface signals
 			spi_if.ss <= 1;
 			spi_if.mosi <= 1'b0;
@@ -66,21 +70,22 @@ module master_send
 			// initialize internal counters and buffers
 			sck_div <= 0;
 			bit_count <= 0;
-        		//block_count <= 0;
 			cmd_reg <= 0;
 			sr <= 0;
 			sr_tx <= 0;
 			sr_rx <= 0;
 			sck_prev <= 0;
 			spi_if.done <= 0;
+			sck_en <= 0;
+			total_blocks <= 8;
+			done_flag <= 0;
 		end
 		
 		else begin
-
 			debug_state <= state;
-
-			//master clock generation
-			if (state != IDLE) begin
+	
+			if(sck_en) begin
+				//master clock generation
 				if(sck_div == DIV_MAX) begin
 					sck_div <= 0;
 					spi_if.sck <= ~spi_if.sck;  // Invert SCK
@@ -106,27 +111,30 @@ module master_send
 					spi_if.done <= 0;
 					bit_count <= 0;
                 			sck_div <= 0;
+					done_flag <= 0;
 					//spi_if.miso <= 0;
 
 					if (spi_if.start) begin
 					    	sr <= spi_if.data_to_send;  // load data (buffer)
-						$display("DEBUG (IDLE): sr_rx=0x%016X, debug_state=%b, buffer_sr=x%016X", sr_rx[7:0], debug_state, sr);
+					    	sck_en <= 1;
+						$display("[MASTER] Start transmission, data=0x%016X", spi_if.data_to_send);
 					    	state <= CMD_PARSE;
-                    			end
+                    end
 				end
 
 				CMD_PARSE: begin
 				    spi_if.ss <= 1'b0;		//slave activation
 					
 					if(spi_if.sck && !sck_prev) begin
-						sr_rx <= {sr[62:0], spi_if.miso_encrypted};		//from buffer to shf_reg
+						spi_if.mosi <= sr[63 - bit_count];
+						sr_rx <= {sr_rx[62:0], spi_if.miso_encrypted[0]};
 
 						if(bit_count == 7) begin
 							bit_count <= 0;
-							cmd_reg <= {32'b0, sr_rx[31:0]};     // future use (zero-padding)
+							cmd_reg <= {32'b0, {sr_rx[62:0], spi_if.miso_encrypted[0]}[31:0]};							
 							
 							//LSB verfing if odd or even
-							if (cmd_reg[0] == 0) begin      // EVEN: WRITE
+							if ({sr_rx[62:0], spi_if.miso_encrypted[0]}[0] == 0) begin      // EVEN: WRITE
 								sr_tx <= spi_if.data_to_send;
 								state <= FILL_BUFFER;  // Write/Encrypt
 							end
@@ -141,18 +149,22 @@ module master_send
 				FILL_BUFFER: begin
 				    //MISO sampling
 				    if (spi_if.sck && !sck_prev) begin
-					sr_rx <= {sr_rx[62:0], spi_if.miso_encrypted};
-					bit_count <= bit_count + 1;
-					$display("DEBUG FILL: bit_count=%d, mosi=%b, miso=%b, sr_rx=0x%016X", bit_count, spi_if.mosi, spi_if.miso, sr_rx);
+						sr_rx <= {sr_rx[62:0], spi_if.miso_encrypted[0]};
+						bit_count <= bit_count + 1;
+						$display("DEBUG FILL: bit_count=%d, mosi=%b, miso=%b, sr_rx=0x%016X", bit_count, spi_if.mosi, spi_if.miso, sr_rx);
 				    end
 
 				    // negedge clock detection
 				    if (!spi_if.sck && sck_prev) begin
-					spi_if.mosi <= sr_tx[63];
-					sr_tx <= {sr_tx[62:0], 1'b0};
+						spi_if.mosi <= sr_tx[63];
+						sr_tx <= {sr_tx[62:0], 1'b0};
 				    end
 
 				    if (bit_count == 63) begin
+				    	//$display("[MASTER] achieved 63; bit_count=%0d, sck=%b, ss=%b", bit_count, spi_if.sck, spi_if.ss);
+				        spi_if.ss <= 1;
+					bit_count <= 0; 
+					spi_if.done <= 1;
 				    	spi_if.block_ready <= 1;
 					state <= EXEC_ENCRYPT;
 				    end
@@ -161,7 +173,7 @@ module master_send
 				DRAIN_BUFFER: begin
 					//if(bit_count == 0) $display("DEBUG DRAIN: Starting reception, bit_count=0");
 					if(spi_if.sck && !sck_prev) begin
-						sr_rx <= {sr_rx[62:0], spi_if.miso_encrypted};
+						sr_rx <= {sr_rx[62:0], spi_if.miso_encrypted[0]};
 						bit_count <= bit_count + 1;
 					end
 		
@@ -172,46 +184,47 @@ module master_send
 					end
 						
 					if (bit_count == 63) begin
+						sck_en <= 0;
 						spi_if.block_ready <= 1;
 						bit_count <= 0;
-						state <= DONE;
+						spi_if.done <= 1;
+						state <= EXEC_ENCRYPT;
 						$display("DEBUG DRAIN DONE: data_received=0x%016X", sr_rx);
 					end
 				end
 
 				EXEC_ENCRYPT: begin					
-					//if(crypto_done) begin
-					if (last_block) begin
-						state <= DONE;
-					end
-					else begin
-						state <= FILL_BUFFER;
+					if(spi_if.crypto_done) begin
+						sck_en <= 0;
+						if (last_block) begin
+							state <= DONE;
+						end
+						else begin
+							state <= FILL_BUFFER;
+						end
 					end
 				end
 				
+				
 				DONE: begin
-					spi_if.ss <= 1'b1;
-					// present received word to the interface and load tx word
+				    $display("[MASTER] Entering DONE, done_flag=%b", done_flag);
+				    spi_if.ss <= 1'b1;
+				    spi_if.mosi <= 1'b0;
+				    spi_if.data_received <= sr_rx;
+				    bit_count <= 0;
+
+				    if (done_flag == 0) begin
 					spi_if.done <= 1'b1;
-					spi_if.mosi <= 1'b0;	//clean mosi
-					
-					spi_if.data_received <= sr_rx;
-
-					bit_count <= 0;
-					
-					$display("DEBUG DONE: data_received=0x%016X bit_count=%d mosi=%b, miso=%b, done=%d", sr_rx, bit_count,spi_if.mosi, spi_if.miso_encrypted, spi_if.done);
-
-					if(done_counter == 0) begin
-						done_counter <= 1;
-					end
-					else begin
-						done_counter <= 0;
-						spi_if.done <= 1'b0; 	//clean done
-
-						//spi_if.data_received <= 0;
-
-						state <= IDLE;
-					end
+					done_flag <= 1;
+					$display("DEBUG DONE: data=0x%016X", sr_rx);
+				    end else if (done_flag == 1) begin
+					spi_if.done <= 1'b1;   // mantém ativo
+					done_flag <= 2;
+				    end else begin
+					spi_if.done <= 1'b0;
+					done_flag <= 0;
+					state <= IDLE;
+				    end
 				end
 
 				default: state <= IDLE;
@@ -219,7 +232,7 @@ module master_send
 			endcase
 		end
 	end
-	
+
 	/*
 	//manage of bit_count and block_count
 	always_ff @(posedge machine_mast.sck) begin
@@ -238,6 +251,6 @@ module master_send
             		block_count <= 0;
        		 end
        	end
-       	*/
+	*/
        	
 endmodule

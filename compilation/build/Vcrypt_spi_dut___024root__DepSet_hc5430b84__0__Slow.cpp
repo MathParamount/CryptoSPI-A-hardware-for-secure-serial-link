@@ -5,25 +5,10 @@
 #include "Vcrypt_spi_dut__pch.h"
 #include "Vcrypt_spi_dut___024root.h"
 
-VL_ATTR_COLD void Vcrypt_spi_dut___024root___eval_static__TOP(Vcrypt_spi_dut___024root* vlSelf);
-
 VL_ATTR_COLD void Vcrypt_spi_dut___024root___eval_static(Vcrypt_spi_dut___024root* vlSelf) {
     if (false && vlSelf) {}  // Prevent unused
     Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vcrypt_spi_dut___024root___eval_static\n"); );
-    // Body
-    Vcrypt_spi_dut___024root___eval_static__TOP(vlSelf);
-    vlSelf->__Vm_traceActivity[2U] = 1U;
-    vlSelf->__Vm_traceActivity[1U] = 1U;
-    vlSelf->__Vm_traceActivity[0U] = 1U;
-}
-
-VL_ATTR_COLD void Vcrypt_spi_dut___024root___eval_static__TOP(Vcrypt_spi_dut___024root* vlSelf) {
-    if (false && vlSelf) {}  // Prevent unused
-    Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vcrypt_spi_dut___024root___eval_static__TOP\n"); );
-    // Body
-    vlSelf->crypt_spi_dut__DOT__u_master__DOT__done_counter = 0U;
 }
 
 VL_ATTR_COLD void Vcrypt_spi_dut___024root___eval_initial__TOP(Vcrypt_spi_dut___024root* vlSelf) {
@@ -144,13 +129,16 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___dump_triggers__act(Vcrypt_spi_dut__
         VL_DBG_MSGF("         'act' region trigger index 0 is active: @(posedge clk)\n");
     }
     if ((2ULL & vlSelf->__VactTriggered.word(0U))) {
-        VL_DBG_MSGF("         'act' region trigger index 1 is active: @(posedge clk or negedge reset)\n");
+        VL_DBG_MSGF("         'act' region trigger index 1 is active: @(posedge clk or negedge reset_n)\n");
     }
     if ((4ULL & vlSelf->__VactTriggered.word(0U))) {
-        VL_DBG_MSGF("         'act' region trigger index 2 is active: @(posedge crypt_spi_dut.spi_if.sck or posedge crypt_spi_dut.spi_if.ss)\n");
+        VL_DBG_MSGF("         'act' region trigger index 2 is active: @(posedge crypt_spi_dut.spi_if.sck)\n");
     }
     if ((8ULL & vlSelf->__VactTriggered.word(0U))) {
-        VL_DBG_MSGF("         'act' region trigger index 3 is active: @(negedge crypt_spi_dut.spi_if.sck or posedge crypt_spi_dut.spi_if.ss)\n");
+        VL_DBG_MSGF("         'act' region trigger index 3 is active: @(negedge crypt_spi_dut.spi_if.sck)\n");
+    }
+    if ((0x10ULL & vlSelf->__VactTriggered.word(0U))) {
+        VL_DBG_MSGF("         'act' region trigger index 4 is active: @(negedge reset_n or posedge crypt_spi_dut.spi_if.sck)\n");
     }
 }
 #endif  // VL_DEBUG
@@ -168,13 +156,16 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___dump_triggers__nba(Vcrypt_spi_dut__
         VL_DBG_MSGF("         'nba' region trigger index 0 is active: @(posedge clk)\n");
     }
     if ((2ULL & vlSelf->__VnbaTriggered.word(0U))) {
-        VL_DBG_MSGF("         'nba' region trigger index 1 is active: @(posedge clk or negedge reset)\n");
+        VL_DBG_MSGF("         'nba' region trigger index 1 is active: @(posedge clk or negedge reset_n)\n");
     }
     if ((4ULL & vlSelf->__VnbaTriggered.word(0U))) {
-        VL_DBG_MSGF("         'nba' region trigger index 2 is active: @(posedge crypt_spi_dut.spi_if.sck or posedge crypt_spi_dut.spi_if.ss)\n");
+        VL_DBG_MSGF("         'nba' region trigger index 2 is active: @(posedge crypt_spi_dut.spi_if.sck)\n");
     }
     if ((8ULL & vlSelf->__VnbaTriggered.word(0U))) {
-        VL_DBG_MSGF("         'nba' region trigger index 3 is active: @(negedge crypt_spi_dut.spi_if.sck or posedge crypt_spi_dut.spi_if.ss)\n");
+        VL_DBG_MSGF("         'nba' region trigger index 3 is active: @(negedge crypt_spi_dut.spi_if.sck)\n");
+    }
+    if ((0x10ULL & vlSelf->__VnbaTriggered.word(0U))) {
+        VL_DBG_MSGF("         'nba' region trigger index 4 is active: @(negedge reset_n or posedge crypt_spi_dut.spi_if.sck)\n");
     }
 }
 #endif  // VL_DEBUG
@@ -185,7 +176,7 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___ctor_var_reset(Vcrypt_spi_dut___024
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vcrypt_spi_dut___024root___ctor_var_reset\n"); );
     // Body
     vlSelf->clk = VL_RAND_RESET_I(1);
-    vlSelf->reset = VL_RAND_RESET_I(1);
+    vlSelf->reset_n = VL_RAND_RESET_I(1);
     vlSelf->master_data = VL_RAND_RESET_Q(64);
     vlSelf->start = VL_RAND_RESET_I(1);
     vlSelf->miso = VL_RAND_RESET_I(1);
@@ -200,6 +191,8 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___ctor_var_reset(Vcrypt_spi_dut___024
     vlSelf->cipher_text = VL_RAND_RESET_Q(64);
     vlSelf->nonce = VL_RAND_RESET_Q(64);
     vlSelf->lfsr_cipher = VL_RAND_RESET_Q(64);
+    vlSelf->mosi_encrypted = VL_RAND_RESET_Q(64);
+    vlSelf->miso_encrypted = VL_RAND_RESET_Q(64);
     vlSelf->crypt_spi_dut__DOT__u_master__DOT__state = VL_RAND_RESET_I(3);
     vlSelf->crypt_spi_dut__DOT__u_master__DOT__sr = VL_RAND_RESET_Q(64);
     vlSelf->crypt_spi_dut__DOT__u_master__DOT__cmd_reg = VL_RAND_RESET_Q(64);
@@ -208,7 +201,9 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___ctor_var_reset(Vcrypt_spi_dut___024
     vlSelf->crypt_spi_dut__DOT__u_master__DOT__bit_count = VL_RAND_RESET_I(7);
     vlSelf->crypt_spi_dut__DOT__u_master__DOT__sck_div = VL_RAND_RESET_Q(64);
     vlSelf->crypt_spi_dut__DOT__u_master__DOT__sck_prev = VL_RAND_RESET_I(1);
-    vlSelf->crypt_spi_dut__DOT__u_master__DOT__done_counter = VL_RAND_RESET_I(3);
+    vlSelf->crypt_spi_dut__DOT__u_master__DOT__sck_en = VL_RAND_RESET_I(1);
+    vlSelf->crypt_spi_dut__DOT__u_master__DOT__last_block = VL_RAND_RESET_I(1);
+    vlSelf->crypt_spi_dut__DOT__u_master__DOT__done_flag = VL_RAND_RESET_I(2);
     vlSelf->crypt_spi_dut__DOT__u_master__DOT__block_count = VL_RAND_RESET_I(16);
     vlSelf->crypt_spi_dut__DOT__u_master__DOT__total_blocks = VL_RAND_RESET_I(16);
     vlSelf->crypt_spi_dut__DOT__u_slave__DOT__sr_rx = VL_RAND_RESET_Q(64);
@@ -221,21 +216,23 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___ctor_var_reset(Vcrypt_spi_dut___024
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__lfsr_cipher = VL_RAND_RESET_Q(64);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key = VL_RAND_RESET_Q(64);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt = VL_RAND_RESET_I(6);
-    vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__block_count = VL_RAND_RESET_I(16);
-    vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__state = VL_RAND_RESET_I(3);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__sck_div = VL_RAND_RESET_Q(64);
-    vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__bit_count = VL_RAND_RESET_I(7);
-    vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__cmd_reg = VL_RAND_RESET_Q(64);
-    vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__sr = VL_RAND_RESET_Q(64);
-    vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__sr_tx = VL_RAND_RESET_Q(64);
-    vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__sr_rx = VL_RAND_RESET_Q(64);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__sck_prev = VL_RAND_RESET_I(1);
-    vlSelf->__Vdly__debug_state = VL_RAND_RESET_I(3);
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__state = VL_RAND_RESET_I(3);
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__bit_count = VL_RAND_RESET_I(7);
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__done_flag = VL_RAND_RESET_I(2);
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__sr_rx = VL_RAND_RESET_Q(64);
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__sr_tx = VL_RAND_RESET_Q(64);
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_slave__DOT__ss_prev = VL_RAND_RESET_I(1);
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_slave__DOT__sr_tx = VL_RAND_RESET_Q(64);
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text = VL_RAND_RESET_Q(64);
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt = VL_RAND_RESET_I(6);
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__state = VL_RAND_RESET_I(3);
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key = VL_RAND_RESET_Q(64);
     vlSelf->__Vtrigprevexpr___TOP__clk__0 = VL_RAND_RESET_I(1);
-    vlSelf->__Vtrigprevexpr___TOP__reset__0 = VL_RAND_RESET_I(1);
+    vlSelf->__Vtrigprevexpr___TOP__reset_n__0 = VL_RAND_RESET_I(1);
     vlSelf->__Vtrigprevexpr___TOP__crypt_spi_dut__DOT__spi_if__sck__0 = VL_RAND_RESET_I(1);
-    vlSelf->__Vtrigprevexpr___TOP__crypt_spi_dut__DOT__spi_if__ss__0 = VL_RAND_RESET_I(1);
-    for (int __Vi0 = 0; __Vi0 < 3; ++__Vi0) {
+    for (int __Vi0 = 0; __Vi0 < 4; ++__Vi0) {
         vlSelf->__Vm_traceActivity[__Vi0] = 0;
     }
 }

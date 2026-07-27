@@ -11,7 +11,7 @@ Vcrypt_spi_dut::Vcrypt_spi_dut(VerilatedContext* _vcontextp__, const char* _vcna
     : VerilatedModel{*_vcontextp__}
     , vlSymsp{new Vcrypt_spi_dut__Syms(contextp(), _vcname__, this)}
     , clk{vlSymsp->TOP.clk}
-    , reset{vlSymsp->TOP.reset}
+    , reset_n{vlSymsp->TOP.reset_n}
     , start{vlSymsp->TOP.start}
     , miso{vlSymsp->TOP.miso}
     , done{vlSymsp->TOP.done}
@@ -26,6 +26,8 @@ Vcrypt_spi_dut::Vcrypt_spi_dut(VerilatedContext* _vcontextp__, const char* _vcna
     , cipher_text{vlSymsp->TOP.cipher_text}
     , nonce{vlSymsp->TOP.nonce}
     , lfsr_cipher{vlSymsp->TOP.lfsr_cipher}
+    , mosi_encrypted{vlSymsp->TOP.mosi_encrypted}
+    , miso_encrypted{vlSymsp->TOP.miso_encrypted}
     , __PVT__crypt_spi_dut__DOT__spi_if{vlSymsp->TOP.__PVT__crypt_spi_dut__DOT__spi_if}
     , rootp{&(vlSymsp->TOP)}
 {

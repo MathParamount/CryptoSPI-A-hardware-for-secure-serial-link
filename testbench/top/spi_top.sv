@@ -2,7 +2,7 @@
 
 module spi_top (
     input  logic clk,
-    input  logic reset,
+    input  logic reset_n,
     input  logic [63:0] master_data,
     input  logic start,
     output logic miso,
@@ -13,12 +13,15 @@ module spi_top (
     output logic [2:0] debug_state,
     output logic ss,
     output logic [63:0] cipher_text,
-    output logic [63:0] lfsr_cipher
+    output logic [63:0] lfsr_cipher,
+    output logic [63:0] nonce,      	// seed from Simon
+    output logic [63:0] mosi_encrypted,
+    output logic [63:0] miso_encrypted
 );
 
     spi_dut u_dut (
         .clk(clk),
-        .reset(reset),
+        .reset_n(reset_n),
         .master_data(master_data),
         .start(start),
         .miso(miso),
@@ -28,8 +31,12 @@ module spi_top (
         .mosi(mosi),
         .debug_state(debug_state),
         .ss(ss),
+        .crypto_done(crypto_done),
         .cipher_text(cipher_text),
-        .lfsr_cipher(lfsr_cipher)
+        .nonce(nonce),
+        .lfsr_cipher(lfsr_cipher),
+        .mosi_encrypted(mosi_encrypted),
+        .miso_encrypted(miso_encrypted)
     );
 
 endmodule

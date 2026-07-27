@@ -15,17 +15,18 @@ class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut_spi_bus_if final : public Veri
 
     // DESIGN SPECIFIC STATE
     CData/*0:0*/ sck;
-    CData/*0:0*/ ss;
     CData/*0:0*/ mosi;
     CData/*0:0*/ miso;
+    CData/*0:0*/ ss;
     CData/*0:0*/ done;
     CData/*0:0*/ block_ready;
     CData/*0:0*/ crypto_done;
-    CData/*0:0*/ __Vdly__mosi;
     CData/*0:0*/ __Vdly__sck;
-    CData/*0:0*/ __Vdly__done;
-    CData/*0:0*/ __Vdly__miso;
+    CData/*0:0*/ __Vdly__ss;
+    CData/*0:0*/ __Vdly__mosi;
     QData/*63:0*/ data_received;
+    QData/*63:0*/ miso_encrypted;
+    QData/*63:0*/ mosi_encrypted;
     QData/*63:0*/ cipher_text;
     QData/*63:0*/ nonce;
 

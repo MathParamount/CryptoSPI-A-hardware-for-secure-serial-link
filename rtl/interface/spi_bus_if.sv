@@ -13,6 +13,8 @@ interface spi_bus_if;
     
     //cryptographic signals
     logic block_ready;
+    logic [63:0] miso_encrypted;
+    logic [63:0] mosi_encrypted;
     
     /* verilator lint_off UNDRIVEN */
     logic [63:0] cipher_text;	// shift register SPI
@@ -56,8 +58,7 @@ interface spi_bus_if;
         input  done,
         input  crypto_done,
         input  nonce,
-        input  data_to_send,   /*with existency of data in slaver to send*/
-        input  cipher_text
+        input  data_to_send   /*with existency of data in slaver to send*/
     );
     
 endinterface
