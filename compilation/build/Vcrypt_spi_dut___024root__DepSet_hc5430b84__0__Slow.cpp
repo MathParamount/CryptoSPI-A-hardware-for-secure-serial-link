@@ -5,22 +5,10 @@
 #include "Vcrypt_spi_dut__pch.h"
 #include "Vcrypt_spi_dut___024root.h"
 
-VL_ATTR_COLD void Vcrypt_spi_dut___024root___eval_static__TOP(Vcrypt_spi_dut___024root* vlSelf);
-
 VL_ATTR_COLD void Vcrypt_spi_dut___024root___eval_static(Vcrypt_spi_dut___024root* vlSelf) {
     if (false && vlSelf) {}  // Prevent unused
     Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vcrypt_spi_dut___024root___eval_static\n"); );
-    // Body
-    Vcrypt_spi_dut___024root___eval_static__TOP(vlSelf);
-}
-
-VL_ATTR_COLD void Vcrypt_spi_dut___024root___eval_static__TOP(Vcrypt_spi_dut___024root* vlSelf) {
-    if (false && vlSelf) {}  // Prevent unused
-    Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vcrypt_spi_dut___024root___eval_static__TOP\n"); );
-    // Body
-    vlSelf->crypt_spi_dut__DOT__u_master__DOT__last_block = 1U;
 }
 
 VL_ATTR_COLD void Vcrypt_spi_dut___024root___eval_initial__TOP(Vcrypt_spi_dut___024root* vlSelf) {
@@ -233,6 +221,7 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___ctor_var_reset(Vcrypt_spi_dut___024
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key_s = VL_RAND_RESET_Q(64);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt = VL_RAND_RESET_I(6);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__encypt_count = VL_RAND_RESET_I(6);
+    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__is_write = VL_RAND_RESET_I(1);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__sck_div = VL_RAND_RESET_Q(64);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__sck_prev = VL_RAND_RESET_I(1);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__state = VL_RAND_RESET_I(3);
@@ -242,7 +231,6 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___ctor_var_reset(Vcrypt_spi_dut___024
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__sr_rx = VL_RAND_RESET_Q(64);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_slave__DOT__ss_prev = VL_RAND_RESET_I(1);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_slave__DOT__sr_tx = VL_RAND_RESET_Q(64);
-    vlSelf->__Vdly__debug_state_crypt = VL_RAND_RESET_I(3);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__state_encr = VL_RAND_RESET_I(3);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt = VL_RAND_RESET_I(6);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text = VL_RAND_RESET_Q(64);

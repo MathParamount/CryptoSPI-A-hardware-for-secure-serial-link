@@ -83,17 +83,17 @@ int main(int argc, char** argv)
 
 	 std::vector<Transmission> transmissions = {
         // basic test
-        {100,  0x0000, 0, "Zero"},
-        {2000, 0xFFFF, 0, "All ones"},
-        {4000, 0x5555, 0, "Alternating 0x55"},
-        {6000, 0xAAAA, 0, "Alternating 0xAA"},
+        {100,  0x0012, 0, "Zero"},
+        {1000, 0xFFFF, 0, "All ones"},
+        {1500, 0x5555, 0, "Alternating 0x55"},
+        {2000, 0xAAAA, 0, "Alternating 0xAA"},
         // specific patterns
-        {8000, 0x00A5, 0, "Pattern A5"},
-        {10000, 0x5A5A, 0, "Pattern 5A5A"},
+        {3000, 0x00A5, 0, "Pattern A5"},
+        {3500, 0x5A5A, 0, "Pattern 5A5A"},
         // (to FILL_BUFFER)
-        {12000, 0x00A4, 0, "Even command - should go to FILL_BUFFER"},
+        {4000, 0x00A4, 0, "Even command - should go to FILL_BUFFER"},
         // to DONE
-        {14000, 0x00A5, 0, "Repeat A5"},
+        {4500, 0x00A5, 0, "Repeat A5"},
     };
 
     //==========  main simulation ============ 
@@ -165,6 +165,7 @@ int main(int argc, char** argv)
     	// --- Transmission finality ---
     	if (next_idx >= transmissions.size()) {
         printf("All transmissions completed at %lu ns\n", main_t/1000);
+		  break;
     	}
 	 }
 

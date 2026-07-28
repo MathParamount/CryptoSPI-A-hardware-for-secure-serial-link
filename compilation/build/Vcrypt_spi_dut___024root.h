@@ -43,12 +43,12 @@ class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut___024root final : public Veril
         CData/*2:0*/ crypt_spi_dut__DOT__u_crypt__DOT__state_mast;
         CData/*5:0*/ crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt;
         CData/*5:0*/ crypt_spi_dut__DOT__u_crypt__DOT__encypt_count;
+        CData/*0:0*/ crypt_spi_dut__DOT__u_crypt__DOT__is_write;
         CData/*0:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__sck_prev;
         CData/*2:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__state;
         CData/*6:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__bit_count;
         CData/*1:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__done_cnt;
         CData/*0:0*/ __Vdly__crypt_spi_dut__DOT__u_slave__DOT__ss_prev;
-        CData/*2:0*/ __Vdly__debug_state_crypt;
         CData/*2:0*/ __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__state_encr;
         CData/*5:0*/ __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt;
         CData/*5:0*/ __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__encypt_count;

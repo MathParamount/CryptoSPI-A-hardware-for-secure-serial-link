@@ -22,7 +22,7 @@ module slaver_receiver (
         end else begin
 	
             // load bits from MISO
-	        sr_rx <= {sr_rx[62:0], spi_if.mosi_encrypted[0]};
+	    sr_rx <= {sr_rx[62:0], spi_if.mosi_encrypted[0]};
             bit_count <= bit_count + 1;
 
             if(bit_count == 63) begin

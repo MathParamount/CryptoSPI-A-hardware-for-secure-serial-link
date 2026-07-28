@@ -31,6 +31,8 @@ module crypto_spi_core
 	logic [5:0] cycle_cnt;
 	logic [5:0] encypt_count;
 	
+	reg is_write;
+	
 	initial begin
 	    $display("Crypto module instantiated");
 	    $display("plain_text bits: %0d", $bits(plain_text));
@@ -43,8 +45,10 @@ module crypto_spi_core
 			slave_rx <= 64'h0;
 			state_encr <= IDLE_CRYPT;
 			state_mast <= IDLE;
-			epherm_key_m <= 64'h0000000000000001;
-			epherm_key_s <= 64'h8000000000000000;
+			//epherm_key_m <= 64'h0000000000000001;
+			//epherm_key_s <= 64'h8000000000000000;
+			epherm_key_m <= 64'h326456754ACCEEF1;
+			epherm_key_s <= 64'h523456789ABCDEd2;
 			crypto_if.nonce <= 64'h0000000000000001;  // initial seed
 			crypto_if.crypto_done <= 0;
 			cycle_cnt <= 0;
@@ -68,6 +72,8 @@ module crypto_spi_core
 						slave_rx   <= {slave_rx[62:0], crypto_if.miso};       // come from slaver
 						cycle_cnt <= cycle_cnt + 1;
 						
+						if(cycle_cnt == 7) is_write <= ~plain_text[0];
+						
 						if(cycle_cnt == 63) begin
 							state_encr <= ENCRYPT;
 						end
@@ -82,11 +88,14 @@ module crypto_spi_core
 					epherm_key_m <= {epherm_key_m[62:0], plain_text[63] ^ plain_text[62] ^ plain_text[55] ^ plain_text[22] ^ plain_text[11] ^ plain_text[0]};
 					epherm_key_s <= {epherm_key_s[62:0], slave_rx[63] ^ slave_rx[62] ^ slave_rx[55] ^ slave_rx[22] ^ slave_rx[11] ^ slave_rx[0]};
 					
-					$display("plain_text: 0x%04X , slave_rx: 0x%04X", plain_text, slave_rx);
-					
-					if(debug_state_crypt == FILL_BUFFER) encrypt_text <= plain_text ^ epherm_key_m;		//write
+					if(is_write) encrypt_text <= plain_text ^ epherm_key_m;		//write
 					else encrypt_text <= slave_rx ^ epherm_key_s;			//read
 					
+					$display("\t CRYPTO DONE: data storaged = 0x%016X\n", encrypt_text); 					
+					$display("[CRYPTO] ENCRYPT: setting crypto_done=1");
+
+					crypto_if.crypto_done <= 1;
+										
 					encypt_count <= encypt_count + 1;
 					
 					if(encypt_count == 63) begin
@@ -98,11 +107,11 @@ module crypto_spi_core
 				TRANSMISSION: begin
 					//come from master
 					crypto_if.mosi_encrypted <= {63'b0, encrypt_text[63 - cycle_cnt]};
-					$display("send: 0x%04X to slaver", crypto_if.mosi_encrypted);
 					
 					//come from slaver
 					crypto_if.miso_encrypted <= {63'b0, encrypt_text[63 - cycle_cnt]};
-					$display("send: 0x%04X to slaver", crypto_if.miso_encrypted);
+					
+					$display("[CRYPTO] send bit[%0d]=%b to MASTER (data=0x%016X)", cycle_cnt, encrypt_text[63 - cycle_cnt], encrypt_text);
 		   			
 		   			cycle_cnt <= cycle_cnt + 1;
 		   			
@@ -111,18 +120,13 @@ module crypto_spi_core
 		   				state_encr <= DONE_CRYPT;
 		   				crypto_if.crypto_done <= 0;
 		   			end
-		   			
-		   			if( $size(crypto_if.miso_encrypted ) + 1) begin
-		   				crypto_if.crypto_done <= 0;   		// deactivation after transmissions
-        					debug_state_crypt <= IDLE;
-		   			end
 				end
 				
 				DONE_CRYPT: begin
 					crypto_if.crypto_done <= 1;
-					$display("CRYPTO DONE: data storaged = 0x%016X", encrypt_text);
 					
 					if (crypto_if.ss == 1'b1) begin
+						$display("\t CRYPTO DONE: data storaged = 0x%016X \n", encrypt_text);
                     				crypto_if.crypto_done <= 0;
                    			 	state_encr <= IDLE_CRYPT;
                 			end

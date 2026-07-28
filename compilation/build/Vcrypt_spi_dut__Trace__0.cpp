@@ -50,41 +50,42 @@ void Vcrypt_spi_dut___024root__trace_chg_0_sub_0(Vcrypt_spi_dut___024root* vlSel
         bufp->chgQData(oldp+31,(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key_s),64);
         bufp->chgCData(oldp+33,(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt),6);
         bufp->chgCData(oldp+34,(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__encypt_count),6);
-        bufp->chgQData(oldp+35,(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.miso_encrypted),64);
-        bufp->chgQData(oldp+37,(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.mosi_encrypted),64);
-        bufp->chgQData(oldp+39,(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.nonce),64);
-        bufp->chgBit(oldp+41,(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.crypto_done));
+        bufp->chgBit(oldp+35,(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__is_write));
+        bufp->chgQData(oldp+36,(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.miso_encrypted),64);
+        bufp->chgQData(oldp+38,(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.mosi_encrypted),64);
+        bufp->chgQData(oldp+40,(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.nonce),64);
+        bufp->chgBit(oldp+42,(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.crypto_done));
     }
     if (VL_UNLIKELY(vlSelf->__Vm_traceActivity[3U])) {
-        bufp->chgQData(oldp+42,(vlSelf->crypt_spi_dut__DOT__u_slave__DOT__sr_tx),64);
-        bufp->chgBit(oldp+44,(vlSelf->crypt_spi_dut__DOT__u_slave__DOT__ss_prev));
-        bufp->chgBit(oldp+45,(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.miso));
+        bufp->chgQData(oldp+43,(vlSelf->crypt_spi_dut__DOT__u_slave__DOT__sr_tx),64);
+        bufp->chgBit(oldp+45,(vlSelf->crypt_spi_dut__DOT__u_slave__DOT__ss_prev));
+        bufp->chgBit(oldp+46,(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.miso));
     }
-    bufp->chgBit(oldp+46,(vlSelf->clk));
-    bufp->chgBit(oldp+47,(vlSelf->reset_n));
-    bufp->chgQData(oldp+48,(vlSelf->master_data),64);
-    bufp->chgBit(oldp+50,(vlSelf->start));
-    bufp->chgBit(oldp+51,(vlSelf->miso));
-    bufp->chgBit(oldp+52,(vlSelf->done));
-    bufp->chgQData(oldp+53,(vlSelf->data_received),64);
-    bufp->chgBit(oldp+55,(vlSelf->sck));
-    bufp->chgBit(oldp+56,(vlSelf->mosi));
-    bufp->chgCData(oldp+57,(vlSelf->debug_state),3);
-    bufp->chgCData(oldp+58,(vlSelf->debug_state_crypt),3);
-    bufp->chgBit(oldp+59,(vlSelf->ss));
-    bufp->chgBit(oldp+60,(vlSelf->crypto_done));
-    bufp->chgBit(oldp+61,(vlSelf->block_ready));
-    bufp->chgQData(oldp+62,(vlSelf->cipher_text),64);
-    bufp->chgQData(oldp+64,(vlSelf->nonce),64);
-    bufp->chgQData(oldp+66,(vlSelf->lfsr_cipher),64);
-    bufp->chgQData(oldp+68,(vlSelf->mosi_encrypted),64);
-    bufp->chgQData(oldp+70,(vlSelf->miso_encrypted),64);
-    bufp->chgBit(oldp+72,(vlSelf->crypt_spi_dut__DOT__u_master__DOT__last_block));
-    bufp->chgSData(oldp+73,(vlSelf->crypt_spi_dut__DOT__u_master__DOT__block_count),16);
-    bufp->chgQData(oldp+74,(vlSelf->crypt_spi_dut__DOT__u_slave__DOT__sr_rx),64);
-    bufp->chgCData(oldp+76,(vlSelf->crypt_spi_dut__DOT__u_slave__DOT__bit_count),7);
-    bufp->chgBit(oldp+77,(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.mosi));
-    bufp->chgBit(oldp+78,(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.ss));
+    bufp->chgBit(oldp+47,(vlSelf->clk));
+    bufp->chgBit(oldp+48,(vlSelf->reset_n));
+    bufp->chgQData(oldp+49,(vlSelf->master_data),64);
+    bufp->chgBit(oldp+51,(vlSelf->start));
+    bufp->chgBit(oldp+52,(vlSelf->miso));
+    bufp->chgBit(oldp+53,(vlSelf->done));
+    bufp->chgQData(oldp+54,(vlSelf->data_received),64);
+    bufp->chgBit(oldp+56,(vlSelf->sck));
+    bufp->chgBit(oldp+57,(vlSelf->mosi));
+    bufp->chgCData(oldp+58,(vlSelf->debug_state),3);
+    bufp->chgCData(oldp+59,(vlSelf->debug_state_crypt),3);
+    bufp->chgBit(oldp+60,(vlSelf->ss));
+    bufp->chgBit(oldp+61,(vlSelf->crypto_done));
+    bufp->chgBit(oldp+62,(vlSelf->block_ready));
+    bufp->chgQData(oldp+63,(vlSelf->cipher_text),64);
+    bufp->chgQData(oldp+65,(vlSelf->nonce),64);
+    bufp->chgQData(oldp+67,(vlSelf->lfsr_cipher),64);
+    bufp->chgQData(oldp+69,(vlSelf->mosi_encrypted),64);
+    bufp->chgQData(oldp+71,(vlSelf->miso_encrypted),64);
+    bufp->chgBit(oldp+73,(vlSelf->crypt_spi_dut__DOT__u_master__DOT__last_block));
+    bufp->chgSData(oldp+74,(vlSelf->crypt_spi_dut__DOT__u_master__DOT__block_count),16);
+    bufp->chgQData(oldp+75,(vlSelf->crypt_spi_dut__DOT__u_slave__DOT__sr_rx),64);
+    bufp->chgCData(oldp+77,(vlSelf->crypt_spi_dut__DOT__u_slave__DOT__bit_count),7);
+    bufp->chgBit(oldp+78,(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.mosi));
+    bufp->chgBit(oldp+79,(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.ss));
 }
 
 void Vcrypt_spi_dut___024root__trace_cleanup(void* voidSelf, VerilatedFst* /*unused*/) {
