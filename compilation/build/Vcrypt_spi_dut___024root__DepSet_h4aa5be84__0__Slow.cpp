@@ -46,15 +46,15 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___stl_sequent__TOP__0(Vcrypt_spi_dut_
     vlSelf->done = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.done;
     vlSelf->sck = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.sck;
     vlSelf->ss = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.ss;
+    vlSelf->crypto_ack = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.crypto_ack;
     vlSelf->mosi = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.mosi;
     vlSelf->miso = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.miso;
     vlSelf->mosi_encrypted = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.mosi_encrypted;
     vlSelf->miso_encrypted = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.miso_encrypted;
-    vlSelf->cipher_text = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.cipher_text;
     vlSelf->nonce = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.nonce;
     vlSelf->crypto_done = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.crypto_done;
     vlSelf->block_ready = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.block_ready;
-    vlSelf->lfsr_cipher = vlSelf->master_data;
+    vlSelf->encrypt_text = vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__encrypt_text_reg;
     vlSelf->crypt_spi_dut__DOT__u_master__DOT__last_block 
         = ((IData)(vlSelf->crypt_spi_dut__DOT__u_master__DOT__block_count) 
            == ((IData)(vlSelf->crypt_spi_dut__DOT__u_master__DOT__total_blocks) 

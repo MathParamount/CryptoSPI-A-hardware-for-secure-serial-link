@@ -102,21 +102,6 @@ VL_ATTR_COLD bool Vcrypt_spi_dut___024root___eval_phase__stl(Vcrypt_spi_dut___02
 }
 
 #ifdef VL_DEBUG
-VL_ATTR_COLD void Vcrypt_spi_dut___024root___dump_triggers__ico(Vcrypt_spi_dut___024root* vlSelf) {
-    if (false && vlSelf) {}  // Prevent unused
-    Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vcrypt_spi_dut___024root___dump_triggers__ico\n"); );
-    // Body
-    if ((1U & (~ (IData)(vlSelf->__VicoTriggered.any())))) {
-        VL_DBG_MSGF("         No triggers active\n");
-    }
-    if ((1ULL & vlSelf->__VicoTriggered.word(0U))) {
-        VL_DBG_MSGF("         'ico' region trigger index 0 is active: Internal 'ico' trigger - first iteration\n");
-    }
-}
-#endif  // VL_DEBUG
-
-#ifdef VL_DEBUG
 VL_ATTR_COLD void Vcrypt_spi_dut___024root___dump_triggers__act(Vcrypt_spi_dut___024root* vlSelf) {
     if (false && vlSelf) {}  // Prevent unused
     Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
@@ -189,11 +174,11 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___ctor_var_reset(Vcrypt_spi_dut___024
     vlSelf->ss = VL_RAND_RESET_I(1);
     vlSelf->crypto_done = VL_RAND_RESET_I(1);
     vlSelf->block_ready = VL_RAND_RESET_I(1);
-    vlSelf->cipher_text = VL_RAND_RESET_Q(64);
     vlSelf->nonce = VL_RAND_RESET_Q(64);
-    vlSelf->lfsr_cipher = VL_RAND_RESET_Q(64);
     vlSelf->mosi_encrypted = VL_RAND_RESET_Q(64);
     vlSelf->miso_encrypted = VL_RAND_RESET_Q(64);
+    vlSelf->encrypt_text = VL_RAND_RESET_Q(64);
+    vlSelf->crypto_ack = VL_RAND_RESET_I(1);
     vlSelf->crypt_spi_dut__DOT__u_master__DOT__state = VL_RAND_RESET_I(3);
     vlSelf->crypt_spi_dut__DOT__u_master__DOT__sr = VL_RAND_RESET_Q(64);
     vlSelf->crypt_spi_dut__DOT__u_master__DOT__cmd_reg = VL_RAND_RESET_Q(64);
@@ -216,12 +201,14 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___ctor_var_reset(Vcrypt_spi_dut___024
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__state_mast = VL_RAND_RESET_I(3);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text = VL_RAND_RESET_Q(64);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__slave_rx = VL_RAND_RESET_Q(64);
-    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__encrypt_text = VL_RAND_RESET_Q(64);
+    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__lfsr_m = VL_RAND_RESET_Q(64);
+    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__lfsr_s = VL_RAND_RESET_Q(64);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key_m = VL_RAND_RESET_Q(64);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__epherm_key_s = VL_RAND_RESET_Q(64);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt = VL_RAND_RESET_I(6);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__encypt_count = VL_RAND_RESET_I(6);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__is_write = VL_RAND_RESET_I(1);
+    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__encrypt_text_reg = VL_RAND_RESET_Q(64);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__sck_div = VL_RAND_RESET_Q(64);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__sck_prev = VL_RAND_RESET_I(1);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__state = VL_RAND_RESET_I(3);
@@ -233,11 +220,13 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___ctor_var_reset(Vcrypt_spi_dut___024
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_slave__DOT__sr_tx = VL_RAND_RESET_Q(64);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__state_encr = VL_RAND_RESET_I(3);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt = VL_RAND_RESET_I(6);
-    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text = VL_RAND_RESET_Q(64);
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__lfsr_m = VL_RAND_RESET_Q(64);
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__lfsr_s = VL_RAND_RESET_Q(64);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__encypt_count = VL_RAND_RESET_I(6);
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__encrypt_text_reg = VL_RAND_RESET_Q(64);
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text = VL_RAND_RESET_Q(64);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__slave_rx = VL_RAND_RESET_Q(64);
-    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key_m = VL_RAND_RESET_Q(64);
-    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__epherm_key_s = VL_RAND_RESET_Q(64);
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__is_write = VL_RAND_RESET_I(1);
     vlSelf->__Vtrigprevexpr___TOP__clk__0 = VL_RAND_RESET_I(1);
     vlSelf->__Vtrigprevexpr___TOP__reset_n__0 = VL_RAND_RESET_I(1);
     vlSelf->__Vtrigprevexpr___TOP__crypt_spi_dut__DOT__spi_if__sck__0 = VL_RAND_RESET_I(1);

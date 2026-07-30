@@ -22,13 +22,13 @@ Vcrypt_spi_dut::Vcrypt_spi_dut(VerilatedContext* _vcontextp__, const char* _vcna
     , ss{vlSymsp->TOP.ss}
     , crypto_done{vlSymsp->TOP.crypto_done}
     , block_ready{vlSymsp->TOP.block_ready}
+    , crypto_ack{vlSymsp->TOP.crypto_ack}
     , master_data{vlSymsp->TOP.master_data}
     , data_received{vlSymsp->TOP.data_received}
-    , cipher_text{vlSymsp->TOP.cipher_text}
     , nonce{vlSymsp->TOP.nonce}
-    , lfsr_cipher{vlSymsp->TOP.lfsr_cipher}
     , mosi_encrypted{vlSymsp->TOP.mosi_encrypted}
     , miso_encrypted{vlSymsp->TOP.miso_encrypted}
+    , encrypt_text{vlSymsp->TOP.encrypt_text}
     , __PVT__crypt_spi_dut__DOT__spi_if{vlSymsp->TOP.__PVT__crypt_spi_dut__DOT__spi_if}
     , rootp{&(vlSymsp->TOP)}
 {

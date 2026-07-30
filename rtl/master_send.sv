@@ -41,14 +41,14 @@ module master_send
 	logic [15:0] block_count;
 	logic [15:0] total_blocks;
 	/* verilator lint_off UNDRIVEN */
-
+	
 	always_ff @(posedge clk) begin
 	    	if (state == IDLE) begin
-			block_count <= 0;
-		end
-	    	else if (spi_if.block_ready && state == EXEC_ENCRYPT) begin
+				block_count <= 0;
+			end
+	    	else if (spi_if.block_ready && state == EXEC_ENCRYPT && block_count < total_blocks - 1) begin
         		block_count <= block_count + 1;
-				$display("block_count  value: %d", block_count);
+			$display("block_count  value: %d", block_count);
         	end
 	end
 	
@@ -82,7 +82,11 @@ module master_send
 		
 		else begin
 			debug_state <= state;
-	
+
+			//generating knowledge pulse
+        	if (state == EXEC_ENCRYPT && spi_if.crypto_done) spi_if.crypto_ack <= 1;
+		else spi_if.crypto_ack <= 0;
+
 			if(sck_en) begin
 				//master clock generation
 				if(sck_div == DIV_MAX) begin
@@ -206,6 +210,8 @@ module master_send
 				EXEC_ENCRYPT: begin	
 				    $display("[MASTER] EXEC_ENCRYPT: crypto_done=%b, last_block=%b", spi_if.crypto_done, last_block);
 					if(spi_if.crypto_done) begin
+						//spi_if.crypto_done <= 0;
+						$display("CRYPTO DONE ACTIVATED: %d", spi_if.crypto_done);
 						sck_en <= 0;
 						if (last_block) begin
 							state <= DONE;
@@ -243,7 +249,7 @@ module master_send
 				    		state <= IDLE;
 				    		$display("DEBUG DONE: done cleared, going to IDLE");
 				    	end
-					  endcase
+				     endcase
 			     end
 
 				  default: state <= IDLE;

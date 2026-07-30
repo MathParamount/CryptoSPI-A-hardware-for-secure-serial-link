@@ -46,10 +46,10 @@ void tick()
 
 	//Displaying LFSR signals & time running
 	
-	if(top->lfsr_cipher != last_lfsr)
+	if(top->encrypt_text != last_lfsr)
 	{
-		printf("[%.3f us] LFSR data changed from: 0X%016llx --> 0X016llx", main_t/1000000.0, (unsigned long long)top->lfsr_cipher, (unsigned long long)last_lfsr);
-		last_lfsr = top->lfsr_cipher;
+		printf("[%.3f us] LFSR data changed from: 0X%016llx --> 0X016llx\n", main_t/1000000.0, (unsigned long long)top->encrypt_text, (unsigned long long)last_lfsr);
+		last_lfsr = top->encrypt_text;
 		lfsr_change_count++;
 	}
 	
@@ -143,7 +143,7 @@ int main(int argc, char** argv)
 		// LFSR functionality check
   		printf("[%.3f us] LFSR current: 0x%016llX (changes: %d)\n", 
                main_t/1000000.0,
-               (unsigned long long)top->lfsr_cipher,
+               (unsigned long long)top->encrypt_text,
                lfsr_change_count);
 	 }
 

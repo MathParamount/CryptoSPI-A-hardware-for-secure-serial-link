@@ -14,7 +14,8 @@ module spi_top (
     output logic [2:0] debug_state_crypt,
     output logic ss,
     output logic [63:0] cipher_text,
-    output logic [63:0] lfsr_cipher,
+    output logic crypto_ack,
+    //output logic [63:0] lfsr_cipher,
     output logic [63:0] nonce,      	// seed from Simon
     output logic [63:0] mosi_encrypted,
     output logic [63:0] miso_encrypted
@@ -35,8 +36,9 @@ module spi_top (
         .ss(ss),
         .crypto_done(crypto_done),
         .cipher_text(cipher_text),
+        .crypto_ack(crypto_ack),
         .nonce(nonce),
-        .lfsr_cipher(lfsr_cipher),
+        //.lfsr_cipher(lfsr_cipher),
         .mosi_encrypted(mosi_encrypted),
         .miso_encrypted(miso_encrypted)
     );
