@@ -48,9 +48,12 @@ void tick()
 	
 	if(top->encrypt_text != last_lfsr)
 	{
-		printf("[%.3f us] LFSR data changed from: 0X%016llx --> 0X016llx\n", main_t/1000000.0, (unsigned long long)top->encrypt_text, (unsigned long long)last_lfsr);
-		last_lfsr = top->encrypt_text;
-		lfsr_change_count++;
+    printf("[%.3f us] LFSR data changed from: 0x%016llX --> 0x%016llX\n",
+           main_t/1000000.0,
+           (unsigned long long)last_lfsr,    // last value
+           (unsigned long long)top->encrypt_text); // new value encrypted
+    last_lfsr = top->encrypt_text;
+    lfsr_change_count++;
 	}
 	
     pointer->dump(main_t);
