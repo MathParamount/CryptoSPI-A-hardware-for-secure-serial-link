@@ -45,8 +45,8 @@ module slaver_receiver (
                 ss_prev <= 0;
             end
             else begin
-                spi_if.miso <= sr_tx[63];      // envia bit
-                sr_tx <= {sr_tx[62:0], 1'b0};  // desloca
+                spi_if.miso <= sr_tx[63];      // send bit
+                sr_tx <= {sr_tx[62:0], 1'b0};  // displacement
             end
         end
     end

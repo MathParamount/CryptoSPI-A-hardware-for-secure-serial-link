@@ -6,7 +6,6 @@ interface spi_bus_if;
     logic ss;
     
     logic [63:0] data_to_send;
-    logic [63:0] data_received;
     
     logic start;
     logic done;
@@ -24,10 +23,8 @@ interface spi_bus_if;
 
     logic crypto_ack;
     
-    
     modport master_f (
         input  start,
-        input  miso,
         input  data_to_send,
         input  crypto_done,
         input  miso_encrypted,
@@ -36,7 +33,6 @@ interface spi_bus_if;
         output ss,
         output done,
         output block_ready,
-        output data_received,		//from slaver to master
         output crypto_ack           //knowledge of clock
     );
     
@@ -56,11 +52,9 @@ interface spi_bus_if;
     
     modport slaver_f (
         output miso,
-        input  mosi_encrypted,
         input  sck,
-        input  mosi,
+        input  mosi_encrypted,
         input  ss,
-        input  done,
         input  crypto_done,
         input  nonce,
         input  data_to_send   /*with existency of data in slaver to send*/

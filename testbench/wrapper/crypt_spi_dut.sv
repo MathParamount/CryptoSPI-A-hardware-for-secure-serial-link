@@ -7,7 +7,6 @@ module crypt_spi_dut (
     input  logic start,
     output logic miso,
     output logic done,
-    output logic [63:0] data_received,
     output logic sck,
     output logic mosi,
     output logic [2:0] debug_state,
@@ -16,11 +15,11 @@ module crypt_spi_dut (
     output logic crypto_done,
     output logic block_ready,
     output logic [63:0] nonce,      	// seed from Simon
-    //output logic [63:0] lfsr_cipher,
     output logic [63:0] mosi_encrypted,
     output logic [63:0] miso_encrypted,
     output logic [63:0] encrypt_text,
     output logic crypto_ack
+    //output logic [63:0] lfsr_cipher
 );
     // Instancia a interface
     spi_bus_if spi_if ();
@@ -31,7 +30,6 @@ module crypt_spi_dut (
     assign spi_if.data_to_send = master_data;
     assign spi_if.start = start;    
 
-    assign data_received = spi_if.data_received;
     assign done = spi_if.done;
     assign sck = spi_if.sck;
     assign ss = spi_if.ss;
@@ -50,14 +48,18 @@ module crypt_spi_dut (
     assign nonce = spi_if.nonce;
     assign crypto_done = spi_if.crypto_done;
     assign block_ready = spi_if.block_ready;
-    //assign lfsr_cipher = spi_if.crypto_f.data_to_send;
+    
+    //assign lfsr_cipher = u_crypt.lfsr_m;
+
     assign encrypt_text = spi_if.crypto_f.encrypt_text;
-	
-	//interface declaration
+    
+    //assign lfsr_cipher = crypto_f.lfsr_m;
+
+    //interface declaration
     master_send u_master (
         .clk(clk),
         .reset_n(reset_n),
-	    .debug_state(debug_state),
+	.debug_state(debug_state),
         .spi_if(spi_if.master_f) 
     );
     
@@ -66,9 +68,10 @@ module crypt_spi_dut (
     );
 
     crypto_spi_core u_crypt (
+        .clk(clk),
         .reset_n(reset_n),
         .debug_state_crypt(debug_state_crypt),
-	    .crypto_if(spi_if.crypto_f)
+	.crypto_if(spi_if.crypto_f)
     );
     
 endmodule

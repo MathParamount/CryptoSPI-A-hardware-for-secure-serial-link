@@ -91,9 +91,9 @@ int main(int argc, char** argv)
         {3000, 0x00A5, 0, "Pattern A5"},
         {3500, 0x5A5A, 0, "Pattern 5A5A"},
         // (to FILL_BUFFER)
-        {4000, 0x00A4, 0, "Even command - should go to FILL_BUFFER"},
+        {4000, 0x10A4, 0, "Even command - should go to FILL_BUFFER"},
         // to DONE
-        {4500, 0x00A5, 0, "Repeat A5"},
+        {4500, 0xAB41, 0, "Repeat A5"},
     };
 
     //==========  main simulation ============ 
@@ -150,7 +150,7 @@ int main(int argc, char** argv)
     // --- Detect posedge signal of done ---
 	 if(top->done && !last_done) {
     	if (transmission_active) {
-    		printf("[%lu ns] DONE! RX=0x%04X\n", main_t/1000, top->data_received);
+    		printf("[%lu ns] DONE! RX=0x%04X\n", main_t/1000, top->miso_encrypted);
     		transmission_active = false;
     		next_idx++;
     		printf("[DEBUG] next_idx DEPOIS = %d\n", next_idx);

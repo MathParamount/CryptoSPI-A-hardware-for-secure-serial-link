@@ -48,7 +48,7 @@ module master_send
 			end
 	    	else if (spi_if.block_ready && state == EXEC_ENCRYPT && block_count < total_blocks - 1) begin
         		block_count <= block_count + 1;
-			$display("block_count  value: %d", block_count);
+				$display("block_count  value: %d", block_count);
         	end
 	end
 	
@@ -61,8 +61,7 @@ module master_send
 		//Default attribute (reset cycle)
 		if (!reset_n) begin
 			state <= IDLE;
-		    	spi_if.block_ready <= 0;
-		    	spi_if.data_received <= 0;
+		        spi_if.block_ready <= 0;
 			// initialize interface signals
 			spi_if.ss <= 1;
 			spi_if.mosi <= 1'b0;
@@ -84,8 +83,8 @@ module master_send
 			debug_state <= state;
 
 			//generating knowledge pulse
-        	if (state == EXEC_ENCRYPT && spi_if.crypto_done) spi_if.crypto_ack <= 1;
-		else spi_if.crypto_ack <= 0;
+        		if (state == EXEC_ENCRYPT && spi_if.crypto_done) spi_if.crypto_ack <= 1;
+			else spi_if.crypto_ack <= 0;
 
 			if(sck_en) begin
 				//master clock generation
@@ -115,14 +114,12 @@ module master_send
 					bit_count <= 0;
                				sck_div <= 0;
 					done_cnt <= 0;
-					//spi_if.miso <= 0;
 
 					if (spi_if.start) begin
-					 	$display("[MASTER] IDLE: data_to_send = 0x%016X", spi_if.data_to_send);
-					    	sr <= spi_if.data_to_send;  // load data (buffer)
-					    	sck_en <= 1;
+					    sr <= spi_if.data_to_send;  // load data (buffer)
+					    sck_en <= 1;
 						$display("[MASTER] Start transmission, data_to_send=0x%016X", spi_if.data_to_send);
-					    	state <= CMD_PARSE;
+					    state <= CMD_PARSE;
                    			end
 				end
 
@@ -170,16 +167,16 @@ module master_send
 				    if (!spi_if.sck && sck_prev) begin
 						spi_if.mosi <= sr_tx[63];
 						sr_tx <= {sr_tx[62:0], 1'b0};
-						$display("FILL: from mosi= 0x%016X to sr_tx= 0x%016X", spi_if.mosi, sr_tx);
+						//$display("FILL: from mosi= 0x%016X to sr_tx= 0x%016X", spi_if.mosi, sr_tx);
 				    end
 
 				    if (bit_count == 63) begin
 				    	//$display("[MASTER] achieved 63; bit_count=%0d, sck=%b, ss=%b", bit_count, spi_if.sck, spi_if.ss);
-				      		spi_if.ss <= 1;
-						bit_count <= 0; 
-						//spi_if.done <= 1;
-				    		spi_if.block_ready <= 1;
-				    		$display("Master: data_send=0x%04X", sr_tx);   // debug
+				      	spi_if.ss <= 1;
+					bit_count <= 0; 
+					//spi_if.done <= 1;
+				    	spi_if.block_ready <= 1;
+				    	$display("Master: data_send=0x%04X", sr_tx);   // debug
 						state <= EXEC_ENCRYPT;
 				    end
 				end
@@ -228,7 +225,7 @@ module master_send
 				    $display("[MASTER] Entering DONE, done_flag=%b", done_cnt);
 				    spi_if.ss <= 1'b1;
 				    spi_if.mosi <= 1'b0;
-				    spi_if.data_received <= sr_rx;
+				    //spi_if.miso_encrypted <= sr_rx;
 				    bit_count <= 0;
 
 				    case (done_cnt)
