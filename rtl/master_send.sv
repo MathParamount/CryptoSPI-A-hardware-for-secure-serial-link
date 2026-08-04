@@ -140,14 +140,12 @@ module master_send
 							//if (spi_if.data_to_send[0] == 0) begin      // EVEN: WRITE
 							if (bit_count == 7) begin      // EVEN: WRITE
 								sr_tx <= spi_if.data_to_send << 48;
-								$display("[MASTER] WRITE: sr_tx loaded with 0x%016X", sr_tx);
 								state <= FILL_BUFFER;  // Write/Encrypt
 							end
 							else begin		// ODD: READ
 								//sr_tx <= 64'h0;			//sending zero in read
 								sr_tx <= spi_if.data_to_send << 48;  // loading same data after each block
 								state <= DRAIN_BUFFER; 		// Read/Decrypt
-								$display("[MASTER] READ: sr_tx set to 0");
 							end		
 						end
 						else bit_count <= bit_count + 1;
@@ -176,8 +174,7 @@ module master_send
 					bit_count <= 0; 
 					//spi_if.done <= 1;
 				    	spi_if.block_ready <= 1;
-				    	$display("Master: data_send=0x%04X", sr_tx);   // debug
-						state <= EXEC_ENCRYPT;
+					state <= EXEC_ENCRYPT;
 				    end
 				end
 				
@@ -205,10 +202,9 @@ module master_send
 				end
 
 				EXEC_ENCRYPT: begin	
-				    $display("[MASTER] EXEC_ENCRYPT: crypto_done=%b, last_block=%b", spi_if.crypto_done, last_block);
 					if(spi_if.crypto_done) begin
 						//spi_if.crypto_done <= 0;
-						$display("CRYPTO DONE ACTIVATED: %d", spi_if.crypto_done);
+				    		$display("[MASTER] EXEC_ENCRYPT: crypto_done=%b, last_block=%b", spi_if.crypto_done, last_block);
 						sck_en <= 0;
 						if (last_block) begin
 							state <= DONE;
@@ -222,7 +218,7 @@ module master_send
 				end
 				
 				DONE: begin
-				    $display("[MASTER] Entering DONE, done_flag=%b", done_cnt);
+				    //$display("[MASTER] Entering DONE, done_flag=%b", done_cnt);
 				    spi_if.ss <= 1'b1;
 				    spi_if.mosi <= 1'b0;
 				    //spi_if.miso_encrypted <= sr_rx;
@@ -232,19 +228,19 @@ module master_send
        					0: begin
 				    		spi_if.done <= 1'b1;
 				    		done_cnt <= 1;
-				    		$display("  -> keeping done (cnt=0->1)");
+				    		//$display("  -> keeping done (cnt=0->1)");
 				    		//$display("DEBUG DONE: data=0x%016X", sr_rx);
 				    	end
 				    	1: begin
 				   		spi_if.done <= 1'b1; 		//keep done active
 				    		done_cnt <= 2;
-				    		$display("  -> keeping done (cnt=1->2)");
+				    		//$display("  -> keeping done (cnt=1->2)");
 				    	end
 				    	2: begin
 				    		spi_if.done <= 1'b0;   		//done clean
 				    		done_cnt <= 0;
 				    		state <= IDLE;
-				    		$display("DEBUG DONE: done cleared, going to IDLE");
+				    		//$display("DEBUG DONE: done cleared, going to IDLE");
 				    	end
 				     endcase
 			     end

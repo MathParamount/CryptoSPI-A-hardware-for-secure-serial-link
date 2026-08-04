@@ -52,7 +52,6 @@ class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut___024root final : public Veril
         CData/*2:0*/ __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__state_encr;
         CData/*5:0*/ __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt;
         CData/*5:0*/ __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__encypt_count;
-        CData/*0:0*/ __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__is_write;
         CData/*0:0*/ __Vdly__crypt_spi_dut__DOT__u_slave__DOT__ss_prev;
         CData/*0:0*/ __VstlFirstIteration;
         CData/*0:0*/ __Vtrigprevexpr___TOP__clk__0;
@@ -83,15 +82,13 @@ class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut___024root final : public Veril
         QData/*63:0*/ crypt_spi_dut__DOT__u_crypt__DOT__epherm_key_s;
         QData/*63:0*/ crypt_spi_dut__DOT__u_crypt__DOT__encrypt_text_reg;
         QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__sck_div;
+        QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__sr_tx;
     };
     struct {
-        QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__sr_tx;
         QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__sr_rx;
         QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__lfsr_m;
         QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__lfsr_s;
-        QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__encrypt_text_reg;
         QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text;
-        QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__slave_rx;
         QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_slave__DOT__sr_tx;
         VlUnpacked<CData/*0:0*/, 4> __Vm_traceActivity;
     };

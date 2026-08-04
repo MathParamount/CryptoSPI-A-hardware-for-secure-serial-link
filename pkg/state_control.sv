@@ -15,6 +15,7 @@ package state_control;
 		IDLE_CRYPT,
 		RECEPTION,
 		ENCRYPT,
+		SIMON_ENCRYPT,
 		TRANSMISSION,
 		DONE_CRYPT
 	} encrypt_state;

@@ -17,7 +17,7 @@ interface spi_bus_if;
     
     /* verilator lint_off UNDRIVEN */
     logic [63:0] encrypt_text;	// shift register SPI
-    logic [63:0] nonce;      	// IV generated or received
+    logic [127:0] nonce;      	// IV generated or received
     logic crypto_done;        	// processed block
     /* verilator lint_off UNDRIVEN */
 

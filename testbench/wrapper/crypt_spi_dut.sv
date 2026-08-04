@@ -14,12 +14,11 @@ module crypt_spi_dut (
     output logic ss,
     output logic crypto_done,
     output logic block_ready,
-    output logic [63:0] nonce,      	// seed from Simon
+    output logic [127:0] nonce,      	// seed from Simon
     output logic [63:0] mosi_encrypted,
     output logic [63:0] miso_encrypted,
     output logic [63:0] encrypt_text,
     output logic crypto_ack
-    //output logic [63:0] lfsr_cipher
 );
     // Instancia a interface
     spi_bus_if spi_if ();

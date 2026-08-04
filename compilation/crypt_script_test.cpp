@@ -112,7 +112,7 @@ int main(int argc, char** argv)
     while (main_t < SIMUL_CYCLES * 1000) {
     	// --- Starting new transmission ---
     	if (!transmission_active && !start_pending && next_idx < transmissions.size()) {
-		  printf("[DEBUG] Iniciando transmissão %d\n", next_idx);
+		  //printf("[DEBUG] START TRANSMISSION %d\n", next_idx);
 
         Transmission& t = transmissions[next_idx];
         if (main_t >= t.start_time_ns * 1000) {
@@ -140,23 +140,22 @@ int main(int argc, char** argv)
     tick();
     
 	 if( main_t % 1000000 == 0) {
-    	printf("[DEBUG] main_t=%lu, active=%d, pending=%d, next_idx=%d, done=%d\n",
-    main_t, transmission_active, start_pending, next_idx, top->done);
+    	//printf("[DEBUG] main_t=%lu, active=%d, pending=%d, next_idx=%d, done=%d\n", main_t, transmission_active, start_pending, next_idx, top->done);
 		
 		// LFSR functionality check
-  		printf("[%.3f us] LFSR current: 0x%016llX (changes: %d)\n", 
+  		printf("[%.3f us] LFSR current: 0x%016llX , main_t: %d ,(transmission: %d)\n", 
                main_t/1000000.0,
                (unsigned long long)top->encrypt_text,
+					main_t,
                lfsr_change_count);
 	 }
 
     // --- Detect posedge signal of done ---
 	 if(top->done && !last_done) {
     	if (transmission_active) {
-    		printf("[%lu ns] DONE! RX=0x%04X\n", main_t/1000, top->miso_encrypted);
     		transmission_active = false;
     		next_idx++;
-    		printf("[DEBUG] next_idx DEPOIS = %d\n", next_idx);
+    		//printf("[DEBUG] next_idx DEPOIS = %d\n", next_idx);
 
 			//stabilization stop
 			for (int w=0; w<5; w++) tick();
@@ -167,16 +166,15 @@ int main(int argc, char** argv)
 
     	// --- Transmission finality ---
     	if (next_idx >= transmissions.size()) {
-        printf("All transmissions completed at %lu ns\n", main_t/1000);
+        //printf("All transmissions completed at %lu ns\n", main_t/1000);
 		  break;
     	}
 	 }
 
-    printf("Simulation finished at %lu ns\n", main_t/1000);
-    printf("Transmissions completed: %d / %zu\n", next_idx, transmissions.size());
+    printf("Transmissions completed: %d / %zu at time: %ld \n", next_idx, transmissions.size(), main_t);
 
-	//Final result
-    printf("Total cycles: %d\n", SIMUL_CYCLES);
+	 //Final result
+    //printf("Total cycles: %d\n", SIMUL_CYCLES);
     printf("Transmissions initialized: %zu\n", transmissions.size());
 
     pointer->close();
