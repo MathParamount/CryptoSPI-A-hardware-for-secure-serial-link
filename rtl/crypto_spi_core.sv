@@ -38,8 +38,9 @@ module crypto_spi_core
 	
 	//simon buffers
 	logic [63:0] rol2,rol8,rol1;
-	logic [63:0] x0,x1;
+	logic [63:0] ys, xs;
 	logic [63:0] ciphertext;	//simon output
+	logic [63:0] round_key [0:71];		// expanded key 72 words of 64 bits
 	
 	assign crypto_if.encrypt_text = encrypt_text_reg;
 	
@@ -122,7 +123,20 @@ module crypto_spi_core
 				end
 				
 				SIMON_ENCRYPT: begin
-				
+					// round key generator
+					
+					//initialization
+					round_key[0] = key[63:0];
+					round_key[1] = key[127:64];
+					
+					for (int i = 2; i < 72; i++) begin
+						temp <= {round_key[i-1][2:0], round_key[i-1][63:3]};	//rotation (ROR)
+						temp <= temp ^ round_key[i-2];
+						temp <= temp ^ temp[0];		// XOR with bit 0
+						round_key[i] = ~round_key[i-4] ^ temp ^ crypto_if.nonce[i-4];	//simplify
+					end
+					
+					//encription
 					if(count_round < 72) begin
 						ys <= encrypt_text_reg[127:64];	    //high
 						xs <= encrypt_text_reg[63:0];	    //low
