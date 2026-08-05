@@ -145,7 +145,9 @@ module crypto_spi_core
 						
 						temp <= {round_key[i-1][2:0], round_key[i-1][31:3]};	//rotation (ROR S^-3)
 						temp <= temp ^ {temp[0], temp[31:1]};		// XOR with m=2 S^-1
+						/* verilator lint_off BLKSEQ */
 						round_key[i] = ~round_key[i-2] ^ temp ^ {{31{1'b0}}, Z[i-4]};	// subkey of 2 rounds ago
+						/* verilator lint_off BLKSEQ */
 					end
 					
 					//encription
