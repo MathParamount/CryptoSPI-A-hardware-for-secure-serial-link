@@ -65,22 +65,32 @@ VL_INLINE_OPT void Vcrypt_spi_dut___024root___nba_sequent__TOP__0(Vcrypt_spi_dut
         = vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__lfsr_s;
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__lfsr_m 
         = vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__lfsr_m;
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__xs 
+        = vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__xs;
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__temp 
+        = vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__temp;
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__Z 
+        = vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__Z;
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt 
         = vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt;
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__state_encr 
         = vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__state_encr;
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__encrypt_text_reg 
+        = vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__encrypt_text_reg;
     vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.__Vdly__miso_encrypted 
         = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.miso_encrypted;
     vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.__Vdly__crypto_done 
         = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.crypto_done;
+    vlSelf->__Vdlyvset__crypt_spi_dut__DOT__u_crypt__DOT__round_key__v0 = 0U;
+    vlSelf->__Vdlyvset__crypt_spi_dut__DOT__u_crypt__DOT__round_key__v1 = 0U;
+    vlSelf->__Vdlyvset__crypt_spi_dut__DOT__u_crypt__DOT__round_key__v2 = 0U;
+    vlSelf->__Vdlyvset__crypt_spi_dut__DOT__u_crypt__DOT__round_key__v3 = 0U;
     if (vlSelf->reset_n) {
         vlSelf->debug_state_crypt = vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__state_mast;
     }
     if ((1U & (~ (IData)(vlSelf->reset_n)))) {
-        vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.nonce = 1ULL;
         vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__state_mast = 0U;
     }
-    vlSelf->nonce = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.nonce;
 }
 
 VL_INLINE_OPT void Vcrypt_spi_dut___024root___nba_sequent__TOP__2(Vcrypt_spi_dut___024root* vlSelf) {
@@ -147,29 +157,33 @@ VL_INLINE_OPT void Vcrypt_spi_dut___024root___nba_sequent__TOP__4(Vcrypt_spi_dut
     if (false && vlSelf) {}  // Prevent unused
     Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vcrypt_spi_dut___024root___nba_sequent__TOP__4\n"); );
+    // Init
+    IData/*31:0*/ __Vdlyvval__crypt_spi_dut__DOT__u_crypt__DOT__round_key__v0;
+    __Vdlyvval__crypt_spi_dut__DOT__u_crypt__DOT__round_key__v0 = 0;
+    IData/*31:0*/ __Vilp;
+    IData/*31:0*/ __Vdlyvval__crypt_spi_dut__DOT__u_crypt__DOT__round_key__v1;
+    __Vdlyvval__crypt_spi_dut__DOT__u_crypt__DOT__round_key__v1 = 0;
     // Body
     if (vlSelf->reset_n) {
         if ((4U & (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__state_encr))) {
             if ((2U & (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__state_encr))) {
                 vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__state_encr = 0U;
             } else if ((1U & (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__state_encr))) {
-                vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__state_encr = 0U;
-            } else if (vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.crypto_ack) {
-                vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.__Vdly__crypto_done = 0U;
-                vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__state_encr = 0U;
-            }
-        } else if ((2U & (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__state_encr))) {
-            if ((1U & (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__state_encr))) {
+                if (vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.crypto_ack) {
+                    vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.__Vdly__crypto_done = 0U;
+                    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__state_encr = 0U;
+                }
+            } else {
                 vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.mosi_encrypted 
                     = (QData)((IData)((1U & (IData)(
-                                                    (vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__encrypt_text_reg 
+                                                    (vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__ciphertext 
                                                      >> 
                                                      (0x3fU 
                                                       & ((IData)(0x3fU) 
                                                          - (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt))))))));
                 vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.__Vdly__miso_encrypted 
                     = (QData)((IData)((1U & (IData)(
-                                                    (vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__encrypt_text_reg 
+                                                    (vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__ciphertext 
                                                      >> 
                                                      (0x3fU 
                                                       & ((IData)(0x3fU) 
@@ -178,8 +192,128 @@ VL_INLINE_OPT void Vcrypt_spi_dut___024root___nba_sequent__TOP__4(Vcrypt_spi_dut
                     = (0x3fU & ((IData)(1U) + (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt)));
                 if ((0x3fU == (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt))) {
                     vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt = 0U;
+                    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__state_encr = 5U;
+                }
+            }
+        } else if ((2U & (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__state_encr))) {
+            if ((1U & (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__state_encr))) {
+                vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__i = 2U;
+                __Vdlyvval__crypt_spi_dut__DOT__u_crypt__DOT__round_key__v0 
+                    = vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__key[0U];
+                vlSelf->__Vdlyvset__crypt_spi_dut__DOT__u_crypt__DOT__round_key__v0 = 1U;
+                while (VL_GTS_III(32, 0x48U, vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__i)) {
+                    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vlvbound_h6b7f6e6a__0 
+                        = (1U & (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__lfsr_m));
+                    if (VL_LIKELY((0x3dU >= (0x3fU 
+                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__i)))) {
+                        vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__Z 
+                            = (((~ (1ULL << (0x3fU 
+                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__i))) 
+                                & vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__Z) 
+                               | (0x3fffffffffffffffULL 
+                                  & ((QData)((IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vlvbound_h6b7f6e6a__0)) 
+                                     << (0x3fU & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__i))));
+                    }
+                    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__temp 
+                        = ((((0x47U >= (0x7fU & (vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__i 
+                                                 - (IData)(1U))))
+                              ? vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__round_key
+                             [(0x7fU & (vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__i 
+                                        - (IData)(1U)))]
+                              : vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d93fe75__0) 
+                            << 0x1dU) | (((0x47U >= 
+                                           (0x7fU & 
+                                            (vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__i 
+                                             - (IData)(1U))))
+                                           ? vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__round_key
+                                          [(0x7fU & 
+                                            (vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__i 
+                                             - (IData)(1U)))]
+                                           : vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d93fe75__1) 
+                                         >> 3U));
+                    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__temp 
+                        = (vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__temp 
+                           ^ ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__temp 
+                               << 0x1fU) | (vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__temp 
+                                            >> 1U)));
+                    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vlvbound_h3809abc3__0 
+                        = (((~ ((0x47U >= (0x7fU & 
+                                           (vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__i 
+                                            - (IData)(2U))))
+                                 ? vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__round_key
+                                [(0x7fU & (vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__i 
+                                           - (IData)(2U)))]
+                                 : vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d93fe75__2)) 
+                            ^ vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__temp) 
+                           ^ (1U & ((0x3dU >= (0x3fU 
+                                               & (vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__i 
+                                                  - (IData)(4U))))
+                                     ? (IData)((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__Z 
+                                                >> 
+                                                (0x3fU 
+                                                 & (vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__i 
+                                                    - (IData)(4U)))))
+                                     : (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d96565c__0))));
+                    if (VL_LIKELY((0x47U >= (0x7fU 
+                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__i)))) {
+                        vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__round_key[(0x7fU 
+                                                                             & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__i)] 
+                            = vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vlvbound_h3809abc3__0;
+                    }
+                    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__i 
+                        = ((IData)(1U) + vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__i);
+                }
+                __Vdlyvval__crypt_spi_dut__DOT__u_crypt__DOT__round_key__v1 
+                    = vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__key[1U];
+                vlSelf->__Vdlyvset__crypt_spi_dut__DOT__u_crypt__DOT__round_key__v1 = 1U;
+                if ((0x48U > (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__count_round))) {
+                    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__temp 
+                        = ((((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__rol1 
+                              & vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__rol8) 
+                             ^ vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__rol2) 
+                            ^ vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__ys) 
+                           ^ ((0x47U >= (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__count_round))
+                               ? vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__round_key
+                              [vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__count_round]
+                               : vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d93fe75__3));
+                    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__ys 
+                        = (IData)((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__encrypt_text_reg 
+                                   >> 0x20U));
+                    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__rol1 
+                        = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__xs 
+                            << 1U) | (vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__xs 
+                                      >> 0x1fU));
+                    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__count_round 
+                        = (0x7fU & ((IData)(1U) + (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__count_round)));
+                    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__rol8 
+                        = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__xs 
+                            << 8U) | (vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__xs 
+                                      >> 0x18U));
+                    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__rol2 
+                        = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__xs 
+                            << 2U) | (vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__xs 
+                                      >> 0x1eU));
+                    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__xs 
+                        = (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__encrypt_text_reg);
+                    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__encrypt_text_reg 
+                        = (((QData)((IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__temp)) 
+                            << 0x20U) | (QData)((IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__xs)));
+                } else {
+                    vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.__Vdly__crypto_done = 1U;
+                    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__ciphertext 
+                        = vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__encrypt_text_reg;
                     vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__state_encr = 4U;
                 }
+                vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__key[0U] 
+                    = (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__lfsr_s);
+                vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__key[1U] 
+                    = (IData)((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__lfsr_s 
+                               >> 0x20U));
+                vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__key[2U] 
+                    = (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__lfsr_m);
+                vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__key[3U] 
+                    = (IData)((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__lfsr_m 
+                               >> 0x20U));
             } else {
                 vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__lfsr_m 
                     = ((vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__lfsr_m 
@@ -197,14 +331,13 @@ VL_INLINE_OPT void Vcrypt_spi_dut___024root___nba_sequent__TOP__4(Vcrypt_spi_dut
                     = (0x3fU & ((IData)(1U) + (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__encypt_count)));
                 if ((0x3fU == (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__encypt_count))) {
                     vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__encypt_count = 0U;
-                    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__encrypt_text_reg 
+                    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__encrypt_text_reg 
                         = ((IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__is_write)
                             ? (vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
                                ^ vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__lfsr_m)
                             : (vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__slave_rx 
                                ^ vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__lfsr_s));
-                    vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.__Vdly__crypto_done = 1U;
-                    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__state_encr = 3U;
+                    vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__state_encr = 4U;
                 }
             }
         } else if ((1U & (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__state_encr))) {
@@ -240,11 +373,20 @@ VL_INLINE_OPT void Vcrypt_spi_dut___024root___nba_sequent__TOP__4(Vcrypt_spi_dut
         vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt = 0U;
         vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__lfsr_m = 1ULL;
         vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__lfsr_s = 0x8000000000000000ULL;
+        vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__ciphertext = 0ULL;
+        vlSelf->__Vdlyvset__crypt_spi_dut__DOT__u_crypt__DOT__round_key__v2 = 1U;
+        vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__Z = 0ULL;
+        vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__temp = 0U;
+        vlSelf->__Vdlyvset__crypt_spi_dut__DOT__u_crypt__DOT__round_key__v3 = 1U;
     }
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__state_encr 
         = vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__state_encr;
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt 
         = vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt;
+    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__Z = vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__Z;
+    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__temp 
+        = vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__temp;
+    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__xs = vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__xs;
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__lfsr_m 
         = vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__lfsr_m;
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__lfsr_s 
@@ -253,6 +395,26 @@ VL_INLINE_OPT void Vcrypt_spi_dut___024root___nba_sequent__TOP__4(Vcrypt_spi_dut
         = vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__encypt_count;
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__plain_text 
         = vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__plain_text;
+    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__encrypt_text_reg 
+        = vlSelf->__Vdly__crypt_spi_dut__DOT__u_crypt__DOT__encrypt_text_reg;
+    if (vlSelf->__Vdlyvset__crypt_spi_dut__DOT__u_crypt__DOT__round_key__v0) {
+        vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__round_key[0U] 
+            = __Vdlyvval__crypt_spi_dut__DOT__u_crypt__DOT__round_key__v0;
+    }
+    if (vlSelf->__Vdlyvset__crypt_spi_dut__DOT__u_crypt__DOT__round_key__v1) {
+        vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__round_key[1U] 
+            = __Vdlyvval__crypt_spi_dut__DOT__u_crypt__DOT__round_key__v1;
+    }
+    if (vlSelf->__Vdlyvset__crypt_spi_dut__DOT__u_crypt__DOT__round_key__v2) {
+        vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__round_key[0U] = 0U;
+    }
+    if (vlSelf->__Vdlyvset__crypt_spi_dut__DOT__u_crypt__DOT__round_key__v3) {
+        __Vilp = 1U;
+        while ((__Vilp <= 0x47U)) {
+            vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__round_key[__Vilp] = 0U;
+            __Vilp = ((IData)(1U) + __Vilp);
+        }
+    }
     vlSelf->mosi_encrypted = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.mosi_encrypted;
     vlSelf->encrypt_text = vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__encrypt_text_reg;
 }

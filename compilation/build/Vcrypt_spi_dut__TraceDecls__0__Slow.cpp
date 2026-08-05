@@ -6,11 +6,11 @@
 void Vcrypt_spi_dut___024root__traceDeclTypesSub0(VerilatedFst* tracep) {
     {
         const char* __VenumItemNames[]
-        = {"IDLE_CRYPT", "RECEPTION", "ENCRYPT", "TRANSMISSION", 
-                                "DONE_CRYPT"};
+        = {"IDLE_CRYPT", "RECEPTION", "ENCRYPT", "SIMON_ENCRYPT", 
+                                "TRANSMISSION", "DONE_CRYPT"};
         const char* __VenumItemValues[]
-        = {"0", "1", "10", "11", "100"};
-        tracep->declDTypeEnum(1, "state_control::encrypt_state", 5, 3, __VenumItemNames, __VenumItemValues);
+        = {"0", "1", "10", "11", "100", "101"};
+        tracep->declDTypeEnum(1, "state_control::encrypt_state", 6, 3, __VenumItemNames, __VenumItemValues);
     }
     {
         const char* __VenumItemNames[]

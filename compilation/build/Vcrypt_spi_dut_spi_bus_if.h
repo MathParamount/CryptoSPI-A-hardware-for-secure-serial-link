@@ -26,7 +26,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut_spi_bus_if final : public Veri
     CData/*0:0*/ __Vdly__crypto_done;
     QData/*63:0*/ miso_encrypted;
     QData/*63:0*/ mosi_encrypted;
-    QData/*63:0*/ nonce;
+    QData/*63:0*/ ciphertext;
     QData/*63:0*/ __Vdly__miso_encrypted;
 
     // INTERNAL VARIABLES

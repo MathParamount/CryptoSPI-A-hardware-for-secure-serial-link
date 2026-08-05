@@ -37,18 +37,22 @@ module crypto_spi_core
 	logic [63:0] encrypt_text_reg;			//output from LFSR
 	
 	//simon buffers
-	logic [63:0] rol2,rol8,rol1;
-	logic [63:0] ys, xs;
+	logic [31:0] rol2,rol8,rol1;
+	logic [31:0] ys, xs;
 	logic [63:0] ciphertext;	//simon output
-	logic [63:0] round_key [0:71];		// expanded key 72 words of 64 bits
+	logic [31:0] round_key [0:71];		// expanded key 72 words of 31 bits
+	logic [61:0] Z;
+	logic [127:0] key;
+
+	//simon temporal variable
+	logic [31:0] temp;
+	logic [6:0] count_round;
 	
 	assign crypto_if.encrypt_text = encrypt_text_reg;
 	
 	//generating 128 bits nonce
-	assign crypto_if.nonce = {lfsr_m, lfsr_s};
-	
-	assign
-	
+	//assign crypto_if.nonce = {lfsr_m, lfsr_s};
+		
 	initial begin
 	    $display("Crypto module instantiated");
 	    $display("plain_text bits: %0d", $bits(plain_text));
@@ -64,11 +68,16 @@ module crypto_spi_core
 			//lfsr_m <= 64'h326456754ACCEEF1;			// LFSR seed Master -> Slave
 			//lfsr_s <= 64'h523456789ABCDEd2;			// LFSR seed Slave -> Master
 			//$display("[CRYPTO] lfsr_m initialization  = 0x%016X", lfsr_m);
-			crypto_if.nonce <= 64'h0000000000000001;  // initial seed
 			crypto_if.crypto_done <= 0;
 			cycle_cnt <= 0;
 			lfsr_m <= 64'h0000000000000001;   // LFSR seed Master -> Slave
-    			lfsr_s <= 64'h8000000000000000;	  // LFSR seed Slave -> Master
+    		lfsr_s <= 64'h8000000000000000;	  // LFSR seed Slave -> Master
+    		ciphertext <= 64'h0;
+
+			round_key <= '{72{32'h0}};        // 72 repetitions of 32'h0
+
+			Z <= 62'h0;
+			temp <= 32'h0;
 		end
 		else begin
 			debug_state_crypt <= state_mast;
@@ -124,32 +133,35 @@ module crypto_spi_core
 				
 				SIMON_ENCRYPT: begin
 					// round key generator
+					key <= {lfsr_m,lfsr_s};
 					
 					//initialization
-					round_key[0] = key[63:0];
-					round_key[1] = key[127:64];
+					round_key[0] <= key[31:0];		//m=1, fisrt word
+					round_key[1] <= key[63:32];		//m=2, second word
 					
+					//key rotation and bit displacement   &&  key generation
 					for (int i = 2; i < 72; i++) begin
-						temp <= {round_key[i-1][2:0], round_key[i-1][63:3]};	//rotation (ROR)
-						temp <= temp ^ round_key[i-2];
-						temp <= temp ^ temp[0];		// XOR with bit 0
-						round_key[i] = ~round_key[i-4] ^ temp ^ crypto_if.nonce[i-4];	//simplify
+						Z[i] <= lfsr_m[0];
+						
+						temp <= {round_key[i-1][2:0], round_key[i-1][31:3]};	//rotation (ROR S^-3)
+						temp <= temp ^ {temp[0], temp[31:1]};		// XOR with m=2 S^-1
+						round_key[i] = ~round_key[i-2] ^ temp ^ {{31{1'b0}}, Z[i-4]};	// subkey of 2 rounds ago
 					end
 					
 					//encription
 					if(count_round < 72) begin
-						ys <= encrypt_text_reg[127:64];	    //high
-						xs <= encrypt_text_reg[63:0];	    //low
+						ys <= {encrypt_text_reg[63:32]};	    //high
+						xs <= {encrypt_text_reg[31:0]};	    //low
 						
 						//mixing bits and round function fundation
-						rol1 <= {[62:0] , xs[63]};
-						
-						rol8 <= {[55:0], xs[63:56]};
-						
-						rol2 <= {[61:0], xs[63:62};
+						rol1 <= {xs[30:0] , xs[31]};
+
+						rol8 <= {xs[23:0], xs[31:24]};	
+
+						rol2 <= {xs[29:0], xs[31:30]};
 						
 						//ciphertext output generation
-						temp <= (rol1 & rol8) ^ rol2 ^ ys ^ round_key[round_count];
+						temp <= (rol1 & rol8) ^ rol2 ^ ys ^ round_key[count_round];
 						encrypt_text_reg <= {temp, xs};  // new xs = temp, new y = x ancient
 						count_round <= count_round + 1;
 						
@@ -157,18 +169,17 @@ module crypto_spi_core
 					else begin
 						crypto_if.crypto_done <= 1;
 						ciphertext <= encrypt_text_reg;  // result
+						state_encr <= TRANSMISSION;
 					end
-					
-					//key generation
 							
 				end
 				
 				TRANSMISSION: begin
 					//come from master
-					crypto_if.mosi_encrypted <= {63'b0, encrypt_text_reg[63 - cycle_cnt]};
+					crypto_if.mosi_encrypted <= {63'b0, ciphertext[63 - cycle_cnt]};
 					
 					//come from slaver
-					crypto_if.miso_encrypted <= {63'b0, encrypt_text_reg[63 - cycle_cnt]};
+					crypto_if.miso_encrypted <= {63'b0, ciphertext[63 - cycle_cnt]};
 					
 					//$display("[CRYPTO] send bit[%0d]=%b to MASTER (data=0x%016X)", cycle_cnt, encrypt_text_reg[63 - cycle_cnt], encrypt_text_reg);
 		   			

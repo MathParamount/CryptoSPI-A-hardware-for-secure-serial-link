@@ -14,10 +14,11 @@ module crypt_spi_dut (
     output logic ss,
     output logic crypto_done,
     output logic block_ready,
-    output logic [127:0] nonce,      	// seed from Simon
+    //output logic [127:0] nonce,      	// seed from Simon
     output logic [63:0] mosi_encrypted,
     output logic [63:0] miso_encrypted,
     output logic [63:0] encrypt_text,
+    output logic [63:0] ciphertext,
     output logic crypto_ack
 );
     // Instancia a interface
@@ -43,16 +44,14 @@ module crypt_spi_dut (
     assign miso_encrypted = spi_if.crypto_f.miso_encrypted;
 
     //attribution to crypto dut
-    //assign cipher_text = spi_if.cipher_text;
-    assign nonce = spi_if.nonce;
+    //assign nonce = spi_if.nonce;
     assign crypto_done = spi_if.crypto_done;
     assign block_ready = spi_if.block_ready;
     
     //assign lfsr_cipher = u_crypt.lfsr_m;
 
     assign encrypt_text = spi_if.crypto_f.encrypt_text;
-    
-    //assign lfsr_cipher = crypto_f.lfsr_m;
+    assign ciphertext = spi_if.crypto_f.ciphertext;
 
     //interface declaration
     master_send u_master (
