@@ -22,12 +22,12 @@ module slaver_receiver (
         end else begin
 	
             // load bits from MISO
-	    sr_rx <= {sr_rx[62:0], spi_if.mosi_encrypted[0]};
+	        sr_rx <= {sr_rx[62:0], spi_if.mosi_encrypted[0]};
             bit_count <= bit_count + 1;
 
             if(bit_count == 63) begin
                 bit_count <= 0;
-                $display("SLAVE: data_received=0x%04X", sr_rx);   // debug
+                $display("SLAVE: data_received(plaintext) = 0x%016X, data_received(chiphertext) = 0x%016X", spi_if.plaintext, sr_rx);
             end
 
         end

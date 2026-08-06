@@ -5,7 +5,6 @@
 
 #include "verilated_fst_c.h"
 
-
 using namespace std;
 
 const vluint64_t scale_factor = 1000;			//1ns = 1000ps
@@ -15,9 +14,9 @@ const int SIMUL_CYCLES = 1000000;			//total cycles (150 us)
 
 //Transmission structure
 struct Transmission {
-	vluint64_t start_time_ns ;
-	uint64_t data;
-	int expected_response;
+	uint64_t start_time_ns ;
+	uint64_t plaintext;
+	uint64_t expected_cipher;
 	const char* description;
 };
 
@@ -25,11 +24,6 @@ struct Transmission {
 Vcrypt_spi_dut* top = nullptr;
 VerilatedFstC* pointer = nullptr;
 vluint64_t main_t = 0;				//ps time
-int transm_count = 0;
-
-//LFSR data tracking
-uint64_t last_lfsr = 0;
-int lfsr_change_count = 0;
 
 
 //clock count, time unit and generation waves
@@ -44,22 +38,10 @@ void tick()
     top->clk = 1;
     top->eval();
 
-	//Displaying LFSR signals & time running
-	
-	if(top->encrypt_text != last_lfsr)
-	{
-    printf("[%.3f us] LFSR data changed from: 0x%016llX --> 0x%016llX\n",
-           main_t/1000000.0,
-           (unsigned long long)last_lfsr,    // last value
-           (unsigned long long)top->ciphertext); // new value encrypted
-    last_lfsr = top->encrypt_text;
-    lfsr_change_count++;
-	}
-	
+  	 //Displaying LFSR signals & time running
+		
     pointer->dump(main_t);
     main_t += clock_half_period;
-
-	transm_count++;
 }
 
 int main(int argc, char** argv)
@@ -71,7 +53,7 @@ int main(int argc, char** argv)
     pointer = new VerilatedFstC;
 
     top->trace(pointer, 99);
-    pointer->open("Cryptwave.vcd");
+    pointer->open("Simon_wave.vcd");
 
     // initialization
     top->reset_n = 0;
@@ -83,20 +65,14 @@ int main(int argc, char** argv)
     
 	 top->reset_n = 1;
 	 printf("Made the reset\n");
-
+		
+	 //Simon transmission tests
 	 std::vector<Transmission> transmissions = {
         // basic test
-        {100,  0x0012, 0, "Zero"},
-        {1000, 0xFFFF, 0, "All ones"},
-        {1500, 0x5555, 0, "Alternating 0x55"},
-        {2000, 0xAAAA, 0, "Alternating 0xAA"},
-        // specific patterns
-        {3000, 0x00A5, 0, "Pattern A5"},
-        {3500, 0x5A5A, 0, "Pattern 5A5A"},
-        // (to FILL_BUFFER)
-        {4000, 0x10A4, 0, "Even command - should go to FILL_BUFFER"},
-        // to DONE
-        {4500, 0xAB41, 0, "Repeat A5"},
+        {100,  0x656b696c2064e75ULL, 0x5DC20AF09B5097B5, "Test 1 (original vector Simon)"},
+        {1000, 0x0000000000000000ULL, 0xAABBB8284A4EE59E, "Test 2 (All Zeros)"},
+        {2000, 0xFFFFFFFFFFFFFFFFULL, 0xBA3F196D8DDE7F2A, "Test 3 (All Ones)"},
+        {3000, 0x0123456789ABCDEFULL, 0xB80BF5C1988071B7, "Test 4 (Hexadecimal count)"}
     };
 
     //==========  main simulation ============ 
@@ -104,8 +80,9 @@ int main(int argc, char** argv)
     static int next_idx = 0, i = 0;
     static bool transmission_active = false;
     bool start_pending = false;
-    uint16_t pending_data = 0;
+    uint64_t pending_data = 0;
     bool last_done = false;
+	 int sucess_count = 0;
 
     printf("======== Starting simulation ===========\n");
 
@@ -115,23 +92,24 @@ int main(int argc, char** argv)
 		  //printf("[DEBUG] START TRANSMISSION %d\n", next_idx);
 
         Transmission& t = transmissions[next_idx];
-        if (main_t >= t.start_time_ns * 1000) {
-            pending_data = t.data;
+        if (main_t >= t.start_time_ns * 1000ULL) {
+            pending_data = t.plaintext;
             start_pending = true;
             printf("[%lu ns] Starting: %s (data=0x%04llX)\n",
-                   main_t/1000, t.description, (unsigned long long)t.data);
+                   main_t/1000, t.description, (unsigned long long)t.plaintext);
         }
     }
 
-    //printf("[DEBUG] Ativando start para idx %d, data=0x%04X\n", next_idx, pending_data);
-
-    // --- Applying start pulse (3 cycles) ---
+    
+    // --- Applying start a pulse/cycle ---
     if (start_pending) {
-        top->start = 1;
+
         top->master_data = pending_data;
-        for (i = 0; i < 3; i++) tick();
-        top->start = 0;
-        start_pending = false;
+		  top->start = 1;
+		  tick();
+        for (int w = 0; w < 3; w++) tick();		//kepping start by 3 cycles
+		  top->start = 0;
+		  start_pending = false;
         transmission_active = true;
         continue;
     }
@@ -139,43 +117,50 @@ int main(int argc, char** argv)
     // --- Tick normal ---
     tick();
     
-	 if( main_t % 1000000 == 0) {
-    	//printf("[DEBUG] main_t=%lu, active=%d, pending=%d, next_idx=%d, done=%d\n", main_t, transmission_active, start_pending, next_idx, top->done);
-		
-		// LFSR functionality check
-  		printf("[%.3f us] LFSR current: 0x%016llX , main_t: %d ,(transmission: %d)\n", 
-               main_t/1000000.0,
-               (unsigned long long)top->ciphertext,
-					main_t,
-               lfsr_change_count);
-	 }
-
+	 
     // --- Detect posedge signal of done ---
 	 if(top->done && !last_done) {
     	if (transmission_active) {
-    		transmission_active = false;
-    		next_idx++;
-    		//printf("[DEBUG] next_idx DEPOIS = %d\n", next_idx);
+    		Transmission& t = transmissions[next_idx];
 
+			uint64_t result = top->ciphertext;	
+			
+			printf("[%llu ns] END:\n", (unsigned long long)(main_t / 1000));
+         printf(" Output (Ciphertext) = 0x%016llX\n", (unsigned long long)result);
+         printf(" Expected = 0x%016llX", (unsigned long long)t.expected_cipher);
+                
+         if (result == t.expected_cipher) {
+            printf(" -> [PASS]\n\n");
+            sucess_count++;
+         } else {
+            printf(" -> [FAIL]\n\n");
+         }
+
+
+			transmission_active = false;
+    		next_idx++;
+    		
 			//stabilization stop
-			for (int w=0; w<5; w++) tick();
+			for (int w=0; w<10; w++) tick();
 		}
 	 }
     	
     	last_done = top->done;
 
     	// --- Transmission finality ---
-    	if (next_idx >= transmissions.size()) {
-        //printf("All transmissions completed at %lu ns\n", main_t/1000);
+    	if (next_idx >= transmissions.size() && !transmission_active) {
+		  //complete waveform at the end
+		  for( int w =0; w < 20; w++) tick();
 		  break;
     	}
 	 }
 
-    printf("Transmissions completed: %d / %zu at time: %ld \n", next_idx, transmissions.size(), main_t);
+    printf("Transmissions completed: %d / %zu at time: %ld \n", next_idx, transmissions.size(), (main_t/1000));
 
 	 //Final result
     //printf("Total cycles: %d\n", SIMUL_CYCLES);
-    printf("Transmissions initialized: %zu\n", transmissions.size());
+    printf("Made tests: %i / %zu\n", next_idx, transmissions.size());
+    printf("Sucess test training: %d\n", sucess_count);
 
     pointer->close();
     delete top;

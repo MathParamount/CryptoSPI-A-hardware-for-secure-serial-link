@@ -31,7 +31,7 @@ module master_send
 	localparam DIV_MAX = 10;  		// 100 cycles = 1us (99 = 0-99) ; (To 199 -> 2 us/10 ns = 200 cycles)
 	//localparam DIV_HALF = 49;		// (0-49 = low, 50-99 = high); (To 99 -> 1 us/10 ns = 100 cycles)
 
-	logic sck_en;
+	logic sck_en, ss_delay;
 
 	//crypto internal signals
 	logic last_block;
@@ -77,6 +77,7 @@ module master_send
 			spi_if.done <= 0;
 			sck_en <= 0;
 			total_blocks <= 1;		//each transmission block_length
+			ss_delay <= 0;
 		end
 		
 		else begin
@@ -114,6 +115,7 @@ module master_send
 					bit_count <= 0;
                				sck_div <= 0;
 					done_cnt <= 0;
+					ss_delay <= 0;
 
 					if (spi_if.start) begin
 					    sr <= spi_if.data_to_send;  // load data (buffer)
@@ -132,20 +134,23 @@ module master_send
 
 						if(bit_count == 7) begin
 							bit_count <= 0;
-							cmd_reg <= {32'b0, {sr_rx[62:0], spi_if.miso_encrypted[0]}[31:0]};							
+							//cmd_reg <= {32'b0, {sr_rx[62:0], spi_if.miso_encrypted[0]}[31:0]};							
 							
 							$display("[MASTER] CMD_PARSE: data_to_send[0]=%b, full=0x%016X",spi_if.data_to_send[0], spi_if.data_to_send);
 							
 							//LSB verfing if odd or even
-							//if (spi_if.data_to_send[0] == 0) begin      // EVEN: WRITE
 							if (bit_count == 7) begin      // EVEN: WRITE
-								sr_tx <= spi_if.data_to_send << 48;
-								state <= FILL_BUFFER;  // Write/Encrypt
-							end
-							else begin		// ODD: READ
-								//sr_tx <= 64'h0;			//sending zero in read
-								sr_tx <= spi_if.data_to_send << 48;  // loading same data after each block
-								state <= DRAIN_BUFFER; 		// Read/Decrypt
+								bit_count <= 0;
+								//sending 64 bits to shift_register
+								if (spi_if.data_to_send[0] == 0) begin
+									sr_tx <= spi_if.data_to_send << 48;
+									state <= FILL_BUFFER;  // Write/Encrypt
+								end
+								else begin		// ODD: READ
+									//sr_tx <= 64'h0;			//sending zero in read
+									sr_tx <= spi_if.data_to_send << 48;  // loading same data after each block
+									state <= DRAIN_BUFFER; 		// Read/Decrypt
+								end
 							end		
 						end
 						else bit_count <= bit_count + 1;
@@ -170,11 +175,16 @@ module master_send
 
 				    if (bit_count == 63) begin
 				    	//$display("[MASTER] achieved 63; bit_count=%0d, sck=%b, ss=%b", bit_count, spi_if.sck, spi_if.ss);
-				      	spi_if.ss <= 1;
 					bit_count <= 0; 
 					//spi_if.done <= 1;
 				    	spi_if.block_ready <= 1;
 					state <= EXEC_ENCRYPT;
+					ss_delay <= 1;
+				    end
+				    
+				    if(ss_delay) begin
+				    	spi_if.ss <= 1;
+				    	ss_delay <= 0;
 				    end
 				end
 				

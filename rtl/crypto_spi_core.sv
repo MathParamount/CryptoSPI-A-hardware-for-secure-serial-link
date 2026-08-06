@@ -11,10 +11,8 @@ module crypto_spi_core
 	import state_control::*;
 	
 	//logic control states
-	encrypt_state state_encr;
-	state_t state_mast;
-	
-	//localparam TOTAL_BLOCK = 16;		//total transmission count
+	encrypt_state state_encr;		//crypto core
+	state_t state_mast;			////spi core
 	
 	logic [63:0] plain_text; 	// shift register SPI
 	logic [63:0] slave_rx;
@@ -29,7 +27,7 @@ module crypto_spi_core
 	/* verilator lint_off UNUSEDSIGNAL */
 	
 	logic [5:0] cycle_cnt;
-	logic [5:0] encypt_count;
+	logic [5:0] encypt_count, dencypt_count;
 	
 	reg is_write;
 	
@@ -37,21 +35,24 @@ module crypto_spi_core
 	logic [63:0] encrypt_text_reg;			//output from LFSR
 	
 	//simon buffers
-	logic [31:0] rol2,rol8,rol1;
-	logic [31:0] ys, xs;
-	logic [63:0] ciphertext;	//simon output
-	logic [31:0] round_key [0:71];		// expanded key 72 words of 31 bits
-	logic [61:0] Z;
+	logic [31:0] rol2,rol8,rol1, f_x;
+	logic [31:0] ys, xs, x_new, y, x;
+	logic [63:0] ciphertext;		//simon output
+	logic [31:0] round_key [0:41];		// expanded key 42 words of 32 bits
 	logic [127:0] key;
 
 	//simon temporal variable
 	logic [31:0] temp;
-	logic [6:0] count_round;
+	logic [5:0] count_round;
+	
+	//Simon 64 constant
+	localparam [41:0] Z = 42'b11011011001001101101101100100110110110110;
+	
+	logic [63:0] Post_SMplaintext;
+	logic decrpt_signal;			//signal control to behavior
 	
 	assign crypto_if.encrypt_text = encrypt_text_reg;
-	
-	//generating 128 bits nonce
-	//assign crypto_if.nonce = {lfsr_m, lfsr_s};
+	assign crypto_if.ciphertext = ciphertext;
 		
 	initial begin
 	    $display("Crypto module instantiated");
@@ -59,7 +60,7 @@ module crypto_spi_core
 	end
 	
 	//LFSR core
-	always_ff @(posedge clk or negedge reset_n)
+	always_ff @(posedge clk or negedge reset_n) begin
 		if(!reset_n) begin 
 			plain_text <= 64'h0;
 			slave_rx <= 64'h0;
@@ -67,16 +68,14 @@ module crypto_spi_core
 			state_mast <= IDLE;
 			//lfsr_m <= 64'h326456754ACCEEF1;			// LFSR seed Master -> Slave
 			//lfsr_s <= 64'h523456789ABCDEd2;			// LFSR seed Slave -> Master
-			//$display("[CRYPTO] lfsr_m initialization  = 0x%016X", lfsr_m);
+			//$display("[CRYPTO] lfsr_m initialization  = 0x%016X", lfsr_m);		//debug
 			crypto_if.crypto_done <= 0;
 			cycle_cnt <= 0;
 			lfsr_m <= 64'h0000000000000001;   // LFSR seed Master -> Slave
     		lfsr_s <= 64'h8000000000000000;	  // LFSR seed Slave -> Master
     		ciphertext <= 64'h0;
 
-			round_key <= '{72{32'h0}};        // 72 repetitions of 32'h0
-
-			Z <= 62'h0;
+			round_key <= '{42{32'h0}};        // 42 repetitions of 32'h0
 			temp <= 32'h0;
 		end
 		else begin
@@ -99,13 +98,23 @@ module crypto_spi_core
 						cycle_cnt <= cycle_cnt + 1;
 						
 						if(cycle_cnt == 7) is_write <= ~plain_text[0];
+						
 						if(cycle_cnt == 63) begin
-							//$display("[RECEPTION] is_write: %d, plain_text: 0x%016X, slaver_rx: 0x%016X, encrypt_text_reg: 0x%016X", is_write, plain_text,slave_rx, encrypt_text_reg);
+							$display("[RECEPTION] is_write: %d, plain_text: 0x%016X, slaver_rx: 0x%016X, encrypt_text_reg: 0x%016X", is_write, plain_text,slave_rx, encrypt_text_reg);
 						    cycle_cnt <= 0;
-						    state_encr <= ENCRYPT;
+
+							if (is_write) begin 
+								state_encr <= ENCRYPT;
+								decrpt_signal <= 0;
+							end
+							else begin 
+								state_encr <= DECRYPT;
+								decrpt_signal <= 1;
+							end
 						end
 					end
 				end
+
 				ENCRYPT: begin
 					//1 keystream by cycle
 					lfsr_m <= {lfsr_m[62:0], lfsr_m[63] ^ lfsr_m[43] ^ lfsr_m[33] ^ lfsr_m[22] ^ lfsr_m[10] ^ lfsr_m[1]};
@@ -127,67 +136,125 @@ module crypto_spi_core
 						
 						//crypto_if.crypto_done <= 1;
 					
-						state_encr <= TRANSMISSION;
+						state_encr <= SIMON_ENCRYPT;
 					end
 				end
 				
 				SIMON_ENCRYPT: begin
 					// round key generator
-					key <= {lfsr_m,lfsr_s};
+					//key <= {lfsr_m,lfsr_s};
+					$display("[SIMON] count_round=%d, xs=0x%08X, ys=0x%08X", count_round, xs, ys);
 					
 					//initialization
-					round_key[0] <= key[31:0];		//m=1, fisrt word
-					round_key[1] <= key[63:32];		//m=2, second word
+					round_key[0] <= lfsr_m[31:0];		//m=1, fisrt word
+					round_key[1] <= lfsr_m[63:32];		//m=2, second word
+					round_key[2] <= lfsr_m[31:0];		//m=3, third word or ([95:64];)
+					
+					ys <= {encrypt_text_reg[63:32]};    	//high
+					xs <= {encrypt_text_reg[31:0]};	    	//low
+					
+					count_round <= 0;
 					
 					//key rotation and bit displacement   &&  key generation
-					for (int i = 2; i < 72; i++) begin
-						Z[i] <= lfsr_m[0];
+					for (int i = 2; i < 42; i++) begin						
+						temp <= {round_key[i-1][2:0], round_key[i-1][31:3]};		//rotation (ROR S^-3)
 						
-						temp <= {round_key[i-1][2:0], round_key[i-1][31:3]};	//rotation (ROR S^-3)
-						temp <= temp ^ {temp[0], temp[31:1]};		// XOR with m=2 S^-1
+						if(i % 2 == 0) temp <= temp ^ {round_key[i-1][3:0], round_key[i-1][31:4]};
+						
 						/* verilator lint_off BLKSEQ */
-						round_key[i] = ~round_key[i-2] ^ temp ^ {{31{1'b0}}, Z[i-4]};	// subkey of 2 rounds ago
+						round_key[i] <= round_key[i-2] ^ temp ^ {31'b0, Z[i-2]};	// subkey of 2 rounds ago
 						/* verilator lint_off BLKSEQ */
 					end
 					
 					//encription
-					if(count_round < 72) begin
-						ys <= {encrypt_text_reg[63:32]};	    //high
-						xs <= {encrypt_text_reg[31:0]};	    //low
-						
+					if(count_round < 42) begin						
 						//mixing bits and round function fundation
 						rol1 <= {xs[30:0] , xs[31]};
 
-						rol8 <= {xs[23:0], xs[31:24]};	
+						rol8 <= {xs[27:0], xs[31:28]};	
 
 						rol2 <= {xs[29:0], xs[31:30]};
 						
-						//ciphertext output generation
-						temp <= (rol1 & rol8) ^ rol2 ^ ys ^ round_key[count_round];
-						encrypt_text_reg <= {temp, xs};  // new xs = temp, new y = x ancient
-						count_round <= count_round + 1;
+						// new value at the left
+						x_new <= ys ^ (rol1 & rol8) ^ rol2 ^ round_key[count_round];
 						
+						$display("x_new_size: %d", $bits(x_new));
+						
+						xs <= ys;
+						ys <= x_new;
+						count_round <= count_round + 1;
 					end
 					else begin
-						crypto_if.crypto_done <= 1;
-						ciphertext <= encrypt_text_reg;  // result
+						count_round <= 0;
+						ciphertext <= {ys, xs};		// result
+						count_round <= count_round + 1;
+						
+						$display("[SIMON] Final: ciphertext: 0x%016X , ciphertext_size: %d", ciphertext, $bits(ciphertext));
+						
 						state_encr <= TRANSMISSION;
 					end
 							
 				end
 				
+				DECRYPT: begin
+					//simon decriptography
+					y <= ciphertext[63:32];		//high
+					x <= ciphertext[31:0];		//low
+					
+					for( int k = 41; k <= 0; k--) begin
+						rol1 <= {y[30:0] , y[31]};
+						rol8 <= {y[27:0], y[31:28]};	
+						rol2 <= {y[29:0], y[31:30]};
+						
+						f_x <= x ^ (rol1 & rol8) ^ rol2 ^ round_key[k];
+						
+						x <= y;
+						y <= f_x;
+					end
+					
+					Post_SMplaintext <= {y,x};	// decripted output
+					
+					//$display("\nPost simon decription: 0x%016X", Post_SMplaintext);
+					
+					//LFSR decription
+					if(is_write) crypto_if.plaintext <= Post_SMplaintext ^ lfsr_m;
+					else crypto_if.plaintext <= Post_SMplaintext ^ lfsr_s;
+						
+					$display("\nPlaintext from master: 0x%016X",crypto_if.plaintext);	
+					state_encr <= TRANSMISSION;					
+				end
+
 				TRANSMISSION: begin
-					//come from master
-					crypto_if.mosi_encrypted <= {63'b0, ciphertext[63 - cycle_cnt]};
 					
-					//come from slaver
-					crypto_if.miso_encrypted <= {63'b0, ciphertext[63 - cycle_cnt]};
+					if (is_write) begin
+						//come from master
+						if(decrpt_signal == 1'b0) begin
+							crypto_if.mosi_encrypted <= {63'b0, ciphertext[63 - cycle_cnt]};
+							crypto_if.miso_encrypted <= 64'h0;
+						end
+						else begin
+							crypto_if.mosi_encrypted <= {63'b0, crypto_if.plaintext[63 - cycle_cnt]};
+							crypto_if.miso_encrypted <= 64'h0;
+						end
+					end
+					else begin
+						//come from slaver
+						if(decrpt_signal == 1'b0) begin
+							crypto_if.miso_encrypted <= {63'b0, ciphertext[63 - cycle_cnt]};
+							crypto_if.mosi_encrypted <= 64'h0;
+						end
+						else begin
+							crypto_if.miso_encrypted <= {63'b0, crypto_if.plaintext[63 - cycle_cnt]};
+							crypto_if.mosi_encrypted <= 64'h0;
+						end
+					end
 					
-					//$display("[CRYPTO] send bit[%0d]=%b to MASTER (data=0x%016X)", cycle_cnt, encrypt_text_reg[63 - cycle_cnt], encrypt_text_reg);
-		   			
-		   			cycle_cnt <= cycle_cnt + 1;
+					$display("[CRYPTO] send bit[%0d]=%b to MASTER (data=0x%016X)", cycle_cnt, ciphertext[63 - cycle_cnt], ciphertext);
+			   			
+			   		cycle_cnt <= cycle_cnt + 1;
 		   			
 		   			if(cycle_cnt == 63) begin
+		   				crypto_if.crypto_done <= 1;
 		   				cycle_cnt <= 0;
 		   				state_encr <= DONE_CRYPT;
 		   			end
@@ -204,7 +271,6 @@ module crypto_spi_core
 			endcase
 		
 	     	end
-	   
-	//SIMON
+	end
 
 endmodule

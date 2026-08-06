@@ -17,6 +17,7 @@ package state_control;
 		ENCRYPT,
 		SIMON_ENCRYPT,
 		TRANSMISSION,
+		DECRYPT,
 		DONE_CRYPT
 	} encrypt_state;
 
