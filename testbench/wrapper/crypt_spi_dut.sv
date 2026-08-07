@@ -64,6 +64,7 @@ module crypt_spi_dut (
     );
     
     slaver_receiver u_slave (
+        .reset_n(reset_n),
         .spi_if(spi_if.slaver_f)
     );
 

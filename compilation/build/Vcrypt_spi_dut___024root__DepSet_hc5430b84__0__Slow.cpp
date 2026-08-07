@@ -119,10 +119,10 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___dump_triggers__act(Vcrypt_spi_dut__
         VL_DBG_MSGF("         'act' region trigger index 1 is active: @(posedge clk or negedge reset_n)\n");
     }
     if ((4ULL & vlSelf->__VactTriggered.word(0U))) {
-        VL_DBG_MSGF("         'act' region trigger index 2 is active: @(posedge crypt_spi_dut.spi_if.sck)\n");
+        VL_DBG_MSGF("         'act' region trigger index 2 is active: @(negedge reset_n or posedge crypt_spi_dut.spi_if.sck)\n");
     }
     if ((8ULL & vlSelf->__VactTriggered.word(0U))) {
-        VL_DBG_MSGF("         'act' region trigger index 3 is active: @(negedge crypt_spi_dut.spi_if.sck)\n");
+        VL_DBG_MSGF("         'act' region trigger index 3 is active: @(negedge reset_n or negedge crypt_spi_dut.spi_if.sck)\n");
     }
 }
 #endif  // VL_DEBUG
@@ -143,10 +143,10 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___dump_triggers__nba(Vcrypt_spi_dut__
         VL_DBG_MSGF("         'nba' region trigger index 1 is active: @(posedge clk or negedge reset_n)\n");
     }
     if ((4ULL & vlSelf->__VnbaTriggered.word(0U))) {
-        VL_DBG_MSGF("         'nba' region trigger index 2 is active: @(posedge crypt_spi_dut.spi_if.sck)\n");
+        VL_DBG_MSGF("         'nba' region trigger index 2 is active: @(negedge reset_n or posedge crypt_spi_dut.spi_if.sck)\n");
     }
     if ((8ULL & vlSelf->__VnbaTriggered.word(0U))) {
-        VL_DBG_MSGF("         'nba' region trigger index 3 is active: @(negedge crypt_spi_dut.spi_if.sck)\n");
+        VL_DBG_MSGF("         'nba' region trigger index 3 is active: @(negedge reset_n or negedge crypt_spi_dut.spi_if.sck)\n");
     }
 }
 #endif  // VL_DEBUG
@@ -298,7 +298,7 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___ctor_var_reset(Vcrypt_spi_dut___024
     vlSelf->__Vtrigprevexpr___TOP__clk__0 = VL_RAND_RESET_I(1);
     vlSelf->__Vtrigprevexpr___TOP__reset_n__0 = VL_RAND_RESET_I(1);
     vlSelf->__Vtrigprevexpr___TOP__crypt_spi_dut__DOT__spi_if__sck__0 = VL_RAND_RESET_I(1);
-    for (int __Vi0 = 0; __Vi0 < 4; ++__Vi0) {
+    for (int __Vi0 = 0; __Vi0 < 3; ++__Vi0) {
         vlSelf->__Vm_traceActivity[__Vi0] = 0;
     }
 }

@@ -1,6 +1,7 @@
 `timescale 1ns/1ps  // T_SCK = 504 ns
 
 module slaver_receiver (
+    input logic reset_n,
     spi_bus_if.slaver_f spi_if
 );
     /* verilator lint_off UNUSEDSIGNAL */
@@ -15,38 +16,42 @@ module slaver_receiver (
     
 
     // transmission model
-    always_ff @(posedge spi_if.sck) begin
-        if(spi_if.ss) begin
+    always_ff @(posedge spi_if.sck or negedge reset_n) begin
+    	if(!reset_n) begin
             bit_count <= 0;
-            sr_rx <= '0;
-        end else begin
-	
-            // load bits from MISO
-	        sr_rx <= {sr_rx[62:0], spi_if.mosi_encrypted[0]};
-            bit_count <= bit_count + 1;
-
-            if(bit_count == 63) begin
-                bit_count <= 0;
-                $display("SLAVE: data_received(plaintext) = 0x%016X, data_received(chiphertext) = 0x%016X", spi_if.plaintext, sr_rx);
-            end
-
-        end
-    end
-
-    always_ff @(negedge spi_if.sck) begin
-        
-        if(spi_if.ss) begin
-            spi_if.miso <= 0;
+            sr_rx <= 0;
             ss_prev <= 1;
         end
         else begin
-            if(ss_prev) begin
-                sr_tx  <= spi_if.data_to_send;
-                ss_prev <= 0;
-            end
+        	//posedge ss signal
+		    if(spi_if.ss && !ss_prev) begin
+		        bit_count <= 0;
+		        sr_rx <= 0;
+		    end else if (!spi_if.ss) begin
+		        sr_rx <= {sr_rx[62:0], spi_if.mosi_encrypted[0]};
+		        bit_count <= bit_count + 1;
+		    
+		        if(bit_count == 63)  $display("SLAVE: ciphertext = 0x%016X", sr_rx);
+            	  end
+        	ss_prev <= spi_if.ss;
+        end
+    end
+
+    always_ff @(negedge spi_if.sck or negedge reset_n) begin
+        if(!reset_n) begin
+            spi_if.miso <= 0;
+        end else begin     
+		    if(spi_if.ss) begin
+		        spi_if.miso <= 0;
+		    end
             else begin
-                spi_if.miso <= sr_tx[63];      // send bit
-                sr_tx <= {sr_tx[62:0], 1'b0};  // displacement
+                if(ss_prev) begin
+		            sr_tx  <= spi_if.data_to_send;
+		        end
+                else begin
+                	spi_if.miso <= sr_tx[63];      // send bit
+                	sr_tx <= {sr_tx[62:0], 1'b0};  // displacement
+                end
             end
         end
     end

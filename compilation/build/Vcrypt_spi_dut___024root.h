@@ -166,7 +166,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut___024root final : public Veril
         QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_crypt__DOT__slave_rx;
         QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_slave__DOT__sr_tx;
         VlUnpacked<IData/*31:0*/, 42> crypt_spi_dut__DOT__u_crypt__DOT__round_key;
-        VlUnpacked<CData/*0:0*/, 4> __Vm_traceActivity;
+        VlUnpacked<CData/*0:0*/, 3> __Vm_traceActivity;
     };
     VlTriggerVec<1> __VstlTriggered;
     VlTriggerVec<4> __VactTriggered;
