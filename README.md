@@ -119,7 +119,7 @@ The crypto core is controlled by a 7 state FSM, ensuring reliable and determinis
 
 # Waveform analyses
 
-![cpp initialz & transmission test](docs/photos/main/cpp_transmissionSM.png)
+![cpp initialz & transmission test](docs/photos/main/SPI_1_test.png)
 
 A comprehensive set of test cases was executed to validate the architectural behavior and signal integrity of the system. The test was designed to process six independent transmissions, with a total simulation time sufficient to cover all data patterns defined in the testbench.
 
@@ -165,6 +165,12 @@ The encrypted data (ciphertext) produced by the SIMON engine is also preserved i
 ![LFSR compilation test](docs/photos/screenshots/compilt_crypt_1.png)
 
 ## Compilation
+
+Firstly, urge to clone the repository in your desktop:
+
+```bash
+git clone git@github.com:MathParamount/CryptoSPI-A-hardware-for-secure-serial-link.git
+```
 
 The easiest way to compile and execute the simulation is:
 
