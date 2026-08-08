@@ -99,7 +99,7 @@ That brought key improvements:
 
 ### Crypto finite state machine (FSM):
 
-![Crypto FSM architecture](docs/photos/FSMs/CrpFSM_overview.png)
+![Crypto FSM architecture](docs/photos/FSMs/1.png)
 
 The crypto core is controlled by a 7 state FSM, ensuring reliable and deterministic transitions between data reception, processing, and transmission phases.
 
@@ -162,7 +162,8 @@ The project includes a dedicated compilation script, run_verl.sh, which automate
 
 The encrypted data (ciphertext) produced by the SIMON engine is also preserved in internal registers throughout the entire cycle, ensuring that it remains available for subsequent operations (e.g., future encryption rounds, or for Slave decryption). This storage strategy minimises data movement and helps maintain consistency across the system.
 
-![LFSR compilation test](docs/photos/screenshots/compilt_crypt_1.png)
+![LFSR compilation test](docs/photos/FSMs/2.png)
+
 
 ## Compilation
 
