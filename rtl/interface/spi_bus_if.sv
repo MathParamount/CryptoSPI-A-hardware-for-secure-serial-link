@@ -12,8 +12,8 @@ interface spi_bus_if;
     
     //cryptographic signals
     logic block_ready;
-    logic [63:0] miso_encrypted;
-    logic [63:0] mosi_encrypted;
+    logic miso_encrypted;
+    logic mosi_encrypted;
     
     /* verilator lint_off UNDRIVEN */
     logic [63:0] encrypt_text;	// shift register SPI

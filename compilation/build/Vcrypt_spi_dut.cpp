@@ -22,10 +22,10 @@ Vcrypt_spi_dut::Vcrypt_spi_dut(VerilatedContext* _vcontextp__, const char* _vcna
     , ss{vlSymsp->TOP.ss}
     , crypto_done{vlSymsp->TOP.crypto_done}
     , block_ready{vlSymsp->TOP.block_ready}
-    , crypto_ack{vlSymsp->TOP.crypto_ack}
-    , master_data{vlSymsp->TOP.master_data}
     , mosi_encrypted{vlSymsp->TOP.mosi_encrypted}
     , miso_encrypted{vlSymsp->TOP.miso_encrypted}
+    , crypto_ack{vlSymsp->TOP.crypto_ack}
+    , master_data{vlSymsp->TOP.master_data}
     , encrypt_text{vlSymsp->TOP.encrypt_text}
     , ciphertext{vlSymsp->TOP.ciphertext}
     , plaintext{vlSymsp->TOP.plaintext}

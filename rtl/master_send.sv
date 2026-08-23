@@ -44,11 +44,11 @@ module master_send
 	
 	always_ff @(posedge clk) begin
 	    	if (state == IDLE) begin
-				block_count <= 0;
-			end
+			block_count <= 0;
+		end
 	    	else if (spi_if.block_ready && state == EXEC_ENCRYPT && block_count < total_blocks - 1) begin
         		block_count <= block_count + 1;
-				$display("block_count  value: %d", block_count);
+			$display("block_count  value: %d", block_count);
         	end
 	end
 	
@@ -120,7 +120,7 @@ module master_send
 					if (spi_if.start) begin
 					    sr <= spi_if.data_to_send;  // load data (buffer)
 					    sck_en <= 1;
-						$display("[MASTER] Start transmission, data_to_send=0x%016X", spi_if.data_to_send);
+					    $display("[MASTER] Start transmission, data_to_send=0x%016X", spi_if.data_to_send);
 					    state <= CMD_PARSE;
                    			end
 				end
@@ -130,38 +130,35 @@ module master_send
 					
 					if(spi_if.sck && !sck_prev) begin
 						spi_if.mosi <= sr[63 - bit_count];
-						sr_rx <= {sr_rx[62:0], spi_if.miso_encrypted[0]};
+						sr_rx <= {sr_rx[62:0], spi_if.miso_encrypted};
 
-						if(bit_count == 7) begin
+						$display("[MASTER] CMD_PARSE: data_to_send[0]=%b, full_data=0x%016X",spi_if.data_to_send[0], spi_if.data_to_send);
+							
+						//LSB verfing if odd or even
+						if (bit_count == 7) begin      	// EVEN: WRITE
 							bit_count <= 0;
-							//cmd_reg <= {32'b0, {sr_rx[62:0], spi_if.miso_encrypted[0]}[31:0]};							
 							
-							$display("[MASTER] CMD_PARSE: data_to_send[0]=%b, full=0x%016X",spi_if.data_to_send[0], spi_if.data_to_send);
-							
-							//LSB verfing if odd or even
-							if (bit_count == 7) begin      // EVEN: WRITE
-								bit_count <= 0;
-								//sending 64 bits to shift_register
-								if (spi_if.data_to_send[0] == 0) begin
-									sr_tx <= spi_if.data_to_send << 48;
-									state <= FILL_BUFFER;  // Write/Encrypt
-								end
-								else begin		// ODD: READ
-									//sr_tx <= 64'h0;			//sending zero in read
-									sr_tx <= spi_if.data_to_send << 48;  // loading same data after each block
-									state <= DRAIN_BUFFER; 		// Read/Decrypt
-								end
-							end		
-						end
+							//sending 64 bits to shift_register
+							if (spi_if.data_to_send[0] == 0) begin
+								sr_tx <= spi_if.data_to_send << 48;
+								state <= FILL_BUFFER;  		// Write/Encrypt
+							end
+							else begin		// ODD: READ
+								//sr_tx <= 64'h0;			//sending zero in read
+								sr_tx <= spi_if.data_to_send << 48;  // loading same data after each block
+								state <= DRAIN_BUFFER; 		// Read/Decrypt
+							end
+						end		
 						else bit_count <= bit_count + 1;
-					end			
+				       end			
 				end
 
 				FILL_BUFFER: begin
 				    spi_if.ss <= 1'b0;   		// activate slave
+				    
 				    //MISO sampling
 				    if (spi_if.sck && !sck_prev) begin
-						sr_rx <= {sr_rx[62:0], spi_if.miso_encrypted[0]};
+						sr_rx <= {sr_rx[62:0], spi_if.miso_encrypted};
 						bit_count <= bit_count + 1;
 						//$display("DEBUG FILL: bit_count=%d, mosi=%b, miso=%b, sr_rx=0x%016X", bit_count, spi_if.mosi, spi_if.miso, sr_rx);
 				    end
@@ -191,7 +188,7 @@ module master_send
 				DRAIN_BUFFER: begin	
 					//if(bit_count == 0) $display("DEBUG DRAIN: Starting reception, bit_count=0");
 					if(spi_if.sck && !sck_prev) begin
-						sr_rx <= {sr_rx[62:0], spi_if.miso_encrypted[0]};
+						sr_rx <= {sr_rx[62:0], spi_if.miso_encrypted};
 						bit_count <= bit_count + 1;
 					end
 		
@@ -213,9 +210,9 @@ module master_send
 
 				EXEC_ENCRYPT: begin	
 					if(spi_if.crypto_done) begin
-						//spi_if.crypto_done <= 0;
 				    		$display("[MASTER] EXEC_ENCRYPT: crypto_done=%b, last_block=%b", spi_if.crypto_done, last_block);
 						sck_en <= 0;
+						
 						if (last_block) begin
 							state <= DONE;
 						end

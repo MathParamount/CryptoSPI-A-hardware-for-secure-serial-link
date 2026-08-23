@@ -14,8 +14,8 @@ module crypt_spi_dut (
     output logic ss,
     output logic crypto_done,
     output logic block_ready,
-    output logic [63:0] mosi_encrypted,
-    output logic [63:0] miso_encrypted,
+    output logic mosi_encrypted,
+    output logic miso_encrypted,
     output logic [63:0] encrypt_text,
     output logic [63:0] ciphertext,
     output logic crypto_ack,
@@ -51,7 +51,7 @@ module crypt_spi_dut (
     //assign lfsr_cipher = u_crypt.lfsr_m;
 
     assign encrypt_text = spi_if.crypto_f.encrypt_text;
-    assign ciphertext = spi_if.ciphertext;
+    assign ciphertext = spi_if.ciphertext;			//simon output
     
     assign plaintext = spi_if.plaintext;
 
@@ -72,7 +72,7 @@ module crypt_spi_dut (
         .clk(clk),
         .reset_n(reset_n),
         .debug_state_crypt(debug_state_crypt),
-	.crypto_if(spi_if.crypto_f)
+	.spi_if(spi_if.crypto_f)
     );
     
 endmodule

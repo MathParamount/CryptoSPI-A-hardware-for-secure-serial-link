@@ -20,15 +20,16 @@ class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut_spi_bus_if final : public Veri
     CData/*0:0*/ ss;
     CData/*0:0*/ done;
     CData/*0:0*/ block_ready;
+    CData/*0:0*/ miso_encrypted;
+    CData/*0:0*/ mosi_encrypted;
     CData/*0:0*/ crypto_done;
     CData/*0:0*/ crypto_ack;
     CData/*0:0*/ __Vdly__sck;
     CData/*0:0*/ __Vdly__crypto_done;
-    QData/*63:0*/ miso_encrypted;
-    QData/*63:0*/ mosi_encrypted;
+    CData/*0:0*/ __Vdly__mosi_encrypted;
+    CData/*0:0*/ __Vdly__miso_encrypted;
+    QData/*63:0*/ ciphertext;
     QData/*63:0*/ plaintext;
-    QData/*63:0*/ __Vdly__plaintext;
-    QData/*63:0*/ __Vdly__miso_encrypted;
 
     // INTERNAL VARIABLES
     Vcrypt_spi_dut__Syms* const vlSymsp;
