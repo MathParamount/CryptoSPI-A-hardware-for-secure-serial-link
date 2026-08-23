@@ -13,6 +13,7 @@ Vcrypt_spi_dut::Vcrypt_spi_dut(VerilatedContext* _vcontextp__, const char* _vcna
     , clk{vlSymsp->TOP.clk}
     , reset_n{vlSymsp->TOP.reset_n}
     , start{vlSymsp->TOP.start}
+    , is_write{vlSymsp->TOP.is_write}
     , miso{vlSymsp->TOP.miso}
     , done{vlSymsp->TOP.done}
     , sck{vlSymsp->TOP.sck}

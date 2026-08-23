@@ -9,6 +9,8 @@ interface spi_bus_if;
     
     logic start;
     logic done;
+
+    logic is_write;
     
     //cryptographic signals
     logic block_ready;
@@ -30,6 +32,7 @@ interface spi_bus_if;
         input  data_to_send,
         input  crypto_done,
         input  miso_encrypted,
+        input  is_write,
         output sck,
         output mosi,
         output ss,
@@ -42,6 +45,7 @@ interface spi_bus_if;
        input  block_ready,
        input  ss,
        input  sck,
+       input  is_write,
        input  mosi,		//plaintext master
        input  miso,		//plaintext slaver
        input  crypto_ack,       //knowledge of clock

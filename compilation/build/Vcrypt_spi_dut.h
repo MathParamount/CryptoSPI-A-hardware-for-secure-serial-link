@@ -30,6 +30,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut VL_NOT_FINAL : public Verilate
     VL_IN8(&clk,0,0);
     VL_IN8(&reset_n,0,0);
     VL_IN8(&start,0,0);
+    VL_IN8(&is_write,0,0);
     VL_OUT8(&miso,0,0);
     VL_OUT8(&done,0,0);
     VL_OUT8(&sck,0,0);

@@ -11,6 +11,24 @@ void Vcrypt_spi_dut___024root___eval_act(Vcrypt_spi_dut___024root* vlSelf) {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vcrypt_spi_dut___024root___eval_act\n"); );
 }
 
+VL_INLINE_OPT void Vcrypt_spi_dut___024root___nba_sequent__TOP__0(Vcrypt_spi_dut___024root* vlSelf) {
+    if (false && vlSelf) {}  // Prevent unused
+    Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vcrypt_spi_dut___024root___nba_sequent__TOP__0\n"); );
+    // Body
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_slave__DOT__sr_tx 
+        = vlSelf->crypt_spi_dut__DOT__u_slave__DOT__sr_tx;
+}
+
+VL_INLINE_OPT void Vcrypt_spi_dut___024root___nba_sequent__TOP__6(Vcrypt_spi_dut___024root* vlSelf) {
+    if (false && vlSelf) {}  // Prevent unused
+    Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vcrypt_spi_dut___024root___nba_sequent__TOP__6\n"); );
+    // Body
+    vlSelf->crypt_spi_dut__DOT__u_slave__DOT__ss_prev 
+        = vlSelf->__Vdly__crypt_spi_dut__DOT__u_slave__DOT__ss_prev;
+}
+
 VL_INLINE_OPT void Vcrypt_spi_dut___024root___nba_comb__TOP__0(Vcrypt_spi_dut___024root* vlSelf) {
     if (false && vlSelf) {}  // Prevent unused
     Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
@@ -22,34 +40,39 @@ VL_INLINE_OPT void Vcrypt_spi_dut___024root___nba_comb__TOP__0(Vcrypt_spi_dut___
                - (IData)(1U)));
 }
 
-void Vcrypt_spi_dut___024root___nba_sequent__TOP__0(Vcrypt_spi_dut___024root* vlSelf);
 void Vcrypt_spi_dut___024root___nba_sequent__TOP__1(Vcrypt_spi_dut___024root* vlSelf);
 void Vcrypt_spi_dut___024root___nba_sequent__TOP__2(Vcrypt_spi_dut___024root* vlSelf);
 void Vcrypt_spi_dut___024root___nba_sequent__TOP__3(Vcrypt_spi_dut___024root* vlSelf);
 void Vcrypt_spi_dut___024root___nba_sequent__TOP__4(Vcrypt_spi_dut___024root* vlSelf);
+void Vcrypt_spi_dut___024root___nba_sequent__TOP__5(Vcrypt_spi_dut___024root* vlSelf);
 
 void Vcrypt_spi_dut___024root___eval_nba(Vcrypt_spi_dut___024root* vlSelf) {
     if (false && vlSelf) {}  // Prevent unused
     Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vcrypt_spi_dut___024root___eval_nba\n"); );
     // Body
-    if ((2ULL & vlSelf->__VnbaTriggered.word(0U))) {
-        Vcrypt_spi_dut___024root___nba_sequent__TOP__0(vlSelf);
-        vlSelf->__Vm_traceActivity[1U] = 1U;
-    }
     if ((8ULL & vlSelf->__VnbaTriggered.word(0U))) {
-        Vcrypt_spi_dut___024root___nba_sequent__TOP__1(vlSelf);
+        Vcrypt_spi_dut___024root___nba_sequent__TOP__0(vlSelf);
     }
     if ((4ULL & vlSelf->__VnbaTriggered.word(0U))) {
+        Vcrypt_spi_dut___024root___nba_sequent__TOP__1(vlSelf);
+    }
+    if ((2ULL & vlSelf->__VnbaTriggered.word(0U))) {
         Vcrypt_spi_dut___024root___nba_sequent__TOP__2(vlSelf);
-        vlSelf->__Vm_traceActivity[2U] = 1U;
+        vlSelf->__Vm_traceActivity[1U] = 1U;
     }
     if ((1ULL & vlSelf->__VnbaTriggered.word(0U))) {
         Vcrypt_spi_dut___024root___nba_sequent__TOP__3(vlSelf);
     }
-    if ((2ULL & vlSelf->__VnbaTriggered.word(0U))) {
+    if ((8ULL & vlSelf->__VnbaTriggered.word(0U))) {
         Vcrypt_spi_dut___024root___nba_sequent__TOP__4(vlSelf);
-        vlSelf->__Vm_traceActivity[3U] = 1U;
+    }
+    if ((2ULL & vlSelf->__VnbaTriggered.word(0U))) {
+        Vcrypt_spi_dut___024root___nba_sequent__TOP__5(vlSelf);
+        vlSelf->__Vm_traceActivity[2U] = 1U;
+    }
+    if ((4ULL & vlSelf->__VnbaTriggered.word(0U))) {
+        Vcrypt_spi_dut___024root___nba_sequent__TOP__6(vlSelf);
     }
     if ((3ULL & vlSelf->__VnbaTriggered.word(0U))) {
         Vcrypt_spi_dut___024root___nba_comb__TOP__0(vlSelf);
@@ -151,5 +174,7 @@ void Vcrypt_spi_dut___024root___eval_debug_assertions(Vcrypt_spi_dut___024root* 
         Verilated::overWidthError("reset_n");}
     if (VL_UNLIKELY((vlSelf->start & 0xfeU))) {
         Verilated::overWidthError("start");}
+    if (VL_UNLIKELY((vlSelf->is_write & 0xfeU))) {
+        Verilated::overWidthError("is_write");}
 }
 #endif  // VL_DEBUG

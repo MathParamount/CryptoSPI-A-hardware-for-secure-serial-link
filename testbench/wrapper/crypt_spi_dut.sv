@@ -5,6 +5,7 @@ module crypt_spi_dut (
     input  logic reset_n,
     input  logic [63:0] master_data,
     input  logic start,
+    input  logic is_write,
     output logic miso,
     output logic done,
     output logic sck,
@@ -20,7 +21,7 @@ module crypt_spi_dut (
     output logic [63:0] ciphertext,
     output logic crypto_ack,
     output logic [63:0] plaintext
-);
+    );
     // Instancia a interface
     spi_bus_if spi_if ();
 	
@@ -29,6 +30,7 @@ module crypt_spi_dut (
    //attribute external data to dut
     assign spi_if.data_to_send = master_data;
     assign spi_if.start = start;    
+    assign spi_if.is_write = is_write;
 
     assign done = spi_if.done;
     assign sck = spi_if.sck;
@@ -55,11 +57,15 @@ module crypt_spi_dut (
     
     assign plaintext = spi_if.plaintext;
 
+    always_comb begin
+        $display("[TOP] ss = %b", spi_if.ss);
+    end
+
     //interface declaration
     master_send u_master (
         .clk(clk),
         .reset_n(reset_n),
-	.debug_state(debug_state),
+	    .debug_state(debug_state),
         .spi_if(spi_if.master_f) 
     );
     

@@ -14,7 +14,6 @@ module crypto_spi_core
 	encrypt_state state_encr;		//crypto core
 	state_t state_mast;			////spi core
 	
-	logic [63:0] plain_text; 	// shift register SPI
 	logic [63:0] slave_rx;
 
 	//internal buffers
@@ -27,10 +26,8 @@ module crypto_spi_core
 	/* verilator lint_off UNUSEDSIGNAL */
 	
 	logic [5:0] cycle_cnt;
-	logic [5:0] encypt_count, dencypt_count;
-	
-	reg is_write;
-	
+	logic [5:0] encypt_count;
+		
 	// internal logic separation of bus
 	logic [63:0] encrypt_text_reg;			//output from LFSR
 	
@@ -56,13 +53,13 @@ module crypto_spi_core
 		
 	initial begin
 	    $display("Crypto module instantiated");
-	    $display("plain_text bits: %0d", $bits(plain_text));
+	    $display("plain_text bits: %0d", $bits(spi_if.plaintext));
 	end
 	
 	//LFSR core
 	always_ff @(posedge clk or negedge reset_n) begin
 		if(!reset_n) begin 
-			plain_text <= 64'h0;
+			spi_if.plaintext <= 64'h0;
 			slave_rx <= 64'h0;
 			state_encr <= IDLE_CRYPT;
 			state_mast <= IDLE;
@@ -72,8 +69,8 @@ module crypto_spi_core
 			spi_if.crypto_done <= 0;
 			cycle_cnt <= 0;
 			lfsr_m <= 64'h0000000000000001;   // LFSR seed Master -> Slave
-    			lfsr_s <= 64'h8000000000000000;	  // LFSR seed Slave -> Master
-    			spi_if.ciphertext <= 64'h0;
+    		lfsr_s <= 64'h8000000000000000;	  // LFSR seed Slave -> Master
+    		spi_if.ciphertext <= 64'h0;
 			
 			round_key <= '{42{32'h0}};        // 42 repetitions of 32'h0
 			temp <= 32'h0;
@@ -96,25 +93,24 @@ module crypto_spi_core
 
 					if (spi_if.ss == 1'b0) begin  		// only amostrate if active
 						if (spi_if.sck && !sck_prev) begin
-							plain_text <= {plain_text[62:0], spi_if.mosi};      // come from master
+							spi_if.plaintext <= {spi_if.plaintext[62:0], spi_if.mosi};      // come from master
 							slave_rx   <= {slave_rx[62:0], spi_if.miso};       // come from slaver
 							cycle_cnt <= cycle_cnt + 1;
 						end
 						
-						
-						if(cycle_cnt == 7) is_write <= ~plain_text[0];
+						//order transmission
+						//spi_if.is_write <= ~spi_if.plaintext[0];
 						
 						if(cycle_cnt == 63) begin
-							$display("[RECEPTION] is_write: %d, plain_text: 0x%016X, slaver_rx: 0x%016X, encrypt_text_reg: 0x%016X", is_write, plain_text, slave_rx, encrypt_text_reg);
+							$display("[CRYPTO RECEPTION] is_write: %d, plain_text: 0x%016X, slaver_rx: 0x%016X, encrypt_text_reg: 0x%016X", spi_if.is_write, spi_if.plaintext, slave_rx, encrypt_text_reg);
 							
-						    	cycle_cnt <= 0;
-
-							if (is_write) begin
-								state_encr <= ENCRYPT;
+						    cycle_cnt <= 0;
+    						if (spi_if.is_write) begin
+								state_encr <= ENCRYPT;		//write
 								decrpt_signal <= 0;
 							end
-							else begin 
-								state_encr <= DECRYPT;
+							else begin
+								state_encr <= DECRYPT;		//read
 								decrpt_signal <= 1;
 							end
 						end
@@ -133,8 +129,8 @@ module crypto_spi_core
 						//$display("[ENCRYPT] is_write: %d, plain_text: 0x%016X, lfsr_m: 0x%016X, lfsr_s: 0x%016X", is_write, plain_text, lfsr_m, lfsr_s);
 						
 						// calculate the cryptographic data
-						if(is_write) begin
-							encrypt_text_reg <= plain_text ^ lfsr_m;		//write
+						if(spi_if.is_write) begin
+							encrypt_text_reg <= spi_if.plaintext ^ lfsr_m;		//write
 						end
 						else begin 
 							encrypt_text_reg <= slave_rx ^ lfsr_s;			//read
@@ -165,18 +161,17 @@ module crypto_spi_core
 					$display("[SIMON] count_round=%d, xs=0x%08X, ys=0x%08X", count_round, xs, ys);
 					
 					if(count_round < 42) begin						
-						if (count_round + 1 < 42) begin
-							logic [5:0] idx = count_round;	//subkey iteration
+						logic [5:0] idx = count_round;	//subkey iteration
 							
-							//key rotation and bit displacement   &&  key generation
-							temp <= {round_key[idx-1][2:0], round_key[idx-1][31:3]};		//rotation (ROR S^-3)
+						//key rotation and bit displacement   &&  key generation
+						temp <= {round_key[idx-1][2:0], round_key[idx-1][31:3]};		//rotation (ROR S^-3)
 								
-							if((idx + 1) % 2 == 0) temp <= temp ^ {round_key[idx-1][3:0], round_key[idx-1][31:4]};
+						if((idx + 1) % 2 == 0) temp <= temp ^ {round_key[idx-1][3:0], round_key[idx-1][31:4]};
 								
-							/* verilator lint_off BLKSEQ */
-							round_key[idx + 1] <= round_key[idx-1] ^ temp ^ {31'b0, Z[idx-1]};	// subkey of 2 rounds ago
-							/* verilator lint_off BLKSEQ */
-						end
+						/* verilator lint_off BLKSEQ */
+						round_key[idx + 1] <= round_key[idx-1] ^ temp ^ {31'b0, Z[idx-1]};	// subkey of 2 rounds ago
+						/* verilator lint_off BLKSEQ */
+						
 						count_round <= count_round + 1;
 					end
 					
@@ -236,8 +231,8 @@ module crypto_spi_core
 					$display("\n[CRYPTO DECRYPT] Post simon decription: 0x%016X", Post_SMplaintext);
 					
 					//LFSR decription
-					if(is_write) spi_if.plaintext <= Post_SMplaintext ^ lfsr_m;
-					else spi_if.plaintext <= Post_SMplaintext ^ lfsr_s;
+					if(spi_if.is_write) spi_if.plaintext <= Post_SMplaintext ^ lfsr_m;		//write
+					else spi_if.plaintext <= Post_SMplaintext ^ lfsr_s;		//read
 								
 					$display("\n[CRYPTO DECRYPT] Plaintext from master: 0x%016X",spi_if.plaintext);	
 					state_encr <= TRANSMISSION;
@@ -245,7 +240,7 @@ module crypto_spi_core
 
 				TRANSMISSION: begin
 					
-					if (is_write) begin
+					if (spi_if.is_write) begin
 						//come from master
 						if(decrpt_signal == 1'b0) begin
 							spi_if.mosi_encrypted <= spi_if.ciphertext[63 - cycle_cnt];

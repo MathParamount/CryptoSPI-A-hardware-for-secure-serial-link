@@ -21,7 +21,7 @@ module master_send
 
 
 	//counting bit
-	logic [6:0] bit_count;				//to blocks of 127 bits
+	logic [5:0] bit_count;				//to blocks of 127 bits
 		
 	//clock division with (1/4 clock)
 	logic [63:0] sck_div;
@@ -61,7 +61,7 @@ module master_send
 		//Default attribute (reset cycle)
 		if (!reset_n) begin
 			state <= IDLE;
-		        spi_if.block_ready <= 0;
+		    spi_if.block_ready <= 0;
 			// initialize interface signals
 			spi_if.ss <= 1;
 			spi_if.mosi <= 1'b0;
@@ -84,7 +84,7 @@ module master_send
 			debug_state <= state;
 
 			//generating knowledge pulse
-        		if (state == EXEC_ENCRYPT && spi_if.crypto_done) spi_if.crypto_ack <= 1;
+        	if (state == EXEC_ENCRYPT && spi_if.crypto_done) spi_if.crypto_ack <= 1;
 			else spi_if.crypto_ack <= 0;
 
 			if(sck_en) begin
@@ -113,7 +113,7 @@ module master_send
 					spi_if.mosi <= 0;
 					spi_if.done <= 0;
 					bit_count <= 0;
-               				sck_div <= 0;
+               		sck_div <= 0;
 					done_cnt <= 0;
 					ss_delay <= 0;
 
@@ -122,7 +122,7 @@ module master_send
 					    sck_en <= 1;
 					    $display("[MASTER] Start transmission, data_to_send=0x%016X", spi_if.data_to_send);
 					    state <= CMD_PARSE;
-                   			end
+                   	end
 				end
 
 				CMD_PARSE: begin
@@ -134,8 +134,10 @@ module master_send
 
 						$display("[MASTER] CMD_PARSE: data_to_send[0]=%b, full_data=0x%016X",spi_if.data_to_send[0], spi_if.data_to_send);
 							
+						bit_count <= bit_count + 1;
+
 						//LSB verfing if odd or even
-						if (bit_count == 7) begin      	// EVEN: WRITE
+						if (bit_count == 63) begin      	// EVEN: WRITE
 							bit_count <= 0;
 							
 							//sending 64 bits to shift_register
@@ -149,14 +151,14 @@ module master_send
 								state <= DRAIN_BUFFER; 		// Read/Decrypt
 							end
 						end		
-						else bit_count <= bit_count + 1;
-				       end			
+				    end			
 				end
 
 				FILL_BUFFER: begin
 				    spi_if.ss <= 1'b0;   		// activate slave
+				    $display("[MASTER] FILL: bit_count=%d, ss_delay=%b, ss=%b", bit_count, ss_delay, spi_if.ss);
 				    
-				    //MISO sampling
+					//MISO sampling
 				    if (spi_if.sck && !sck_prev) begin
 						sr_rx <= {sr_rx[62:0], spi_if.miso_encrypted};
 						bit_count <= bit_count + 1;
@@ -171,17 +173,11 @@ module master_send
 				    end
 
 				    if (bit_count == 63) begin
-				    	//$display("[MASTER] achieved 63; bit_count=%0d, sck=%b, ss=%b", bit_count, spi_if.sck, spi_if.ss);
-					bit_count <= 0; 
-					//spi_if.done <= 1;
-				    	spi_if.block_ready <= 1;
-					state <= EXEC_ENCRYPT;
-					ss_delay <= 1;
-				    end
-				    
-				    if(ss_delay) begin
-				    	spi_if.ss <= 1;
-				    	ss_delay <= 0;
+						$display("[MASTER] **** bit_count == 63, setting ss_delay ****");
+						bit_count <= 0; 
+						spi_if.block_ready <= 1;
+						state <= EXEC_ENCRYPT;
+						ss_delay <= 1;
 				    end
 				end
 				
@@ -208,9 +204,10 @@ module master_send
 					end
 				end
 
-				EXEC_ENCRYPT: begin	
+				EXEC_ENCRYPT: begin
+					
 					if(spi_if.crypto_done) begin
-				    		$display("[MASTER] EXEC_ENCRYPT: crypto_done=%b, last_block=%b", spi_if.crypto_done, last_block);
+				    	$display("[MASTER] EXEC_ENCRYPT: crypto_done=%b, last_block=%b", spi_if.crypto_done, last_block);
 						sck_en <= 0;
 						
 						if (last_block) begin
@@ -226,7 +223,6 @@ module master_send
 				
 				DONE: begin
 				    //$display("[MASTER] Entering DONE, done_flag=%b", done_cnt);
-				    spi_if.ss <= 1'b1;
 				    spi_if.mosi <= 1'b0;
 				    //spi_if.miso_encrypted <= sr_rx;
 				    bit_count <= 0;
@@ -255,6 +251,12 @@ module master_send
 				  default: state <= IDLE;
 
 			endcase
+
+			if(ss_delay) begin
+				$display("[MASTER] **** Raising ss ****");
+				spi_if.ss <= 1;
+				ss_delay <= 0;
+			end
 		end
 	end
 
