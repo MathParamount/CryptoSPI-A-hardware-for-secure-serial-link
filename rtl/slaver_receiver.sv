@@ -13,10 +13,6 @@ module slaver_receiver (
     
     logic [6:0] bit_count;
     logic ss_prev;
-
-    always_comb begin
-        $display("[SLAVE] ss_input = %b", spi_if.ss);
-    end
     
     // reception model
     always_ff @(posedge spi_if.sck or negedge reset_n) begin

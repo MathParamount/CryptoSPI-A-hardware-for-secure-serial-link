@@ -84,7 +84,7 @@ int main(int argc, char** argv)
     bool last_done = false;
     bool pending_is_write = false;
 
-    printf("======== Starting simulation ===========\n");
+    printf("=========== Starting simulation ===========\n");
 
     while (main_t < SIMUL_CYCLES * 1000) {
     	// --- Starting new transmission ---
@@ -98,10 +98,9 @@ int main(int argc, char** argv)
                 pending_is_write = t.is_write;
                 start_pending = true;
                 printf("[%lu ns] Starting: %s (data=0x%04llX)\n",
-                    main_t/1000, t.description, (unsigned long long)t.plaintext);
+                main_t/1000, t.description, (unsigned long long)t.plaintext);
             }
         }
-
     
         // --- Applying start a pulse/cycle ---
         if (start_pending) {
@@ -119,7 +118,6 @@ int main(int argc, char** argv)
         // --- Tick normal ---
         tick();
     
-	 
         // --- Detect posedge signal of done ---
         if (top->done && !last_done) {
             if (transmission_active) {

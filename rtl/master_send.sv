@@ -173,7 +173,6 @@ module master_send
 				    end
 
 				    if (bit_count == 63) begin
-						$display("[MASTER] **** bit_count == 63, setting ss_delay ****");
 						bit_count <= 0; 
 						spi_if.block_ready <= 1;
 						state <= EXEC_ENCRYPT;

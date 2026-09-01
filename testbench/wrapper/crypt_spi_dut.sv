@@ -21,7 +21,8 @@ module crypt_spi_dut (
     output logic [63:0] ciphertext,
     output logic crypto_ack,
     output logic [63:0] plaintext
-    );
+);
+
     // Instancia a interface
     spi_bus_if spi_if ();
 	
@@ -56,10 +57,6 @@ module crypt_spi_dut (
     assign ciphertext = spi_if.ciphertext;			//simon output
     
     assign plaintext = spi_if.plaintext;
-
-    always_comb begin
-        $display("[TOP] ss = %b", spi_if.ss);
-    end
 
     //interface declaration
     master_send u_master (
