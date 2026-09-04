@@ -42,9 +42,6 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___stl_sequent__TOP__0(Vcrypt_spi_dut_
     Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vcrypt_spi_dut___024root___stl_sequent__TOP__0\n"); );
     // Body
-    VL_WRITEF("[TOP] ss = %b\n[SLAVE] ss_input = %b\n",
-              1,vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.ss,
-              1,(IData)(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.ss));
     vlSelf->done = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.done;
     vlSelf->sck = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.sck;
     vlSelf->ss = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.ss;

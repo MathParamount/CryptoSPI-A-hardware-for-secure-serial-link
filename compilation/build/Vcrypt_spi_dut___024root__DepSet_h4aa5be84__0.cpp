@@ -760,8 +760,7 @@ VL_INLINE_OPT void Vcrypt_spi_dut___024root___nba_sequent__TOP__5(Vcrypt_spi_dut
                         = (vlSelf->crypt_spi_dut__DOT__u_master__DOT__sr_tx 
                            << 1U);
                 }
-                if (VL_UNLIKELY((0x3fU == (IData)(vlSelf->crypt_spi_dut__DOT__u_master__DOT__bit_count)))) {
-                    VL_WRITEF("[MASTER] **** bit_count == 63, setting ss_delay ****\n");
+                if ((0x3fU == (IData)(vlSelf->crypt_spi_dut__DOT__u_master__DOT__bit_count))) {
                     vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__bit_count = 0U;
                     vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.block_ready = 1U;
                     vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__state = 4U;
@@ -865,8 +864,5 @@ VL_INLINE_OPT void Vcrypt_spi_dut___024root___nba_sequent__TOP__5(Vcrypt_spi_dut
     vlSelf->mosi = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.mosi;
     vlSelf->done = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.done;
     vlSelf->block_ready = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.block_ready;
-    VL_WRITEF("[TOP] ss = %b\n[SLAVE] ss_input = %b\n",
-              1,vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.ss,
-              1,(IData)(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.ss));
     vlSelf->ss = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.ss;
 }
