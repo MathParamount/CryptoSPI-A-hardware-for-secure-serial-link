@@ -15,14 +15,11 @@ class alignas(VL_CACHE_LINE_BYTES) Vspi_dut_spi_bus_if final : public VerilatedM
 
     // DESIGN SPECIFIC STATE
     CData/*0:0*/ sck;
-    CData/*0:0*/ ss;
     CData/*0:0*/ mosi;
-    CData/*0:0*/ miso;
+    CData/*0:0*/ ss;
     CData/*0:0*/ done;
-    CData/*0:0*/ __Vdly__mosi;
     CData/*0:0*/ __Vdly__sck;
-    CData/*0:0*/ __Vdly__done;
-    CData/*0:0*/ __Vdly__miso;
+    CData/*0:0*/ __Vdly__mosi;
     SData/*15:0*/ data_received;
 
     // INTERNAL VARIABLES

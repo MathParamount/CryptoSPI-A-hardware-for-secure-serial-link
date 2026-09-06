@@ -17,7 +17,6 @@ const int SIMUL_CYCLES = 1000000;			//total cycles (150 us)
 struct Transmission {
 	vluint64_t start_time_ns ;
 	uint64_t data;
-	int expected_response;
 	const char* description;
 };
 
@@ -56,30 +55,44 @@ int main(int argc, char** argv)
     pointer->open("wave.vcd");
 
     // initialization
-    top->reset = 1;
+    top->reset_n = 1;
     top->start = 0;
     top->master_data = 0;
 
     // Reset
+	top->reset_n = 0;
     for(int i = 0; i < 10; i++) tick();
-    
-	 top->reset = 0;
-	 printf("Made the reset\n");
+    top->reset_n = 1;  
+	
+    printf("Made the reset\n");
 
+    // Master data to send
 	std::vector<Transmission> transmissions = {
         // basic test
-        {100,  0x0000, 0, "Zero"},
-        {2000, 0xFFFF, 0, "All ones"},
-        {4000, 0x5555, 0, "Alternating 0x55"},
-        {6000, 0xAAAA, 0, "Alternating 0xAA"},
+        {100,  0x0000, "Zero"},
+        {2000, 0xFFFF, "All ones"},
+        {4000, 0x5555, "Alternating 0x5555"},
+        {6000, 0xAAAA, "Alternating 0xAAAA"},
         // specific patterns
-        {8000, 0x00A5, 0, "Pattern A5"},
-        {10000, 0x5A5A, 0, "Pattern 5A5A"},
+        //{8000, 0x0ABC, "Pattern 0ABC"},
+        {10000, 0x5A5A, "Pattern 5A5A"},
         // (to FILL_BUFFER)
-        {12000, 0x00A4, 0, "Even command - should go to FILL_BUFFER"},
+        {12000, 0xAAAA, "Even command - should go to FILL_BUFFER"},
         // to DONE
-        {14000, 0x00A5, 0, "Repeat A5"},
+        {14000, 0x10A5, "Pattern 10A5"},
     };
+
+    // Slaver data to send
+    std::vector<uint16_t> slave_responses = {
+    0x0000,  // Zero  response
+    0xFFFF,  // All ones   response
+    0x5555,  // Alternating 0x55
+    0xAAAA,  // Alternating 0xAA response
+    //0x0ABC,  // Pattern ABC  response
+    0x5A5A,  // Pattern 5A5A response
+    0xAAAA,  // Even command response
+    0x10A5   // Pattern 10A5 response
+};
 
     //==========  main simulation ============ 
 
@@ -87,53 +100,61 @@ int main(int argc, char** argv)
     bool transmission_active = false;
     bool start_pending = false;
     uint16_t pending_data = 0;
+    uint16_t pending_slave_data = 0;
     bool last_done = false;
 
     printf("======== Starting simulation ===========\n");
 
     while (main_t < SIMUL_CYCLES * 1000) {
-    // --- Inicia nova transmissão se programada ---
-    if (!transmission_active && !start_pending && next_idx < transmissions.size()) {
-        Transmission& t = transmissions[next_idx];
-        if (main_t >= t.start_time_ns * 1000) {
-            pending_data = t.data;
-            start_pending = true;
-            printf("[%lu ns] Starting: %s (data=0x%04llX)\n",
-                   main_t/1000, t.description, (unsigned long long)t.data);
+        // new transmission start
+        if (!transmission_active && !start_pending && next_idx < transmissions.size()) {
+            Transmission& t = transmissions[next_idx];
+            if (main_t >= t.start_time_ns * 1000) {
+                pending_data = t.data;
+                pending_slave_data = slave_responses[next_idx];         //Slaver response
+                top->slave_data_to_send = pending_slave_data; 
+                start_pending = true;
+                printf("[%lu ns] Starting: %s (Master TX=0x%04llX, Slave TX=0x%04llX)\n",
+       main_t/1000, t.description, (unsigned long long)t.data, (unsigned long long)pending_slave_data);
+            }
         }
-    }
 
-    // --- Aplica pulso de start (3 ciclos) ---
-    if (start_pending) {
-        top->start = 1;
-        top->master_data = pending_data;
-        for (int i = 0; i < 3; i++) tick();
-        top->start = 0;
-        start_pending = false;
-        transmission_active = true;
-        continue;
-    }
-
-    // --- Tick normal ---
-    tick();
-
-    // --- Detecta borda de subida de done ---
-    if (top->done && !last_done) {
-        if (transmission_active) {
-            printf("[%lu ns] DONE! RX=0x%04X\n", main_t/1000, top->data_received);
-            transmission_active = false;
-            next_idx++;
-
-            for (int i = 0; i < 10; i++) tick();
+        // start pulse by 3 cycles
+        if (start_pending) {
+            top->start = 1;
+            top->master_data = pending_data;
+            top->slave_data_to_send = pending_slave_data;        //response send to slaver
+            for (int i = 0; i < 3; i++) tick();
+            top->start = 0;
+            start_pending = false;
+            transmission_active = true;
+            continue;
         }
-    }
-    last_done = top->done;
 
-    // --- Se todas as transmissões foram concluídas, encerra ---
-    if (next_idx >= transmissions.size()) {
-        printf("All transmissions completed at %lu ns\n", main_t/1000);
-        break;
-    }
+        // --- Tick normal ---
+        tick();
+
+        // --- Detect posedge of done signal
+        if (top->done && !last_done) {
+
+            tick();   // ticks
+            tick();   // ticks
+
+            if (transmission_active) {
+                printf("[%lu ns] DONE! RX=0x%04X\n", main_t/1000, top->data_received);
+                transmission_active = false;
+                next_idx++;
+
+                for (int i = 0; i < 8; i++) tick();
+            }
+        }
+        last_done = top->done;
+
+        // --- Se todas as transmissões foram concluídas, encerra ---
+        if (next_idx >= transmissions.size()) {
+            printf("All transmissions completed at %lu ns\n", main_t/1000);
+            break;
+        }
     } 
 
     printf("Simulation finished at %lu ns\n", main_t/1000);

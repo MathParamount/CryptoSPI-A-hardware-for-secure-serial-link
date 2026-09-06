@@ -28,7 +28,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vspi_dut VL_NOT_FINAL : public VerilatedModel
     // The application code writes and reads these signals to
     // propagate new values into/out from the Verilated model.
     VL_IN8(&clk,0,0);
-    VL_IN8(&reset,0,0);
+    VL_IN8(&reset_n,0,0);
     VL_IN8(&start,0,0);
     VL_OUT8(&miso,0,0);
     VL_OUT8(&done,0,0);
@@ -37,6 +37,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vspi_dut VL_NOT_FINAL : public VerilatedModel
     VL_OUT8(&debug_state,2,0);
     VL_OUT8(&ss,0,0);
     VL_IN16(&master_data,15,0);
+    VL_IN16(&slave_data_to_send,15,0);
     VL_OUT16(&data_received,15,0);
 
     // CELLS

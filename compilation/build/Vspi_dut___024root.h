@@ -18,7 +18,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vspi_dut___024root final : public VerilatedMo
 
     // DESIGN SPECIFIC STATE
     VL_IN8(clk,0,0);
-    VL_IN8(reset,0,0);
+    VL_IN8(reset_n,0,0);
     VL_IN8(start,0,0);
     VL_OUT8(miso,0,0);
     VL_OUT8(done,0,0);
@@ -29,20 +29,25 @@ class alignas(VL_CACHE_LINE_BYTES) Vspi_dut___024root final : public VerilatedMo
     CData/*2:0*/ spi_dut__DOT__u_master__DOT__state;
     CData/*6:0*/ spi_dut__DOT__u_master__DOT__bit_count;
     CData/*0:0*/ spi_dut__DOT__u_master__DOT__sck_prev;
+    CData/*0:0*/ spi_dut__DOT__u_master__DOT__ss_delay;
     CData/*2:0*/ spi_dut__DOT__u_master__DOT__done_counter;
     CData/*3:0*/ spi_dut__DOT__u_slave__DOT__bit_count;
     CData/*0:0*/ spi_dut__DOT__u_slave__DOT__ss_prev;
-    CData/*2:0*/ __Vdly__spi_dut__DOT__u_master__DOT__state;
-    CData/*6:0*/ __Vdly__spi_dut__DOT__u_master__DOT__bit_count;
-    CData/*0:0*/ __Vdly__spi_dut__DOT__u_master__DOT__sck_prev;
+    CData/*0:0*/ spi_dut__DOT__u_slave__DOT__miso_reg;
     CData/*2:0*/ __Vdly__debug_state;
+    CData/*0:0*/ __Vdly__spi_dut__DOT__u_master__DOT__sck_prev;
+    CData/*2:0*/ __Vdly__spi_dut__DOT__u_master__DOT__state;
+    CData/*2:0*/ __Vdly__spi_dut__DOT__u_master__DOT__done_counter;
+    CData/*6:0*/ __Vdly__spi_dut__DOT__u_master__DOT__bit_count;
+    CData/*0:0*/ __Vdly__spi_dut__DOT__u_master__DOT__ss_delay;
     CData/*0:0*/ __VstlFirstIteration;
+    CData/*0:0*/ __VicoFirstIteration;
     CData/*0:0*/ __Vtrigprevexpr___TOP__clk__0;
-    CData/*0:0*/ __Vtrigprevexpr___TOP__reset__0;
+    CData/*0:0*/ __Vtrigprevexpr___TOP__reset_n__0;
     CData/*0:0*/ __Vtrigprevexpr___TOP__spi_dut__DOT__spi_if__sck__0;
-    CData/*0:0*/ __Vtrigprevexpr___TOP__spi_dut__DOT__spi_if__ss__0;
     CData/*0:0*/ __VactContinue;
     VL_IN16(master_data,15,0);
+    VL_IN16(slave_data_to_send,15,0);
     VL_OUT16(data_received,15,0);
     SData/*15:0*/ spi_dut__DOT__u_master__DOT__sr;
     SData/*15:0*/ spi_dut__DOT__u_master__DOT__cmd_reg;
@@ -50,18 +55,16 @@ class alignas(VL_CACHE_LINE_BYTES) Vspi_dut___024root final : public VerilatedMo
     SData/*15:0*/ spi_dut__DOT__u_master__DOT__sr_rx;
     SData/*15:0*/ spi_dut__DOT__u_master__DOT__sck_div;
     SData/*15:0*/ spi_dut__DOT__u_slave__DOT__sr_rx;
-    SData/*15:0*/ spi_dut__DOT__u_slave__DOT__data_to_send;
     SData/*15:0*/ spi_dut__DOT__u_slave__DOT__sr_tx;
     SData/*15:0*/ __Vdly__spi_dut__DOT__u_master__DOT__sck_div;
-    SData/*15:0*/ __Vdly__spi_dut__DOT__u_master__DOT__cmd_reg;
-    SData/*15:0*/ __Vdly__spi_dut__DOT__u_master__DOT__sr;
-    SData/*15:0*/ __Vdly__spi_dut__DOT__u_master__DOT__sr_tx;
     SData/*15:0*/ __Vdly__spi_dut__DOT__u_master__DOT__sr_rx;
+    SData/*15:0*/ __Vdly__spi_dut__DOT__u_master__DOT__sr_tx;
     IData/*31:0*/ __VactIterCount;
     VlUnpacked<CData/*0:0*/, 2> __Vm_traceActivity;
     VlTriggerVec<1> __VstlTriggered;
-    VlTriggerVec<3> __VactTriggered;
-    VlTriggerVec<3> __VnbaTriggered;
+    VlTriggerVec<1> __VicoTriggered;
+    VlTriggerVec<2> __VactTriggered;
+    VlTriggerVec<2> __VnbaTriggered;
 
     // INTERNAL VARIABLES
     Vspi_dut__Syms* const vlSymsp;

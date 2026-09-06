@@ -12,11 +12,9 @@ VL_ATTR_COLD void Vspi_dut___024root___eval_initial(Vspi_dut___024root* vlSelf) 
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vspi_dut___024root___eval_initial\n"); );
     // Body
     vlSelf->__Vtrigprevexpr___TOP__clk__0 = vlSelf->clk;
-    vlSelf->__Vtrigprevexpr___TOP__reset__0 = vlSelf->reset;
+    vlSelf->__Vtrigprevexpr___TOP__reset_n__0 = vlSelf->reset_n;
     vlSelf->__Vtrigprevexpr___TOP__spi_dut__DOT__spi_if__sck__0 
         = vlSymsp->TOP__spi_dut__DOT__spi_if.sck;
-    vlSelf->__Vtrigprevexpr___TOP__spi_dut__DOT__spi_if__ss__0 
-        = vlSymsp->TOP__spi_dut__DOT__spi_if.ss;
 }
 
 #ifdef VL_DEBUG
@@ -42,9 +40,15 @@ VL_ATTR_COLD void Vspi_dut___024root___stl_sequent__TOP__0(Vspi_dut___024root* v
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vspi_dut___024root___stl_sequent__TOP__0\n"); );
     // Body
     vlSelf->data_received = vlSymsp->TOP__spi_dut__DOT__spi_if.data_received;
-    vlSelf->miso = vlSymsp->TOP__spi_dut__DOT__spi_if.miso;
     vlSelf->done = vlSymsp->TOP__spi_dut__DOT__spi_if.done;
     vlSelf->sck = vlSymsp->TOP__spi_dut__DOT__spi_if.sck;
     vlSelf->mosi = vlSymsp->TOP__spi_dut__DOT__spi_if.mosi;
     vlSelf->ss = vlSymsp->TOP__spi_dut__DOT__spi_if.ss;
+    vlSelf->spi_dut__DOT__u_slave__DOT__miso_reg = 
+        ((1U & (~ (IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.ss))) 
+         && (1U & ((IData)(vlSelf->spi_dut__DOT__u_slave__DOT__ss_prev)
+                    ? ((IData)(vlSelf->slave_data_to_send) 
+                       >> 0xfU) : ((IData)(vlSelf->spi_dut__DOT__u_slave__DOT__sr_tx) 
+                                   >> 0xfU))));
+    vlSelf->miso = vlSelf->spi_dut__DOT__u_slave__DOT__miso_reg;
 }

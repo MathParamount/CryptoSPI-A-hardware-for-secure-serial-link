@@ -2,10 +2,11 @@
 
 module spi_dut (
     input  logic clk,
-    input  logic reset,
+    input  logic reset_n,
     input  logic [15:0] master_data,
+    input  logic [15:0] slave_data_to_send,
     input  logic start,
-    output  logic miso,
+    output logic miso,
     output logic done,
     output logic [15:0] data_received,
     output logic sck,
@@ -20,6 +21,8 @@ module spi_dut (
 
    //attribute external data to dut
     assign spi_if.data_to_send = master_data;
+    assign spi_if.slave_data_to_send = slave_data_to_send;
+
     assign spi_if.start = start;
 
     assign data_received = spi_if.data_received;
@@ -32,13 +35,16 @@ module spi_dut (
 	//interface declaration
     master_send u_master (
         .clk(clk),
-        .reset(reset),
+        .reset_n(reset_n),
 	    .debug_state(debug_state),
         .spi_if(spi_if.master_f) 
     );
     
     slaver_receiver u_slave (
+        .reset_n(reset_n),
         .spi_if(spi_if.slaver_f)
     );
     
+//always_comb $display("[DUT] slave_tx_data = 0x%04X", slave_tx_data);
+
 endmodule

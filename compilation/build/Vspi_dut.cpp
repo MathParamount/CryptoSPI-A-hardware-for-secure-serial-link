@@ -11,7 +11,7 @@ Vspi_dut::Vspi_dut(VerilatedContext* _vcontextp__, const char* _vcname__)
     : VerilatedModel{*_vcontextp__}
     , vlSymsp{new Vspi_dut__Syms(contextp(), _vcname__, this)}
     , clk{vlSymsp->TOP.clk}
-    , reset{vlSymsp->TOP.reset}
+    , reset_n{vlSymsp->TOP.reset_n}
     , start{vlSymsp->TOP.start}
     , miso{vlSymsp->TOP.miso}
     , done{vlSymsp->TOP.done}
@@ -20,6 +20,7 @@ Vspi_dut::Vspi_dut(VerilatedContext* _vcontextp__, const char* _vcname__)
     , debug_state{vlSymsp->TOP.debug_state}
     , ss{vlSymsp->TOP.ss}
     , master_data{vlSymsp->TOP.master_data}
+    , slave_data_to_send{vlSymsp->TOP.slave_data_to_send}
     , data_received{vlSymsp->TOP.data_received}
     , __PVT__spi_dut__DOT__spi_if{vlSymsp->TOP.__PVT__spi_dut__DOT__spi_if}
     , rootp{&(vlSymsp->TOP)}

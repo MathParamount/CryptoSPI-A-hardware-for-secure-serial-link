@@ -8,11 +8,12 @@ interface spi_bus_if;
     logic [15:0] data_to_send;
     logic [15:0] data_received;
     
+    logic [15:0] slave_data_to_send;
+
     logic start;
     logic done;
     
     //cryptographic signals
-
     
     modport master_f (
         input  start,
@@ -31,7 +32,7 @@ interface spi_bus_if;
         input  mosi,
         input  ss,
         input  done,
-        input  data_to_send   /*with existency of data in slaver to send*/
+        input  slave_data_to_send
     );
     
 endinterface

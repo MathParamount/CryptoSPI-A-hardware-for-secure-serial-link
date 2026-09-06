@@ -3,7 +3,7 @@
 module master_send
 (
 	input logic clk,
-	input logic reset,
+	input logic reset_n,
 	output logic [2:0] debug_state,
 
     spi_bus_if.master_f spi_if
@@ -32,6 +32,7 @@ module master_send
 	localparam DIV_MAX = 99;  		// 100 ciclos = 1us (99 = 0-99) ; (To 199 -> 2 us/10 ns = 200 cycles)
 	//localparam DIV_HALF = 49;		// (0-49 = baixo, 50-99 = alto); (To 99 -> 1 us/10 ns = 100 cycles)
 
+	logic ss_delay;  
 
 	logic [2:0] done_counter = 0;
 
@@ -41,11 +42,10 @@ module master_send
 	*/
 	
 	//general synchronous block
-	always_ff @(posedge clk or negedge reset) begin
+	always_ff @(posedge clk or negedge reset_n) begin
 		//Default attribute (reset cycle)
-		if (reset) begin
+		if (!reset_n) begin
 			state <= IDLE;
-
 			// initialize interface signals
 			spi_if.ss <= 1;
 			spi_if.mosi <= 1'b0;
@@ -60,6 +60,8 @@ module master_send
 			sr_rx <= 0;
 			sck_prev <= 0;
 			spi_if.done <= 0;
+			ss_delay <= 0;
+			done_counter <= 0;
 		end
 		
 		else begin
@@ -88,68 +90,86 @@ module master_send
 			unique case (state)
 
 				IDLE: begin
-					spi_if.ss <= 1'b1; // deactivate the slave
+					spi_if.ss <= 1'b1; 		// deactivate the slave
 					spi_if.mosi <= 0;
 					spi_if.done <= 0;
 					bit_count <= 0;
                 	sck_div <= 0;
+					ss_delay <= 0;
 					//spi_if.miso <= 0;
 
 					if (spi_if.start) begin
-					    	sr <= spi_if.data_to_send;  // load data (buffer)
-							$display("DEBUG (IDLE): sr_rx=0x%04X, debug_state=%b, buffer_sr=x%04X", sr_rx[7:0], debug_state, sr);
-					    	state <= CMD_PARSE;
+					    sr <= spi_if.data_to_send;  	// load data (buffer)
+						spi_if.ss <= 1'b0;		//slave activation
+						$display("DEBUG (IDLE): sr_rx=0x%04X, debug_state=%b, buffer_sr=x%04X", sr_rx[7:0], debug_state, sr);
+					    state <= CMD_PARSE;
                     end
 				end
 
-				CMD_PARSE: begin
-				    spi_if.ss <= 1'b0;		//slave activation
+				CMD_PARSE: begin	
+					spi_if.ss <= 1'b0;				
 					
 					if(spi_if.sck && !sck_prev) begin
-						sr_rx <= {sr[14:0], spi_if.miso};		//from buffer to shf_reg
+						spi_if.mosi <= sr[15 - bit_count];
+						sr_rx <= {spi_if.miso, sr_rx[15:1]};   // MSB first
 
 						if(bit_count == 7) begin
-							bit_count <= 0;
-							cmd_reg <= {8'b0, sr_rx[7:0]};     // future use (zero-padding)
-							
-							
+							bit_count <= 8;							
 							//LSB verfing if odd or even
-							if (cmd_reg[0] == 0) begin      // EVEN: WRITE
+							if (sr[0] == 0) begin      // EVEN: WRITE
 								sr_tx <= spi_if.data_to_send;
-								state <= FILL_BUFFER;  // Write/Encrypt
+								state <= FILL_BUFFER;  		// Write/Encrypt
 							end
 							else begin		// ODD: READ
-								state <= DRAIN_BUFFER; // Read/Decrypt
+								sr_tx <= 16'h0000;         	// dummy data
+								state <= DRAIN_BUFFER; 			// Read/Decrypt
 							end		
 						end
-						else bit_count <= bit_count + 1;
+						else begin 
+							bit_count <= bit_count + 1;
+						end
 					end			
 				end
 
 				FILL_BUFFER: begin
 				    //MISO sampling
 				    if (spi_if.sck && !sck_prev) begin
-						sr_rx <= {sr_rx[14:0], spi_if.miso};
-						bit_count <= bit_count + 1;
-						$display("DEBUG FILL: bit_count=%d, mosi=%b, miso=%b, sr_rx=0x%04X", bit_count, spi_if.mosi, spi_if.miso, sr_rx);
+						sr_rx <= {spi_if.miso, sr_rx[15:1]};   // MSB first
+
+						$display("MASTER TX: bit_count=%d, mosi=%b, miso=%b, sr_rx=0x%04X", bit_count, spi_if.mosi, spi_if.miso, sr_rx);
+
+						if (bit_count == 15) begin
+							bit_count <= 0;
+							state <= DONE;
+							ss_delay <= 1'b1;
+				    	end
+						else begin
+							bit_count <= bit_count + 1;
+						end
 				    end
 
 				    // negedge clock detection
 				    if (!spi_if.sck && sck_prev) begin
 						spi_if.mosi <= sr_tx[15];
 						sr_tx <= {sr_tx[14:0], 1'b0};
-				    end
-
-				    if (bit_count == 15) begin
-						state <= DONE;
-				    end
+				    end					
 				end
 				
 				DRAIN_BUFFER: begin
 					//if(bit_count == 0) $display("DEBUG DRAIN: Starting reception, bit_count=0");
 					if(spi_if.sck && !sck_prev) begin
-						sr_rx <= {sr_rx[14:0], spi_if.miso};
-						bit_count <= bit_count + 1;
+						sr_rx <= {spi_if.miso, sr_rx[15:1]};
+						$display("MASTER RX: bit_count=%d, mosi=%b, miso=%b, sr_rx=0x%04X", bit_count, spi_if.mosi, spi_if.miso, sr_rx);
+
+						if (bit_count == 15) begin
+							bit_count <= 0;
+							state <= DONE;
+							$display("MASTER RX DONE: data_received=0x%04X", sr_rx);					
+							ss_delay <= 1'b1;
+						end
+						else begin
+							bit_count <= bit_count + 1;
+						end
 					end
 		
 					// update mosi in the negedge clock
@@ -158,44 +178,38 @@ module master_send
 						sr_tx <= {sr_tx[14:0], 1'b0};
 					end
 						
-					if (bit_count == 15) begin
-						bit_count <= 0;
-						state <= DONE;
-						$display("DEBUG DRAIN DONE: data_received=0x%04X", sr_rx);
-					end
 				end
 				
 				DONE: begin
-					spi_if.ss <= 1'b1;
-					// present received word to the interface and load tx word
-					spi_if.done <= 1'b1;
-					spi_if.mosi <= 1'b0;	//clean mosi
-					
-					spi_if.data_received <= sr_rx;
-
-					bit_count <= 0;
-					
-					$display("DEBUG DONE: data_received=0x%04X bit_count=%d mosi=%b, miso=%b, done=%d", sr_rx, bit_count,spi_if.mosi, spi_if.miso, spi_if.done);
-
-					if(done_counter == 0) begin
-						done_counter <= 1;
-					end
-					else begin
-						done_counter <= 0;
-						spi_if.done <= 1'b0; 	//clean done
-
-						//spi_if.data_received <= 0;
-
-						state <= IDLE;
-					end
+    				case (done_counter)
+						0: begin
+							// first cycle
+							spi_if.done <= 1'b1;
+							spi_if.data_received <= sr_rx;
+							spi_if.mosi <= 1'b0;
+							done_counter <= 1;
+						end
+						1: begin
+							// second cycle
+							spi_if.done <= 1'b0;
+							done_counter <= 0;
+							state <= IDLE;
+						end
+					endcase
 				end
 
 				default: state <= IDLE;
 
 			endcase
+
+			if (ss_delay) begin
+        		spi_if.ss <= 1'b1;
+        		ss_delay <= 0;
+    		end
+
 		end
 	end
-	
+
 	/*
 	//manage of bit_count and block_count
 	always_ff @(posedge machine_mast.sck) begin
