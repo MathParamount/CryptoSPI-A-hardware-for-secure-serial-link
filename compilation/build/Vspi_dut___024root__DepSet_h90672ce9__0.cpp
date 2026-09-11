@@ -102,19 +102,47 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__1(Vspi_dut___024root* 
     __Vdly__spi_dut__DOT__u_slave__DOT__sr_tx = 0;
     CData/*0:0*/ __Vdly__spi_dut__DOT__u_slave__DOT__ss_prev;
     __Vdly__spi_dut__DOT__u_slave__DOT__ss_prev = 0;
+    CData/*3:0*/ __Vdly__spi_dut__DOT__u_slave__DOT__slaver_bit_count;
+    __Vdly__spi_dut__DOT__u_slave__DOT__slaver_bit_count = 0;
+    SData/*15:0*/ __Vdly__spi_dut__DOT__u_slave__DOT__sr_rx;
+    __Vdly__spi_dut__DOT__u_slave__DOT__sr_rx = 0;
     // Body
+    __Vdly__spi_dut__DOT__u_slave__DOT__sr_rx = vlSelf->spi_dut__DOT__u_slave__DOT__sr_rx;
+    __Vdly__spi_dut__DOT__u_slave__DOT__slaver_bit_count 
+        = vlSelf->spi_dut__DOT__u_slave__DOT__slaver_bit_count;
     __Vdly__spi_dut__DOT__u_slave__DOT__ss_prev = vlSelf->spi_dut__DOT__u_slave__DOT__ss_prev;
     __Vdly__spi_dut__DOT__u_slave__DOT__sr_tx = vlSelf->spi_dut__DOT__u_slave__DOT__sr_tx;
     if (vlSelf->reset_n) {
         if (vlSymsp->TOP__spi_dut__DOT__spi_if.ss) {
+            __Vdly__spi_dut__DOT__u_slave__DOT__slaver_bit_count = 0U;
+            __Vdly__spi_dut__DOT__u_slave__DOT__sr_rx = 0U;
+        } else {
+            __Vdly__spi_dut__DOT__u_slave__DOT__sr_rx 
+                = ((0xfffeU & ((IData)(vlSelf->spi_dut__DOT__u_slave__DOT__sr_rx) 
+                               << 1U)) | (IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.mosi));
+            if (VL_UNLIKELY((0xfU == (IData)(vlSelf->spi_dut__DOT__u_slave__DOT__slaver_bit_count)))) {
+                VL_WRITEF("[SLAVER] data_receiver: 0x%04x\n",
+                          16,((0xfffeU & ((IData)(vlSelf->spi_dut__DOT__u_slave__DOT__sr_rx) 
+                                          << 1U)) | (IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.mosi)));
+                __Vdly__spi_dut__DOT__u_slave__DOT__slaver_bit_count = 0U;
+            } else {
+                __Vdly__spi_dut__DOT__u_slave__DOT__slaver_bit_count 
+                    = (0xfU & ((IData)(1U) + (IData)(vlSelf->spi_dut__DOT__u_slave__DOT__slaver_bit_count)));
+            }
+        }
+    } else {
+        __Vdly__spi_dut__DOT__u_slave__DOT__slaver_bit_count = 0U;
+        __Vdly__spi_dut__DOT__u_slave__DOT__sr_rx = 0U;
+    }
+    if (vlSelf->reset_n) {
+        if (vlSymsp->TOP__spi_dut__DOT__spi_if.ss) {
             __Vdly__spi_dut__DOT__u_slave__DOT__sr_tx = 0U;
             __Vdly__spi_dut__DOT__u_slave__DOT__ss_prev = 1U;
-        } else if (VL_UNLIKELY(vlSelf->spi_dut__DOT__u_slave__DOT__ss_prev)) {
-            VL_WRITEF("sr_tx: 0x%04x\n",16,vlSelf->spi_dut__DOT__u_slave__DOT__sr_tx);
-            __Vdly__spi_dut__DOT__u_slave__DOT__ss_prev = 0U;
+        } else if (vlSelf->spi_dut__DOT__u_slave__DOT__ss_prev) {
             __Vdly__spi_dut__DOT__u_slave__DOT__sr_tx 
                 = (0xfffeU & ((IData)(vlSelf->slave_data_to_send) 
                               << 1U));
+            __Vdly__spi_dut__DOT__u_slave__DOT__ss_prev = 0U;
         } else {
             __Vdly__spi_dut__DOT__u_slave__DOT__sr_tx 
                 = (0xfffeU & ((IData)(vlSelf->spi_dut__DOT__u_slave__DOT__sr_tx) 
@@ -124,6 +152,9 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__1(Vspi_dut___024root* 
         __Vdly__spi_dut__DOT__u_slave__DOT__sr_tx = 0U;
         __Vdly__spi_dut__DOT__u_slave__DOT__ss_prev = 1U;
     }
+    vlSelf->spi_dut__DOT__u_slave__DOT__slaver_bit_count 
+        = __Vdly__spi_dut__DOT__u_slave__DOT__slaver_bit_count;
+    vlSelf->spi_dut__DOT__u_slave__DOT__sr_rx = __Vdly__spi_dut__DOT__u_slave__DOT__sr_rx;
     vlSelf->spi_dut__DOT__u_slave__DOT__sr_tx = __Vdly__spi_dut__DOT__u_slave__DOT__sr_tx;
     vlSelf->spi_dut__DOT__u_slave__DOT__ss_prev = __Vdly__spi_dut__DOT__u_slave__DOT__ss_prev;
 }
@@ -155,11 +186,17 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
                 vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__state = 0U;
             } else if ((1U & (IData)(vlSelf->spi_dut__DOT__u_master__DOT__state))) {
                 vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__state = 0U;
-            } else if ((0U == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__done_counter))) {
+            } else if (VL_UNLIKELY((0U == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__done_counter)))) {
+                VL_WRITEF("MASTER DONE: data_received=0x%04x , data_received=0x%b\n\n",
+                          16,vlSelf->spi_dut__DOT__u_master__DOT__sr_rx,
+                          16,(IData)(vlSelf->spi_dut__DOT__u_master__DOT__sr_rx));
                 vlSymsp->TOP__spi_dut__DOT__spi_if.done = 1U;
                 vlSymsp->TOP__spi_dut__DOT__spi_if.data_received 
                     = vlSelf->spi_dut__DOT__u_master__DOT__sr_rx;
                 vlSymsp->TOP__spi_dut__DOT__spi_if.__Vdly__mosi = 0U;
+                VL_WRITEF("Data_to_send: %b\n",16,(0xfffeU 
+                                                   & (IData)(vlSelf->master_data)));
+                vlSymsp->TOP__spi_dut__DOT__spi_if.ss = 1U;
                 vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__done_counter = 1U;
             } else if ((1U == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__done_counter))) {
                 vlSymsp->TOP__spi_dut__DOT__spi_if.done = 0U;
@@ -174,14 +211,12 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
                         = (((IData)(vlSelf->spi_dut__DOT__u_slave__DOT__miso_reg) 
                             << 0xfU) | (0x7fffU & ((IData)(vlSelf->spi_dut__DOT__u_master__DOT__sr_rx) 
                                                    >> 1U)));
-                    VL_WRITEF("MASTER RX: bit_count=%3#, mosi=%b, miso=%b, sr_rx=0x%04x\n",
+                    VL_WRITEF("MASTER RX: bit_count=%3#, mosi=%b, miso=%b, sr_rx=0x%b\n",
                               7,vlSelf->spi_dut__DOT__u_master__DOT__bit_count,
                               1,(IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.mosi),
                               1,vlSelf->spi_dut__DOT__u_slave__DOT__miso_reg,
                               16,(IData)(vlSelf->spi_dut__DOT__u_master__DOT__sr_rx));
-                    if (VL_UNLIKELY((0xfU == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__bit_count)))) {
-                        VL_WRITEF("MASTER RX DONE: data_received=0x%04x\n",
-                                  16,vlSelf->spi_dut__DOT__u_master__DOT__sr_rx);
+                    if ((0xfU == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__bit_count))) {
                         vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__bit_count = 0U;
                         vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__state = 4U;
                         vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__ss_delay = 1U;
@@ -207,7 +242,7 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
                         = (((IData)(vlSelf->spi_dut__DOT__u_slave__DOT__miso_reg) 
                             << 0xfU) | (0x7fffU & ((IData)(vlSelf->spi_dut__DOT__u_master__DOT__sr_rx) 
                                                    >> 1U)));
-                    VL_WRITEF("MASTER TX: bit_count=%3#, mosi=%b, miso=%b, sr_rx=0x%04x\n",
+                    VL_WRITEF("MASTER TX: bit_count=%3#, mosi=%b, miso=%b, sr_rx=0x%b\n",
                               7,vlSelf->spi_dut__DOT__u_master__DOT__bit_count,
                               1,(IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.mosi),
                               1,vlSelf->spi_dut__DOT__u_slave__DOT__miso_reg,
@@ -244,6 +279,8 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
                     = (1U & ((IData)(vlSelf->spi_dut__DOT__u_master__DOT__sr) 
                              >> (0xfU & ((IData)(0xfU) 
                                          - (IData)(vlSelf->spi_dut__DOT__u_master__DOT__bit_count)))));
+                vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__bit_count 
+                    = (0x7fU & ((IData)(1U) + (IData)(vlSelf->spi_dut__DOT__u_master__DOT__bit_count)));
                 if ((7U == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__bit_count))) {
                     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__bit_count = 8U;
                     if ((1U & (IData)(vlSelf->spi_dut__DOT__u_master__DOT__sr))) {
@@ -254,9 +291,6 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
                             = vlSelf->master_data;
                         vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__state = 2U;
                     }
-                } else {
-                    vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__bit_count 
-                        = (0x7fU & ((IData)(1U) + (IData)(vlSelf->spi_dut__DOT__u_master__DOT__bit_count)));
                 }
             }
         } else {
@@ -276,6 +310,7 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
                 vlSelf->spi_dut__DOT__u_master__DOT__sr 
                     = vlSelf->master_data;
             }
+            vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sr_rx = 0U;
         }
         if (vlSelf->spi_dut__DOT__u_master__DOT__ss_delay) {
             vlSymsp->TOP__spi_dut__DOT__spi_if.ss = 1U;

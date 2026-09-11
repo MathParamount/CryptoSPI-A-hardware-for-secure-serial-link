@@ -14,12 +14,12 @@ module spi_dut (
     output logic [2:0] debug_state,
     output logic ss
 );
-    // Instancia a interface
+    // interface instantiation
     spi_bus_if spi_if ();
 	
     import state_control::*;
 
-   //attribute external data to dut
+   // attribute external data to dut
     assign spi_if.data_to_send = master_data;
     assign spi_if.slave_data_to_send = slave_data_to_send;
 
@@ -32,11 +32,11 @@ module spi_dut (
     assign mosi = spi_if.mosi; 
     assign ss = spi_if.ss;
     
-	//interface declaration
+	//interface declarations
     master_send u_master (
         .clk(clk),
         .reset_n(reset_n),
-	    .debug_state(debug_state),
+	.debug_state(debug_state),
         .spi_if(spi_if.master_f) 
     );
     

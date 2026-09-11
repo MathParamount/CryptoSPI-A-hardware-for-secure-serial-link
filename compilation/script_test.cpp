@@ -77,21 +77,22 @@ int main(int argc, char** argv)
         //{8000, 0x0ABC, "Pattern 0ABC"},
         {10000, 0x5A5A, "Pattern 5A5A"},
         // (to FILL_BUFFER)
-        {12000, 0xAAAA, "Even command - should go to FILL_BUFFER"},
+        {12000, 0xAAAA, "Even command(0xAAAA) - Go to FILL_BUFFER (ancient same transmission)"},
         // to DONE
-        {14000, 0x10A5, "Pattern 10A5"},
+        {20000, 0x07FA, "Pattern 0x07FA"}
     };
 
-    // Slaver data to send
+    // Slaver data response
     std::vector<uint16_t> slave_responses = {
     0x0000,  // Zero  response
     0xFFFF,  // All ones   response
     0x5555,  // Alternating 0x55
-    0xAAAA,  // Alternating 0xAA response
+    0xAAAA,  // Alternating 0xAAAA response
     //0x0ABC,  // Pattern ABC  response
     0x5A5A,  // Pattern 5A5A response
-    0xAAAA,  // Even command response
-    0x10A5   // Pattern 10A5 response
+    0xAAAA,  // Even command(AAAA) response
+    0x07FA
+    //0x07FA   // Pattern 07FA response
 };
 
     //==========  main simulation ============ 
@@ -131,26 +132,23 @@ int main(int argc, char** argv)
             continue;
         }
 
-        // --- Tick normal ---
+        // normal pulse
         tick();
-
+        
         // --- Detect posedge of done signal
-        if (top->done && !last_done) {
-
-            tick();   // ticks
-            tick();   // ticks
+        if (!top->done && last_done) {
 
             if (transmission_active) {
-                printf("[%lu ns] DONE! RX=0x%04X\n", main_t/1000, top->data_received);
+                //printf("[%lu ns] DONE! RX=0x%04X\n", main_t/1000, top->data_received);
                 transmission_active = false;
                 next_idx++;
 
-                for (int i = 0; i < 8; i++) tick();
+                for (int i = 0; i < 4; i++) tick();
             }
         }
         last_done = top->done;
 
-        // --- Se todas as transmissões foram concluídas, encerra ---
+        // transmission made
         if (next_idx >= transmissions.size()) {
             printf("All transmissions completed at %lu ns\n", main_t/1000);
             break;

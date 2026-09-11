@@ -13,7 +13,7 @@ interface spi_bus_if;
     logic start;
     logic done;
     
-    //cryptographic signals
+    //signal directions
     
     modport master_f (
         input  start,
@@ -29,6 +29,7 @@ interface spi_bus_if;
     modport slaver_f (
         output miso,
         input  sck,
+        input  data_received,
         input  mosi,
         input  ss,
         input  done,

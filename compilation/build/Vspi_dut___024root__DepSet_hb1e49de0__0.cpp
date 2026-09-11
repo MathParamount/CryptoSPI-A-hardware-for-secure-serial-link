@@ -54,10 +54,11 @@ void Vspi_dut___024root___eval_nba(Vspi_dut___024root* vlSelf) {
     }
     if ((2ULL & vlSelf->__VnbaTriggered.word(0U))) {
         Vspi_dut___024root___nba_sequent__TOP__1(vlSelf);
+        vlSelf->__Vm_traceActivity[1U] = 1U;
     }
     if ((1ULL & vlSelf->__VnbaTriggered.word(0U))) {
         Vspi_dut___024root___nba_sequent__TOP__2(vlSelf);
-        vlSelf->__Vm_traceActivity[1U] = 1U;
+        vlSelf->__Vm_traceActivity[2U] = 1U;
     }
     if ((3ULL & vlSelf->__VnbaTriggered.word(0U))) {
         Vspi_dut___024root___ico_sequent__TOP__0(vlSelf);

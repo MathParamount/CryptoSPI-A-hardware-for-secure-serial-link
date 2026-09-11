@@ -13,6 +13,7 @@ VL_ATTR_COLD void Vspi_dut___024root___eval_static(Vspi_dut___024root* vlSelf) {
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vspi_dut___024root___eval_static\n"); );
     // Body
     Vspi_dut___024root___eval_static__TOP(vlSelf);
+    vlSelf->__Vm_traceActivity[2U] = 1U;
     vlSelf->__Vm_traceActivity[1U] = 1U;
     vlSelf->__Vm_traceActivity[0U] = 1U;
 }
@@ -187,9 +188,10 @@ VL_ATTR_COLD void Vspi_dut___024root___ctor_var_reset(Vspi_dut___024root* vlSelf
     vlSelf->spi_dut__DOT__u_master__DOT__done_counter = VL_RAND_RESET_I(3);
     vlSelf->spi_dut__DOT__u_slave__DOT__sr_rx = VL_RAND_RESET_I(16);
     vlSelf->spi_dut__DOT__u_slave__DOT__sr_tx = VL_RAND_RESET_I(16);
-    vlSelf->spi_dut__DOT__u_slave__DOT__bit_count = VL_RAND_RESET_I(4);
     vlSelf->spi_dut__DOT__u_slave__DOT__ss_prev = VL_RAND_RESET_I(1);
     vlSelf->spi_dut__DOT__u_slave__DOT__miso_reg = VL_RAND_RESET_I(1);
+    vlSelf->spi_dut__DOT__u_slave__DOT__slaver_bit_count = VL_RAND_RESET_I(4);
+    vlSelf->spi_dut__DOT__u_slave__DOT__slaver_data_received = VL_RAND_RESET_I(16);
     vlSelf->__Vdly__debug_state = VL_RAND_RESET_I(3);
     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sck_div = VL_RAND_RESET_I(16);
     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sck_prev = VL_RAND_RESET_I(1);
@@ -202,7 +204,7 @@ VL_ATTR_COLD void Vspi_dut___024root___ctor_var_reset(Vspi_dut___024root* vlSelf
     vlSelf->__Vtrigprevexpr___TOP__clk__0 = VL_RAND_RESET_I(1);
     vlSelf->__Vtrigprevexpr___TOP__reset_n__0 = VL_RAND_RESET_I(1);
     vlSelf->__Vtrigprevexpr___TOP__spi_dut__DOT__spi_if__sck__0 = VL_RAND_RESET_I(1);
-    for (int __Vi0 = 0; __Vi0 < 2; ++__Vi0) {
+    for (int __Vi0 = 0; __Vi0 < 3; ++__Vi0) {
         vlSelf->__Vm_traceActivity[__Vi0] = 0;
     }
 }
