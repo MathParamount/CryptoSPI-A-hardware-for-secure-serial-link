@@ -98,6 +98,7 @@ module master_send
 					if (spi_if.start) begin
 					    sr <= spi_if.data_to_send;  		// load data (buffer)
 					    spi_if.ss <= 1'b0;			//master sending data
+						$display("Pattern (Data_to_send) in binary: %b",{spi_if.data_to_send[15:1],1'b0});			// debug data to send
 					    $display("DEBUG (IDLE): sr_rx=0x%04X, debug_state=%b, buffer_sr=x%04X", sr_rx[7:0], debug_state, sr);
 					    state <= CMD_PARSE;
                     end
@@ -110,7 +111,8 @@ module master_send
 						spi_if.mosi <= sr[15 - bit_count];
 
 						// shifter-register to receive MSB first
-						sr_rx <= {spi_if.miso, sr_rx[15:1]};
+						//sr_rx <= {spi_if.miso, sr_rx[15:1]};		//LSB first
+						sr_rx <= {sr_rx[14:0], spi_if.miso};
 
 						bit_count <= bit_count + 1;
 
@@ -137,7 +139,7 @@ module master_send
 				    if (spi_if.sck && !sck_prev) begin
 
 						// shifter register to receive (MSB first)
-						sr_rx <= {spi_if.miso, sr_rx[15:1]};
+						sr_rx <= {sr_rx[14:0], spi_if.miso};
 
 						$display("MASTER TX: bit_count=%d, mosi=%b, miso=%b, sr_rx=0x%b", bit_count, spi_if.mosi, spi_if.miso, sr_rx);
 
@@ -163,7 +165,8 @@ module master_send
 					//if(bit_count == 0) $display("DEBUG DRAIN: Starting reception, bit_count=0");
 
 					if(spi_if.sck && !sck_prev) begin
-						sr_rx <= {spi_if.miso, sr_rx[15:1]};
+						sr_rx <= {sr_rx[14:0], spi_if.miso};
+
 						$display("MASTER RX: bit_count=%d, mosi=%b, miso=%b, sr_rx=0x%b", bit_count, spi_if.mosi, spi_if.miso, sr_rx);
 
 						// made the 15 displacements
@@ -193,7 +196,6 @@ module master_send
 							spi_if.data_received <= sr_rx;					//loading the data transmitted
 							spi_if.mosi <= 1'b0;
 							$display("MASTER DONE: data_received=0x%04X , data_received=0x%b\n", sr_rx, sr_rx);
-							$display("Data_to_send: %b",{spi_if.data_to_send[15:1],1'b0});
 							spi_if.ss <= 1'b1;   // deactivation of the slaver
 							done_counter <= 1;
 						end

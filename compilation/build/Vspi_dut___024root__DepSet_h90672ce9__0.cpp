@@ -194,8 +194,6 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
                 vlSymsp->TOP__spi_dut__DOT__spi_if.data_received 
                     = vlSelf->spi_dut__DOT__u_master__DOT__sr_rx;
                 vlSymsp->TOP__spi_dut__DOT__spi_if.__Vdly__mosi = 0U;
-                VL_WRITEF("Data_to_send: %b\n",16,(0xfffeU 
-                                                   & (IData)(vlSelf->master_data)));
                 vlSymsp->TOP__spi_dut__DOT__spi_if.ss = 1U;
                 vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__done_counter = 1U;
             } else if ((1U == (IData)(vlSelf->spi_dut__DOT__u_master__DOT__done_counter))) {
@@ -208,9 +206,8 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
                 if (VL_UNLIKELY(((IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.sck) 
                                  & (~ (IData)(vlSelf->spi_dut__DOT__u_master__DOT__sck_prev))))) {
                     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sr_rx 
-                        = (((IData)(vlSelf->spi_dut__DOT__u_slave__DOT__miso_reg) 
-                            << 0xfU) | (0x7fffU & ((IData)(vlSelf->spi_dut__DOT__u_master__DOT__sr_rx) 
-                                                   >> 1U)));
+                        = ((0xfffeU & ((IData)(vlSelf->spi_dut__DOT__u_master__DOT__sr_rx) 
+                                       << 1U)) | (IData)(vlSelf->spi_dut__DOT__u_slave__DOT__miso_reg));
                     VL_WRITEF("MASTER RX: bit_count=%3#, mosi=%b, miso=%b, sr_rx=0x%b\n",
                               7,vlSelf->spi_dut__DOT__u_master__DOT__bit_count,
                               1,(IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.mosi),
@@ -239,9 +236,8 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
                 if (VL_UNLIKELY(((IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.sck) 
                                  & (~ (IData)(vlSelf->spi_dut__DOT__u_master__DOT__sck_prev))))) {
                     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sr_rx 
-                        = (((IData)(vlSelf->spi_dut__DOT__u_slave__DOT__miso_reg) 
-                            << 0xfU) | (0x7fffU & ((IData)(vlSelf->spi_dut__DOT__u_master__DOT__sr_rx) 
-                                                   >> 1U)));
+                        = ((0xfffeU & ((IData)(vlSelf->spi_dut__DOT__u_master__DOT__sr_rx) 
+                                       << 1U)) | (IData)(vlSelf->spi_dut__DOT__u_slave__DOT__miso_reg));
                     VL_WRITEF("MASTER TX: bit_count=%3#, mosi=%b, miso=%b, sr_rx=0x%b\n",
                               7,vlSelf->spi_dut__DOT__u_master__DOT__bit_count,
                               1,(IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.mosi),
@@ -272,9 +268,8 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
             if (((IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.sck) 
                  & (~ (IData)(vlSelf->spi_dut__DOT__u_master__DOT__sck_prev)))) {
                 vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sr_rx 
-                    = (((IData)(vlSelf->spi_dut__DOT__u_slave__DOT__miso_reg) 
-                        << 0xfU) | (0x7fffU & ((IData)(vlSelf->spi_dut__DOT__u_master__DOT__sr_rx) 
-                                               >> 1U)));
+                    = ((0xfffeU & ((IData)(vlSelf->spi_dut__DOT__u_master__DOT__sr_rx) 
+                                   << 1U)) | (IData)(vlSelf->spi_dut__DOT__u_slave__DOT__miso_reg));
                 vlSymsp->TOP__spi_dut__DOT__spi_if.__Vdly__mosi 
                     = (1U & ((IData)(vlSelf->spi_dut__DOT__u_master__DOT__sr) 
                              >> (0xfU & ((IData)(0xfU) 
@@ -301,11 +296,13 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
             vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sck_div = 0U;
             vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__ss_delay = 0U;
             if (VL_UNLIKELY(vlSelf->start)) {
+                VL_WRITEF("Pattern (Data_to_send) in binary: %b\n",
+                          16,(0xfffeU & (IData)(vlSelf->master_data)));
+                vlSymsp->TOP__spi_dut__DOT__spi_if.ss = 0U;
                 VL_WRITEF("DEBUG (IDLE): sr_rx=0x%04x, debug_state=%b, buffer_sr=x%04x\n",
                           8,(0xffU & (IData)(vlSelf->spi_dut__DOT__u_master__DOT__sr_rx)),
                           3,(IData)(vlSelf->debug_state),
                           16,vlSelf->spi_dut__DOT__u_master__DOT__sr);
-                vlSymsp->TOP__spi_dut__DOT__spi_if.ss = 0U;
                 vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__state = 1U;
                 vlSelf->spi_dut__DOT__u_master__DOT__sr 
                     = vlSelf->master_data;

@@ -70,7 +70,6 @@ VL_ATTR_COLD void Vspi_dut___024root__trace_init_sub__TOP__0(Vspi_dut___024root*
     tracep->declBit(c+3,0,"ss_prev",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1);
     tracep->declBit(c+32,0,"miso_reg",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1);
     tracep->declBus(c+4,0,"slaver_bit_count",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 3,0);
-    tracep->declBus(c+34,0,"slaver_data_received",-1, VerilatedTraceSigDirection::NONE, VerilatedTraceSigKind::VAR, VerilatedTraceSigType::LOGIC, false,-1, 15,0);
     tracep->popPrefix();
     tracep->popPrefix();
 }
@@ -136,7 +135,6 @@ VL_ATTR_COLD void Vspi_dut___024root__trace_const_0_sub_0(Vspi_dut___024root* vl
     uint32_t* const oldp VL_ATTR_UNUSED = bufp->oldp(vlSymsp->__Vm_baseCode);
     // Body
     bufp->fullIData(oldp+33,(0x63U),32);
-    bufp->fullSData(oldp+34,(vlSelf->spi_dut__DOT__u_slave__DOT__slaver_data_received),16);
 }
 
 VL_ATTR_COLD void Vspi_dut___024root__trace_full_0_sub_0(Vspi_dut___024root* vlSelf, VerilatedFst::Buffer* bufp);

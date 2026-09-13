@@ -191,7 +191,6 @@ VL_ATTR_COLD void Vspi_dut___024root___ctor_var_reset(Vspi_dut___024root* vlSelf
     vlSelf->spi_dut__DOT__u_slave__DOT__ss_prev = VL_RAND_RESET_I(1);
     vlSelf->spi_dut__DOT__u_slave__DOT__miso_reg = VL_RAND_RESET_I(1);
     vlSelf->spi_dut__DOT__u_slave__DOT__slaver_bit_count = VL_RAND_RESET_I(4);
-    vlSelf->spi_dut__DOT__u_slave__DOT__slaver_data_received = VL_RAND_RESET_I(16);
     vlSelf->__Vdly__debug_state = VL_RAND_RESET_I(3);
     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sck_div = VL_RAND_RESET_I(16);
     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sck_prev = VL_RAND_RESET_I(1);

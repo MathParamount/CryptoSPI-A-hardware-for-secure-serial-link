@@ -74,12 +74,14 @@ int main(int argc, char** argv)
         {4000, 0x5555, "Alternating 0x5555"},
         {6000, 0xAAAA, "Alternating 0xAAAA"},
         // specific patterns
-        //{8000, 0x0ABC, "Pattern 0ABC"},
+        {8000, 0x0ABC, "Pattern 0ABC"},
         {10000, 0x5A5A, "Pattern 5A5A"},
         // (to FILL_BUFFER)
         {12000, 0xAAAA, "Even command(0xAAAA) - Go to FILL_BUFFER (ancient same transmission)"},
         // to DONE
-        {20000, 0x07FA, "Pattern 0x07FA"}
+        {20000, 0x07FA, "Pattern 0x07FA"},
+        {20000, 0x1234, "Pattern 0x1234"},
+        {20000, 0xABCD, "Pattern 0xABCD"}
     };
 
     // Slaver data response
@@ -88,12 +90,13 @@ int main(int argc, char** argv)
     0xFFFF,  // All ones   response
     0x5555,  // Alternating 0x55
     0xAAAA,  // Alternating 0xAAAA response
-    //0x0ABC,  // Pattern ABC  response
+    0x0ABC,  // Pattern ABC  response
     0x5A5A,  // Pattern 5A5A response
     0xAAAA,  // Even command(AAAA) response
-    0x07FA
-    //0x07FA   // Pattern 07FA response
-};
+    0x07FA,  // Two hexadecimal with 1 decimal
+    0x1234,  // numerical pattern
+    0xABCD   // simple pattern
+    };
 
     //==========  main simulation ============ 
 
