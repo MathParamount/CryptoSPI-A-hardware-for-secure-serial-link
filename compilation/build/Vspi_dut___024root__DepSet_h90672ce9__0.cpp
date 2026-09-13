@@ -238,6 +238,8 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
                     vlSelf->__Vdly__spi_dut__DOT__u_master__DOT__sr_rx 
                         = ((0xfffeU & ((IData)(vlSelf->spi_dut__DOT__u_master__DOT__sr_rx) 
                                        << 1U)) | (IData)(vlSelf->spi_dut__DOT__u_slave__DOT__miso_reg));
+                    vlSymsp->TOP__spi_dut__DOT__spi_if.data_received 
+                        = vlSelf->spi_dut__DOT__u_master__DOT__sr_rx;
                     VL_WRITEF("MASTER TX: bit_count=%3#, mosi=%b, miso=%b, sr_rx=0x%b\n",
                               7,vlSelf->spi_dut__DOT__u_master__DOT__bit_count,
                               1,(IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.mosi),

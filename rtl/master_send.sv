@@ -141,6 +141,9 @@ module master_send
 						// shifter register to receive (MSB first)
 						sr_rx <= {sr_rx[14:0], spi_if.miso};
 
+						//data reception in shifter register
+						spi_if.data_received <= sr_rx;
+
 						$display("MASTER TX: bit_count=%d, mosi=%b, miso=%b, sr_rx=0x%b", bit_count, spi_if.mosi, spi_if.miso, sr_rx);
 
 						// made the 15 displacements
