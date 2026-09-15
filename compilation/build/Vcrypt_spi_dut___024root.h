@@ -36,7 +36,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut___024root final : public Veril
         VL_OUT8(miso_encrypted,0,0);
         VL_OUT8(crypto_ack,0,0);
         CData/*2:0*/ crypt_spi_dut__DOT__u_master__DOT__state;
-        CData/*5:0*/ crypt_spi_dut__DOT__u_master__DOT__bit_count;
+        CData/*6:0*/ crypt_spi_dut__DOT__u_master__DOT__bit_count;
         CData/*0:0*/ crypt_spi_dut__DOT__u_master__DOT__sck_prev;
         CData/*0:0*/ crypt_spi_dut__DOT__u_master__DOT__sck_en;
         CData/*0:0*/ crypt_spi_dut__DOT__u_master__DOT__ss_delay;
@@ -44,10 +44,11 @@ class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut___024root final : public Veril
         CData/*1:0*/ crypt_spi_dut__DOT__u_master__DOT__done_cnt;
         CData/*6:0*/ crypt_spi_dut__DOT__u_slave__DOT__bit_count;
         CData/*0:0*/ crypt_spi_dut__DOT__u_slave__DOT__ss_prev;
+        CData/*0:0*/ crypt_spi_dut__DOT__u_slave__DOT__miso_reg;
         CData/*0:0*/ crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d96565c__0;
         CData/*2:0*/ crypt_spi_dut__DOT__u_crypt__DOT__state_encr;
         CData/*2:0*/ crypt_spi_dut__DOT__u_crypt__DOT__state_mast;
-        CData/*5:0*/ crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt;
+        CData/*6:0*/ crypt_spi_dut__DOT__u_crypt__DOT__cycle_cnt;
         CData/*5:0*/ crypt_spi_dut__DOT__u_crypt__DOT__encypt_count;
         CData/*5:0*/ crypt_spi_dut__DOT__u_crypt__DOT__count_round;
         CData/*0:0*/ crypt_spi_dut__DOT__u_crypt__DOT__decrpt_signal;
@@ -55,9 +56,10 @@ class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut___024root final : public Veril
         CData/*5:0*/ crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__idx;
         CData/*0:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__sck_prev;
         CData/*2:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__state;
-        CData/*5:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__bit_count;
+        CData/*6:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__bit_count;
         CData/*1:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__done_cnt;
         CData/*0:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__ss_delay;
+        CData/*6:0*/ __Vdly__crypt_spi_dut__DOT__u_slave__DOT__bit_count;
         CData/*0:0*/ __Vdly__crypt_spi_dut__DOT__u_slave__DOT__ss_prev;
         CData/*0:0*/ __VstlFirstIteration;
         CData/*0:0*/ __Vtrigprevexpr___TOP__clk__0;
@@ -81,10 +83,10 @@ class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut___024root final : public Veril
         IData/*31:0*/ crypt_spi_dut__DOT__u_crypt__DOT__xs;
         IData/*31:0*/ crypt_spi_dut__DOT__u_crypt__DOT__x_new;
         IData/*31:0*/ crypt_spi_dut__DOT__u_crypt__DOT__y;
-        IData/*31:0*/ crypt_spi_dut__DOT__u_crypt__DOT__x;
-        VlWide<4>/*127:0*/ crypt_spi_dut__DOT__u_crypt__DOT__key;
     };
     struct {
+        IData/*31:0*/ crypt_spi_dut__DOT__u_crypt__DOT__x;
+        VlWide<4>/*127:0*/ crypt_spi_dut__DOT__u_crypt__DOT__key;
         IData/*31:0*/ crypt_spi_dut__DOT__u_crypt__DOT__temp;
         IData/*31:0*/ crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk2__DOT__r;
         IData/*31:0*/ crypt_spi_dut__DOT__u_crypt__DOT____Vlvbound_h6c53c1e8__0;
@@ -92,7 +94,9 @@ class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut___024root final : public Veril
         VL_IN64(master_data,63,0);
         VL_OUT64(encrypt_text,63,0);
         VL_OUT64(ciphertext,63,0);
+        VL_OUT64(slave_data_to_send,63,0);
         VL_OUT64(plaintext,63,0);
+        VL_OUT64(data_received,63,0);
         QData/*63:0*/ crypt_spi_dut__DOT__u_master__DOT__sr;
         QData/*63:0*/ crypt_spi_dut__DOT__u_master__DOT__cmd_reg;
         QData/*63:0*/ crypt_spi_dut__DOT__u_master__DOT__sr_tx;
@@ -111,13 +115,14 @@ class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut___024root final : public Veril
         QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__sck_div;
         QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__sr_tx;
         QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_master__DOT__sr_rx;
+        QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_slave__DOT__sr_rx;
         QData/*63:0*/ __Vdly__crypt_spi_dut__DOT__u_slave__DOT__sr_tx;
         VlUnpacked<IData/*31:0*/, 42> crypt_spi_dut__DOT__u_crypt__DOT__round_key;
         VlUnpacked<CData/*0:0*/, 3> __Vm_traceActivity;
     };
     VlTriggerVec<1> __VstlTriggered;
-    VlTriggerVec<4> __VactTriggered;
-    VlTriggerVec<4> __VnbaTriggered;
+    VlTriggerVec<5> __VactTriggered;
+    VlTriggerVec<5> __VnbaTriggered;
 
     // INTERNAL VARIABLES
     Vcrypt_spi_dut__Syms* const vlSymsp;

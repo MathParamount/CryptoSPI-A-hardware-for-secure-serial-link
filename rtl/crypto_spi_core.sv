@@ -25,7 +25,7 @@ module crypto_spi_core
 	logic [63:0] epherm_key_s;
 	/* verilator lint_off UNUSEDSIGNAL */
 	
-	logic [5:0] cycle_cnt;
+	logic [6:0] cycle_cnt;
 	logic [5:0] encypt_count;
 		
 	// internal logic separation of bus
@@ -104,7 +104,8 @@ module crypto_spi_core
 						if(cycle_cnt == 63) begin
 							$display("[CRYPTO RECEPTION] is_write: %d, plain_text: 0x%016X, slaver_rx: 0x%016X, encrypt_text_reg: 0x%016X", spi_if.is_write, spi_if.plaintext, slave_rx, encrypt_text_reg);
 							
-						    cycle_cnt <= 0;
+						    cycle_cnt <= 64;
+
     						if (spi_if.is_write) begin
 								state_encr <= ENCRYPT;		//write
 								decrpt_signal <= 0;
@@ -266,18 +267,20 @@ module crypto_spi_core
 							$display("[CRYPTO_DECRYP] send bit[%0d]= %b", cycle_cnt, spi_if.ciphertext[63 - cycle_cnt]);
 						end
 					end
-			   			
-			   		cycle_cnt <= cycle_cnt + 1;
-		   			
+
 		   			if(cycle_cnt == 63) begin
 		   				$display("(data encrypted = 0x%016h)", spi_if.ciphertext);
-		   				spi_if.crypto_done <= 1;
 		   				cycle_cnt <= 0;
 		   				state_encr <= DONE_CRYPT;
 		   			end
+					else begin
+			   			cycle_cnt <= cycle_cnt + 1;
+					end
 				end
 				
-				DONE_CRYPT: begin 					
+				DONE_CRYPT: begin 		
+					spi_if.crypto_done <= 1;
+	
 					if (spi_if.crypto_ack) begin
 						spi_if.crypto_done <= 1'b0;
 						state_encr <= IDLE_CRYPT;                		

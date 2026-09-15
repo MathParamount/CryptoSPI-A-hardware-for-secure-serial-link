@@ -21,7 +21,7 @@ module master_send
 
 
 	//counting bit
-	logic [5:0] bit_count;				//to blocks of 127 bits
+	logic [6:0] bit_count;				//to blocks of 127 bits
 		
 	//clock division with (1/4 clock)
 	logic [63:0] sck_div;
@@ -120,6 +120,7 @@ module master_send
 					if (spi_if.start) begin
 					    sr <= spi_if.data_to_send;  // load data (buffer)
 					    sck_en <= 1;
+						spi_if.ss <= 1'b0;			//master sending data
 					    $display("[MASTER] Start transmission, data_to_send=0x%016X", spi_if.data_to_send);
 					    state <= CMD_PARSE;
                    	end
@@ -138,7 +139,7 @@ module master_send
 
 						//LSB verfing if odd or even
 						if (bit_count == 63) begin      	// EVEN: WRITE
-							bit_count <= 0;
+							bit_count <= 64;
 							
 							//sending 64 bits to shift_register
 							if (spi_if.data_to_send[0] == 0) begin
@@ -161,22 +162,25 @@ module master_send
 					//MISO sampling
 				    if (spi_if.sck && !sck_prev) begin
 						sr_rx <= {sr_rx[62:0], spi_if.miso_encrypted};
-						bit_count <= bit_count + 1;
 						//$display("DEBUG FILL: bit_count=%d, mosi=%b, miso=%b, sr_rx=0x%016X", bit_count, spi_if.mosi, spi_if.miso, sr_rx);
-				    end
+						
+						spi_if.data_received <= sr_rx;
 
-				    // negedge clock detection
+				    	if (bit_count == 63) begin
+							bit_count <= 0; 
+							spi_if.block_ready <= 1;
+							state <= EXEC_ENCRYPT;
+							ss_delay <= 1;
+				    	end
+						else begin
+							bit_count <= bit_count + 1;
+						end
+					end
+					// negedge clock detection
 				    if (!spi_if.sck && sck_prev) begin
 						spi_if.mosi <= sr_tx[63];
 						sr_tx <= {sr_tx[62:0], 1'b0};
 						//$display("FILL: from mosi= 0x%016X to sr_tx= 0x%016X", spi_if.mosi, sr_tx);
-				    end
-
-				    if (bit_count == 63) begin
-						bit_count <= 0; 
-						spi_if.block_ready <= 1;
-						state <= EXEC_ENCRYPT;
-						ss_delay <= 1;
 				    end
 				end
 				
@@ -184,22 +188,23 @@ module master_send
 					//if(bit_count == 0) $display("DEBUG DRAIN: Starting reception, bit_count=0");
 					if(spi_if.sck && !sck_prev) begin
 						sr_rx <= {sr_rx[62:0], spi_if.miso_encrypted};
-						bit_count <= bit_count + 1;
+						
+						if (bit_count == 63) begin
+							sck_en <= 0;
+							spi_if.block_ready <= 1;
+							bit_count <= 0;
+							state <= EXEC_ENCRYPT;
+							//$display("DEBUG DRAIN DONE: data_received=0x%016X", sr_rx);
+						end
+						else begin
+							bit_count <= bit_count + 1;
+						end
 					end
-		
+
 					// update mosi in the negedge clock
 					if (!spi_if.sck && sck_prev) begin
 						spi_if.mosi <= sr_tx[63];   // send next bit
 						sr_tx <= {sr_tx[62:0], 1'b0};
-					end
-						
-					if (bit_count == 63) begin
-						sck_en <= 0;
-						spi_if.block_ready <= 1;
-						bit_count <= 0;
-						//spi_if.done <= 1;
-						state <= EXEC_ENCRYPT;
-						//$display("DEBUG DRAIN DONE: data_received=0x%016X", sr_rx);
 					end
 				end
 
@@ -223,22 +228,18 @@ module master_send
 				DONE: begin
 				    //$display("[MASTER] Entering DONE, done_flag=%b", done_cnt);
 				    spi_if.mosi <= 1'b0;
-				    //spi_if.miso_encrypted <= sr_rx;
 				    bit_count <= 0;
 
 				    case (done_cnt)
        					0: begin
 				    		spi_if.done <= 1'b1;
 				    		done_cnt <= 1;
-				    		//$display("  -> keeping done (cnt=0->1)");
+							spi_if.data_received <= sr_rx;			//loading data transmitted
+							spi_if.mosi <= 1'b0;
+							spi_if.ss <= 1'b1;
 				    		//$display("DEBUG DONE: data=0x%016X", sr_rx);
 				    	end
 				    	1: begin
-				   		spi_if.done <= 1'b1; 		//keep done active
-				    		done_cnt <= 2;
-				    		//$display("  -> keeping done (cnt=1->2)");
-				    	end
-				    	2: begin
 				    		spi_if.done <= 1'b0;   		//done clean
 				    		done_cnt <= 0;
 				    		state <= IDLE;
@@ -258,25 +259,5 @@ module master_send
 			end
 		end
 	end
-
-	/*
-	//manage of bit_count and block_count
-	always_ff @(posedge machine_mast.sck) begin
-		//  bit count
-        	if (state == FILL_BUFFER || state == DRAIN_BUFFER) begin
-        		if (sck && machine_mast.sck == 0) begin // Borda de subida
-		        	bit_count <= bit_count + 1;
-		        	sr <= {sr[126:0], machine_mast.miso}; // Shift left
-		        end
-            	end
-            	
-            	//block count
-            	if (state == DRAIN_BUFFER && next_state == FILL_BUFFER)
-            		block_count <= block_count + 1;
-        	else if (state == IDLE)
-            		block_count <= 0;
-       		 end
-       	end
-	*/
        	
 endmodule

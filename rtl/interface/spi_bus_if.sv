@@ -26,6 +26,9 @@ interface spi_bus_if;
     /* verilator lint_off UNDRIVEN */
 
     logic crypto_ack;
+
+    logic [63:0] slave_data_to_send;
+    logic [63:0] data_received;
     
     modport master_f (
         input  start,
@@ -38,7 +41,8 @@ interface spi_bus_if;
         output ss,
         output done,
         output block_ready,
-        output crypto_ack           //knowledge of clock
+        output crypto_ack,           //knowledge of clock
+        output data_received
     );
     
     modport crypto_f (
@@ -49,6 +53,7 @@ interface spi_bus_if;
        input  mosi,		//plaintext master
        input  miso,		//plaintext slaver
        input  crypto_ack,       //knowledge of clock
+       input  data_received,
        output mosi_encrypted,   // to slaver
        output miso_encrypted,   // to master
        output crypto_done,
@@ -63,7 +68,7 @@ interface spi_bus_if;
         input  mosi_encrypted,
         input  ss,
         input  crypto_done,
-        input  data_to_send,   /*with existency of data in slaver to send*/
+        input  slave_data_to_send,
         input  plaintext
     );
     

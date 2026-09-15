@@ -46,8 +46,8 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___stl_sequent__TOP__0(Vcrypt_spi_dut_
     vlSelf->sck = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.sck;
     vlSelf->ss = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.ss;
     vlSelf->crypto_ack = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.crypto_ack;
+    vlSelf->data_received = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.data_received;
     vlSelf->mosi = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.mosi;
-    vlSelf->miso = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.miso;
     vlSelf->mosi_encrypted = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.mosi_encrypted;
     vlSelf->miso_encrypted = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.miso_encrypted;
     vlSelf->crypto_done = vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.crypto_done;
@@ -59,4 +59,12 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___stl_sequent__TOP__0(Vcrypt_spi_dut_
         = ((IData)(vlSelf->crypt_spi_dut__DOT__u_master__DOT__block_count) 
            == ((IData)(vlSelf->crypt_spi_dut__DOT__u_master__DOT__total_blocks) 
                - (IData)(1U)));
+    vlSelf->crypt_spi_dut__DOT__u_slave__DOT__miso_reg 
+        = ((1U & (~ (IData)(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.ss))) 
+           && (1U & ((IData)(vlSelf->crypt_spi_dut__DOT__u_slave__DOT__ss_prev)
+                      ? (IData)((vlSelf->slave_data_to_send 
+                                 >> 0x3fU)) : (IData)(
+                                                      (vlSelf->crypt_spi_dut__DOT__u_slave__DOT__sr_tx 
+                                                       >> 0x3fU)))));
+    vlSelf->miso = vlSelf->crypt_spi_dut__DOT__u_slave__DOT__miso_reg;
 }

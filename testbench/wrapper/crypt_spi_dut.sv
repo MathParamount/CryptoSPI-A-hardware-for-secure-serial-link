@@ -19,8 +19,10 @@ module crypt_spi_dut (
     output logic miso_encrypted,
     output logic [63:0] encrypt_text,
     output logic [63:0] ciphertext,
+    output logic [63:0] slave_data_to_send,
     output logic crypto_ack,
-    output logic [63:0] plaintext
+    output logic [63:0] plaintext,
+    output logic [63:0] data_received
 );
 
     // Instancia a interface
@@ -33,10 +35,13 @@ module crypt_spi_dut (
     assign spi_if.start = start;    
     assign spi_if.is_write = is_write;
 
+    assign spi_if.slave_data_to_send = slave_data_to_send;
+
     assign done = spi_if.done;
     assign sck = spi_if.sck;
     assign ss = spi_if.ss;
     assign crypto_ack = spi_if.crypto_ack;
+    assign data_received = spi_if.data_received;
 
     //SPI serial pins (1 bit)
     assign mosi = spi_if.mosi;		//assign mosi = spi_if.mosi; 
@@ -75,7 +80,7 @@ module crypt_spi_dut (
         .clk(clk),
         .reset_n(reset_n),
         .debug_state_crypt(debug_state_crypt),
-	.spi_if(spi_if.crypto_f)
+	    .spi_if(spi_if.crypto_f)
     );
     
 endmodule

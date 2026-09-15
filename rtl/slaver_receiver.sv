@@ -13,6 +13,8 @@ module slaver_receiver (
     
     logic [6:0] bit_count;
     logic ss_prev;
+
+    logic miso_reg;
     
     // reception model
     always_ff @(posedge spi_if.sck or negedge reset_n) begin
@@ -42,46 +44,40 @@ module slaver_receiver (
     // transmission model
     always_ff @(negedge spi_if.sck or negedge reset_n) begin
         if(!reset_n) begin
-            spi_if.miso <= 1'b0;
+            sr_tx <= 64'b0;
+            ss_prev <= 1;
         end 
         else begin     
             if(spi_if.ss) begin
-                spi_if.miso <= 0;
+                sr_tx <= 0;
+                ss_prev <= 1;
             end
             else begin
                 if(ss_prev) begin
-				    sr_tx  <= spi_if.data_to_send;
-			    end
+                    sr_tx <= {spi_if.slave_data_to_send[62:0], 1'b0};
+                    ss_prev <= 0;
+                end
                 else begin
-		        	spi_if.miso <= sr_tx[63];      // send bit
 		        	sr_tx <= {sr_tx[62:0], 1'b0};  // displacement
                 end
             end
         end
     end
-	
-    /*
-    // data transmission (sr_tx -> MISO)
-    always_ff @(posedge spi_if.sck or posedge spi_if.ss) begin
-        if(spi_if.ss) begin
-            bit_count <= 0;
-            sr_rx <= '0;
-            sr_tx <= 16'hA5A5;
-        end else begin
-            sr_rx <= {sr_rx[14:0], spi_if.mosi};
-            bit_count <= bit_count + 1;
 
-            spi_if.miso <= sr_tx[15];
-	    sr_tx <= {sr_tx[14:0], 1'b0};
-	    
-            if(bit_count == 15) begin
-                bit_count <= 0;
-                sr_tx <= 16'hA5A5;
-            end 
+    //combinational logic miso
+    always_comb begin
+        if(spi_if.ss) begin
+            miso_reg = 0;
+        end
+        else if (ss_prev) begin
+            miso_reg = spi_if.slave_data_to_send[63];       //first bit
+        end
+        else begin
+            miso_reg = sr_tx[63];
         end
     end
-   
-   */
+
+assign spi_if.miso = miso_reg;
 
 endmodule
 

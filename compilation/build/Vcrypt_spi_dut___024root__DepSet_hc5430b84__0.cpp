@@ -16,14 +16,34 @@ VL_INLINE_OPT void Vcrypt_spi_dut___024root___nba_sequent__TOP__0(Vcrypt_spi_dut
     Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vcrypt_spi_dut___024root___nba_sequent__TOP__0\n"); );
     // Body
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_slave__DOT__sr_rx 
+        = vlSelf->crypt_spi_dut__DOT__u_slave__DOT__sr_rx;
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_slave__DOT__bit_count 
+        = vlSelf->crypt_spi_dut__DOT__u_slave__DOT__bit_count;
+}
+
+VL_INLINE_OPT void Vcrypt_spi_dut___024root___nba_sequent__TOP__1(Vcrypt_spi_dut___024root* vlSelf) {
+    if (false && vlSelf) {}  // Prevent unused
+    Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vcrypt_spi_dut___024root___nba_sequent__TOP__1\n"); );
+    // Body
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_slave__DOT__sr_tx 
         = vlSelf->crypt_spi_dut__DOT__u_slave__DOT__sr_tx;
 }
 
-VL_INLINE_OPT void Vcrypt_spi_dut___024root___nba_sequent__TOP__6(Vcrypt_spi_dut___024root* vlSelf) {
+VL_INLINE_OPT void Vcrypt_spi_dut___024root___nba_sequent__TOP__2(Vcrypt_spi_dut___024root* vlSelf) {
     if (false && vlSelf) {}  // Prevent unused
     Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
-    VL_DEBUG_IF(VL_DBG_MSGF("+    Vcrypt_spi_dut___024root___nba_sequent__TOP__6\n"); );
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vcrypt_spi_dut___024root___nba_sequent__TOP__2\n"); );
+    // Body
+    vlSelf->__Vdly__crypt_spi_dut__DOT__u_slave__DOT__ss_prev 
+        = vlSelf->crypt_spi_dut__DOT__u_slave__DOT__ss_prev;
+}
+
+VL_INLINE_OPT void Vcrypt_spi_dut___024root___nba_sequent__TOP__8(Vcrypt_spi_dut___024root* vlSelf) {
+    if (false && vlSelf) {}  // Prevent unused
+    Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vcrypt_spi_dut___024root___nba_sequent__TOP__8\n"); );
     // Body
     vlSelf->crypt_spi_dut__DOT__u_slave__DOT__ss_prev 
         = vlSelf->__Vdly__crypt_spi_dut__DOT__u_slave__DOT__ss_prev;
@@ -40,42 +60,52 @@ VL_INLINE_OPT void Vcrypt_spi_dut___024root___nba_comb__TOP__0(Vcrypt_spi_dut___
                - (IData)(1U)));
 }
 
-void Vcrypt_spi_dut___024root___nba_sequent__TOP__1(Vcrypt_spi_dut___024root* vlSelf);
-void Vcrypt_spi_dut___024root___nba_sequent__TOP__2(Vcrypt_spi_dut___024root* vlSelf);
 void Vcrypt_spi_dut___024root___nba_sequent__TOP__3(Vcrypt_spi_dut___024root* vlSelf);
 void Vcrypt_spi_dut___024root___nba_sequent__TOP__4(Vcrypt_spi_dut___024root* vlSelf);
 void Vcrypt_spi_dut___024root___nba_sequent__TOP__5(Vcrypt_spi_dut___024root* vlSelf);
+void Vcrypt_spi_dut___024root___nba_sequent__TOP__6(Vcrypt_spi_dut___024root* vlSelf);
+void Vcrypt_spi_dut___024root___nba_sequent__TOP__7(Vcrypt_spi_dut___024root* vlSelf);
+void Vcrypt_spi_dut___024root___nba_comb__TOP__1(Vcrypt_spi_dut___024root* vlSelf);
 
 void Vcrypt_spi_dut___024root___eval_nba(Vcrypt_spi_dut___024root* vlSelf) {
     if (false && vlSelf) {}  // Prevent unused
     Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vcrypt_spi_dut___024root___eval_nba\n"); );
     // Body
-    if ((8ULL & vlSelf->__VnbaTriggered.word(0U))) {
+    if ((4ULL & vlSelf->__VnbaTriggered.word(0U))) {
         Vcrypt_spi_dut___024root___nba_sequent__TOP__0(vlSelf);
     }
-    if ((4ULL & vlSelf->__VnbaTriggered.word(0U))) {
+    if ((8ULL & vlSelf->__VnbaTriggered.word(0U))) {
         Vcrypt_spi_dut___024root___nba_sequent__TOP__1(vlSelf);
     }
-    if ((2ULL & vlSelf->__VnbaTriggered.word(0U))) {
+    if ((0x10ULL & vlSelf->__VnbaTriggered.word(0U))) {
         Vcrypt_spi_dut___024root___nba_sequent__TOP__2(vlSelf);
+    }
+    if ((2ULL & vlSelf->__VnbaTriggered.word(0U))) {
+        Vcrypt_spi_dut___024root___nba_sequent__TOP__3(vlSelf);
         vlSelf->__Vm_traceActivity[1U] = 1U;
     }
     if ((1ULL & vlSelf->__VnbaTriggered.word(0U))) {
-        Vcrypt_spi_dut___024root___nba_sequent__TOP__3(vlSelf);
-    }
-    if ((8ULL & vlSelf->__VnbaTriggered.word(0U))) {
         Vcrypt_spi_dut___024root___nba_sequent__TOP__4(vlSelf);
     }
-    if ((2ULL & vlSelf->__VnbaTriggered.word(0U))) {
+    if ((8ULL & vlSelf->__VnbaTriggered.word(0U))) {
         Vcrypt_spi_dut___024root___nba_sequent__TOP__5(vlSelf);
-        vlSelf->__Vm_traceActivity[2U] = 1U;
     }
     if ((4ULL & vlSelf->__VnbaTriggered.word(0U))) {
         Vcrypt_spi_dut___024root___nba_sequent__TOP__6(vlSelf);
     }
+    if ((2ULL & vlSelf->__VnbaTriggered.word(0U))) {
+        Vcrypt_spi_dut___024root___nba_sequent__TOP__7(vlSelf);
+        vlSelf->__Vm_traceActivity[2U] = 1U;
+    }
+    if ((0x10ULL & vlSelf->__VnbaTriggered.word(0U))) {
+        Vcrypt_spi_dut___024root___nba_sequent__TOP__8(vlSelf);
+    }
     if ((3ULL & vlSelf->__VnbaTriggered.word(0U))) {
         Vcrypt_spi_dut___024root___nba_comb__TOP__0(vlSelf);
+    }
+    if ((0x1aULL & vlSelf->__VnbaTriggered.word(0U))) {
+        Vcrypt_spi_dut___024root___nba_comb__TOP__1(vlSelf);
     }
 }
 
@@ -86,7 +116,7 @@ bool Vcrypt_spi_dut___024root___eval_phase__act(Vcrypt_spi_dut___024root* vlSelf
     Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vcrypt_spi_dut___024root___eval_phase__act\n"); );
     // Init
-    VlTriggerVec<4> __VpreTriggered;
+    VlTriggerVec<5> __VpreTriggered;
     CData/*0:0*/ __VactExecute;
     // Body
     Vcrypt_spi_dut___024root___eval_triggers__act(vlSelf);

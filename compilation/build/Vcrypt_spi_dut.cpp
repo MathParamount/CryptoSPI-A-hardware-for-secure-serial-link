@@ -29,7 +29,9 @@ Vcrypt_spi_dut::Vcrypt_spi_dut(VerilatedContext* _vcontextp__, const char* _vcna
     , master_data{vlSymsp->TOP.master_data}
     , encrypt_text{vlSymsp->TOP.encrypt_text}
     , ciphertext{vlSymsp->TOP.ciphertext}
+    , slave_data_to_send{vlSymsp->TOP.slave_data_to_send}
     , plaintext{vlSymsp->TOP.plaintext}
+    , data_received{vlSymsp->TOP.data_received}
     , __PVT__crypt_spi_dut__DOT__spi_if{vlSymsp->TOP.__PVT__crypt_spi_dut__DOT__spi_if}
     , rootp{&(vlSymsp->TOP)}
 {

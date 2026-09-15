@@ -46,7 +46,9 @@ class alignas(VL_CACHE_LINE_BYTES) Vcrypt_spi_dut VL_NOT_FINAL : public Verilate
     VL_IN64(&master_data,63,0);
     VL_OUT64(&encrypt_text,63,0);
     VL_OUT64(&ciphertext,63,0);
+    VL_OUT64(&slave_data_to_send,63,0);
     VL_OUT64(&plaintext,63,0);
+    VL_OUT64(&data_received,63,0);
 
     // CELLS
     // Public to allow access to /* verilator public */ items.
