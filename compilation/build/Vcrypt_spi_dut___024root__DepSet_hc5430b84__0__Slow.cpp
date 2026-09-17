@@ -118,6 +118,21 @@ VL_ATTR_COLD bool Vcrypt_spi_dut___024root___eval_phase__stl(Vcrypt_spi_dut___02
 }
 
 #ifdef VL_DEBUG
+VL_ATTR_COLD void Vcrypt_spi_dut___024root___dump_triggers__ico(Vcrypt_spi_dut___024root* vlSelf) {
+    if (false && vlSelf) {}  // Prevent unused
+    Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vcrypt_spi_dut___024root___dump_triggers__ico\n"); );
+    // Body
+    if ((1U & (~ (IData)(vlSelf->__VicoTriggered.any())))) {
+        VL_DBG_MSGF("         No triggers active\n");
+    }
+    if ((1ULL & vlSelf->__VicoTriggered.word(0U))) {
+        VL_DBG_MSGF("         'ico' region trigger index 0 is active: Internal 'ico' trigger - first iteration\n");
+    }
+}
+#endif  // VL_DEBUG
+
+#ifdef VL_DEBUG
 VL_ATTR_COLD void Vcrypt_spi_dut___024root___dump_triggers__act(Vcrypt_spi_dut___024root* vlSelf) {
     if (false && vlSelf) {}  // Prevent unused
     Vcrypt_spi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
@@ -137,9 +152,6 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___dump_triggers__act(Vcrypt_spi_dut__
     }
     if ((8ULL & vlSelf->__VactTriggered.word(0U))) {
         VL_DBG_MSGF("         'act' region trigger index 3 is active: @(negedge reset_n or negedge crypt_spi_dut.spi_if.sck)\n");
-    }
-    if ((0x10ULL & vlSelf->__VactTriggered.word(0U))) {
-        VL_DBG_MSGF("         'act' region trigger index 4 is active: @(negedge reset_n or edge crypt_spi_dut.spi_if.sck or negedge crypt_spi_dut.spi_if.sck)\n");
     }
 }
 #endif  // VL_DEBUG
@@ -165,9 +177,6 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___dump_triggers__nba(Vcrypt_spi_dut__
     if ((8ULL & vlSelf->__VnbaTriggered.word(0U))) {
         VL_DBG_MSGF("         'nba' region trigger index 3 is active: @(negedge reset_n or negedge crypt_spi_dut.spi_if.sck)\n");
     }
-    if ((0x10ULL & vlSelf->__VnbaTriggered.word(0U))) {
-        VL_DBG_MSGF("         'nba' region trigger index 4 is active: @(negedge reset_n or edge crypt_spi_dut.spi_if.sck or negedge crypt_spi_dut.spi_if.sck)\n");
-    }
 }
 #endif  // VL_DEBUG
 
@@ -181,6 +190,7 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___ctor_var_reset(Vcrypt_spi_dut___024
     vlSelf->master_data = VL_RAND_RESET_Q(64);
     vlSelf->start = VL_RAND_RESET_I(1);
     vlSelf->is_write = VL_RAND_RESET_I(1);
+    vlSelf->slaver_data = VL_RAND_RESET_Q(64);
     vlSelf->miso = VL_RAND_RESET_I(1);
     vlSelf->done = VL_RAND_RESET_I(1);
     vlSelf->sck = VL_RAND_RESET_I(1);
@@ -194,7 +204,6 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___ctor_var_reset(Vcrypt_spi_dut___024
     vlSelf->miso_encrypted = VL_RAND_RESET_I(1);
     vlSelf->encrypt_text = VL_RAND_RESET_Q(64);
     vlSelf->ciphertext = VL_RAND_RESET_Q(64);
-    vlSelf->slave_data_to_send = VL_RAND_RESET_Q(64);
     vlSelf->crypto_ack = VL_RAND_RESET_I(1);
     vlSelf->plaintext = VL_RAND_RESET_Q(64);
     vlSelf->data_received = VL_RAND_RESET_Q(64);
@@ -216,8 +225,9 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___ctor_var_reset(Vcrypt_spi_dut___024
     vlSelf->crypt_spi_dut__DOT__u_slave__DOT__data_to_send = VL_RAND_RESET_Q(64);
     vlSelf->crypt_spi_dut__DOT__u_slave__DOT__sr_tx = VL_RAND_RESET_Q(64);
     vlSelf->crypt_spi_dut__DOT__u_slave__DOT__bit_count = VL_RAND_RESET_I(7);
-    vlSelf->crypt_spi_dut__DOT__u_slave__DOT__ss_prev = VL_RAND_RESET_I(1);
     vlSelf->crypt_spi_dut__DOT__u_slave__DOT__miso_reg = VL_RAND_RESET_I(1);
+    vlSelf->crypt_spi_dut__DOT__u_slave__DOT__ss_prev_pos = VL_RAND_RESET_I(1);
+    vlSelf->crypt_spi_dut__DOT__u_slave__DOT__ss_prev_ng = VL_RAND_RESET_I(1);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d93fe75__6 = VL_RAND_RESET_I(32);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d93fe75__5 = VL_RAND_RESET_I(32);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d96565c__0 = VL_RAND_RESET_I(1);
@@ -265,14 +275,10 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___ctor_var_reset(Vcrypt_spi_dut___024
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__sr_tx = VL_RAND_RESET_Q(64);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__sr_rx = VL_RAND_RESET_Q(64);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__ss_delay = VL_RAND_RESET_I(1);
-    vlSelf->__Vdly__crypt_spi_dut__DOT__u_slave__DOT__bit_count = VL_RAND_RESET_I(7);
-    vlSelf->__Vdly__crypt_spi_dut__DOT__u_slave__DOT__sr_rx = VL_RAND_RESET_Q(64);
-    vlSelf->__Vdly__crypt_spi_dut__DOT__u_slave__DOT__ss_prev = VL_RAND_RESET_I(1);
-    vlSelf->__Vdly__crypt_spi_dut__DOT__u_slave__DOT__sr_tx = VL_RAND_RESET_Q(64);
     vlSelf->__Vtrigprevexpr___TOP__clk__0 = VL_RAND_RESET_I(1);
     vlSelf->__Vtrigprevexpr___TOP__reset_n__0 = VL_RAND_RESET_I(1);
     vlSelf->__Vtrigprevexpr___TOP__crypt_spi_dut__DOT__spi_if__sck__0 = VL_RAND_RESET_I(1);
-    for (int __Vi0 = 0; __Vi0 < 3; ++__Vi0) {
+    for (int __Vi0 = 0; __Vi0 < 4; ++__Vi0) {
         vlSelf->__Vm_traceActivity[__Vi0] = 0;
     }
 }

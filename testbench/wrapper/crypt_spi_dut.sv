@@ -6,6 +6,7 @@ module crypt_spi_dut (
     input  logic [63:0] master_data,
     input  logic start,
     input  logic is_write,
+    input logic [63:0] slaver_data,
     output logic miso,
     output logic done,
     output logic sck,
@@ -19,7 +20,6 @@ module crypt_spi_dut (
     output logic miso_encrypted,
     output logic [63:0] encrypt_text,
     output logic [63:0] ciphertext,
-    output logic [63:0] slave_data_to_send,
     output logic crypto_ack,
     output logic [63:0] plaintext,
     output logic [63:0] data_received
@@ -35,7 +35,7 @@ module crypt_spi_dut (
     assign spi_if.start = start;    
     assign spi_if.is_write = is_write;
 
-    assign spi_if.slave_data_to_send = slave_data_to_send;
+    assign spi_if.slave_data_to_send = slaver_data;
 
     assign done = spi_if.done;
     assign sck = spi_if.sck;

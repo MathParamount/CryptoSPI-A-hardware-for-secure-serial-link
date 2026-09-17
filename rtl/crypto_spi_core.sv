@@ -200,6 +200,7 @@ module crypto_spi_core
 													
 						$display("[SIMON] Final: ciphertext: 0x%016X , ciphertext_size: %d", spi_if.ciphertext, $bits(spi_if.ciphertext));
 						count_round <= 0;
+						spi_if.crypto_done <= 1;
 						state_encr <= TRANSMISSION;
 					end
 				end
@@ -240,7 +241,6 @@ module crypto_spi_core
 				end
 
 				TRANSMISSION: begin
-					
 					if (spi_if.is_write) begin
 						//come from master
 						if(decrpt_signal == 1'b0) begin

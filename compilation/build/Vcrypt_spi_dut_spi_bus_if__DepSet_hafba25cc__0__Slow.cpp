@@ -23,7 +23,6 @@ VL_ATTR_COLD void Vcrypt_spi_dut_spi_bus_if___ctor_var_reset(Vcrypt_spi_dut_spi_
     vlSelf->crypto_ack = VL_RAND_RESET_I(1);
     vlSelf->data_received = VL_RAND_RESET_Q(64);
     vlSelf->__Vdly__sck = VL_RAND_RESET_I(1);
-    vlSelf->__Vdly__ss = VL_RAND_RESET_I(1);
     vlSelf->__Vdly__crypto_done = VL_RAND_RESET_I(1);
     vlSelf->__Vdly__mosi_encrypted = VL_RAND_RESET_I(1);
     vlSelf->__Vdly__miso_encrypted = VL_RAND_RESET_I(1);

@@ -42,18 +42,19 @@ module master_send
 	logic [15:0] total_blocks;
 	/* verilator lint_off UNDRIVEN */
 	
+	// definition of block count to a cryptographic module
 	always_ff @(posedge clk) begin
-	    	if (state == IDLE) begin
+	    if (state == IDLE) begin
 			block_count <= 0;
 		end
-	    	else if (spi_if.block_ready && state == EXEC_ENCRYPT && block_count < total_blocks - 1) begin
-        		block_count <= block_count + 1;
+	    else if (spi_if.block_ready && state == EXEC_ENCRYPT && block_count < total_blocks - 1) begin
+        	block_count <= block_count + 1;
 			$display("block_count  value: %d", block_count);
-        	end
+        end
 	end
 	
 	always_comb begin
-    		last_block = (block_count == total_blocks - 1);
+    	last_block = (block_count == total_blocks - 1);
 	end
 
 	//general synchronous block
@@ -127,13 +128,13 @@ module master_send
 				end
 
 				CMD_PARSE: begin
-				    spi_if.ss <= 1'b0;		//slave activation
-					
+				   spi_if.ss <= 1'b0;		//slave activation
+
 					if(spi_if.sck && !sck_prev) begin
 						spi_if.mosi <= sr[63 - bit_count];
 						sr_rx <= {sr_rx[62:0], spi_if.miso_encrypted};
 
-						$display("[MASTER] CMD_PARSE: data_to_send[0]=%b, full_data=0x%016X",spi_if.data_to_send[0], spi_if.data_to_send);
+						//$display("[MASTER] CMD_PARSE: data_to_send[0]=%b, full_data=0x%016X",spi_if.data_to_send[0], spi_if.data_to_send);			//debug
 							
 						bit_count <= bit_count + 1;
 
@@ -157,8 +158,9 @@ module master_send
 
 				FILL_BUFFER: begin
 				    spi_if.ss <= 1'b0;   		// activate slave
-				    $display("[MASTER] FILL: bit_count=%d, ss_delay=%b, ss=%b", bit_count, ss_delay, spi_if.ss);
-				    
+				    //$display("[MASTER] FILL: bit_count=%d, ss_delay=%b, ss=%b", bit_count, ss_delay, spi_if.ss);		//debug
+				    //$display("[MASTER] FILL: ss_delay=%b, ss=%b",  ss_delay, spi_if.ss); 
+
 					//MISO sampling
 				    if (spi_if.sck && !sck_prev) begin
 						sr_rx <= {sr_rx[62:0], spi_if.miso_encrypted};

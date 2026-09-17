@@ -12,20 +12,22 @@ module slaver_receiver (
     logic [63:0] sr_tx;
     
     logic [6:0] bit_count;
-    logic ss_prev;
-
     logic miso_reg;
+
+    // ss signal division (positive/negative control block)
+    logic ss_prev_pos;  
+    logic ss_prev_ng;
     
     // reception model
     always_ff @(posedge spi_if.sck or negedge reset_n) begin
     	if(!reset_n) begin
             bit_count <= 0;
             sr_rx <= '0;
-            ss_prev <= 1;
+            ss_prev_pos <= 1;
         end
         else begin
         	//posedge ss signal
-		    if(spi_if.ss && !ss_prev && bit_count > 0) begin
+		    if(spi_if.ss && !ss_prev_pos && bit_count > 0) begin
 		        bit_count <= 0;
 		        sr_rx <= 0;
 		    end else if (!spi_if.ss) begin
@@ -37,7 +39,7 @@ module slaver_receiver (
             	
             $display("[SLAVE]: mosi_encrypted = %d, bit_count = %d, ss=%b", spi_if.mosi_encrypted, bit_count, spi_if.ss);
         	
-        	ss_prev <= spi_if.ss;
+        	ss_prev_pos <= spi_if.ss;
         end
     end
 
@@ -45,17 +47,17 @@ module slaver_receiver (
     always_ff @(negedge spi_if.sck or negedge reset_n) begin
         if(!reset_n) begin
             sr_tx <= 64'b0;
-            ss_prev <= 1;
+            ss_prev_ng <= 1;
         end 
         else begin     
             if(spi_if.ss) begin
                 sr_tx <= 0;
-                ss_prev <= 1;
+                ss_prev_ng <= 1;
             end
             else begin
-                if(ss_prev) begin
+                if(ss_prev_ng) begin
                     sr_tx <= {spi_if.slave_data_to_send[62:0], 1'b0};
-                    ss_prev <= 0;
+                    ss_prev_ng <= 0;
                 end
                 else begin
 		        	sr_tx <= {sr_tx[62:0], 1'b0};  // displacement
@@ -69,7 +71,7 @@ module slaver_receiver (
         if(spi_if.ss) begin
             miso_reg = 0;
         end
-        else if (ss_prev) begin
+        else if (ss_prev_pos) begin
             miso_reg = spi_if.slave_data_to_send[63];       //first bit
         end
         else begin
