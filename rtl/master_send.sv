@@ -6,7 +6,7 @@ module master_send
 	input logic reset_n,
 	output logic [2:0] debug_state,
 
-    spi_bus_if.master_f spi_if
+    	spi_bus_if.master_f spi_if
 );
 
 	import state_control::*;

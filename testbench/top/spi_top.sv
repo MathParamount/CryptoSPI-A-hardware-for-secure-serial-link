@@ -2,7 +2,7 @@
 
 module spi_top (
     input  logic clk,
-    input  logic reset,
+    input  logic reset_n,
     input  logic [15:0] master_data,
     input  logic [15:0] slave_data_to_send,
     input  logic start,
@@ -17,7 +17,7 @@ module spi_top (
 
     spi_dut u_dut (
         .clk(clk),
-        .reset(reset),
+        .reset_n(reset_n),
         .master_data(master_data),
         .slave_data_to_send(slave_data_to_send),
         .start(start),
@@ -30,4 +30,57 @@ module spi_top (
         .ss(ss)
     );
 
+endmodule`timescale 1ns/1ps
+
+module tb_spi;
+  logic clk = 0;
+  logic reset_n = 0;
+  logic [15:0] master_data = 16'hA55A;
+  logic [15:0] slave_data_to_send = 16'h1234;
+  logic start = 0;
+  logic miso;
+  logic done;
+  logic [15:0] data_received;
+  logic sck;
+  logic mosi;
+  logic [2:0] debug_state;
+  logic ss;
+
+  spi_top u_top (
+    .clk(clk),
+    .reset_n(reset_n),
+    .master_data(master_data),
+    .slave_data_to_send(slave_data_to_send),
+    .start(start),
+    .miso(miso),
+    .done(done),
+    .data_received(data_received),
+    .sck(sck),
+    .mosi(mosi),
+    .debug_state(debug_state),
+    .ss(ss)
+  );
+
+  // clock generation (period = 20 ns -> 50 MHz)
+  localparam CLK_PERIOD = 20;
+  always #(CLK_PERIOD/2) clk = ~clk;
+
+  // test sequence
+  initial begin
+    reset_n = 0;
+    master_data = 16'hA55A;
+    slave_data_to_send = 16'h1234;
+    start = 0;
+
+    #55;             
+    reset_n = 1;
+
+    #25;                 // t = 80, betweeh edges (70 and 90)
+    start = 1;
+    #40;                 // t = 120, wait by 2 clock cycles
+    start = 0;
+
+    #1000;
+    $finish;
+end
 endmodule

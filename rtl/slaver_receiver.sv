@@ -20,11 +20,11 @@ module slaver_receiver (
     // transmission model
     always_ff @(negedge spi_if.sck or negedge reset_n) begin
     	if (!reset_n) begin
-        	sr_tx <= 0;
+        	sr_tx <= '0;
         	ss_prev <= 1;
     	end
     	else if (spi_if.ss) begin
-        	sr_tx <= 0;
+        	sr_tx <= '0;
         	ss_prev <= 1;
     	end
     	else begin
