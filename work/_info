@@ -7,4 +7,173 @@ z2
 !i10e 25
 !i10f 100
 cModel Technology
-d/home/gabriel-cruz/projects/CryptoSPI-A-hardware-for-secure-serial-link
+Z0 d/home/gabriel-cruz/projects/CryptoSPI-A-hardware-for-secure-serial-link
+vmaster_send
+Z1 DXx6 sv_std 3 std 0 22 AD7iAPLo6nTIKk<N0eo=D3
+Z2 DXx4 work 13 state_control 0 22 4@oG:PeoUIGP7omK>ol;`0
+Z3 !s110 1790037433
+!i10b 1
+!s100 [Xedd:m1DPl_9<Wm@ElA11
+I`SbD3X4EUY:ka?aj=oPja1
+Z4 VDg1SIo80bB@j0V0VzS_@n1
+Z5 !s105 state_control_sv_unit
+S1
+R0
+w1790035389
+8rtl/master_send.sv
+Frtl/master_send.sv
+L0 3
+Z6 OV;L;10.5b;63
+r1
+!s85 0
+31
+Z7 !s108 1790037433.000000
+Z8 !s107 testbench/top/spi_top.sv|testbench/wrapper/spi_dut.sv|rtl/slaver_receiver.sv|rtl/master_send.sv|rtl/interface/spi_bus_if.sv|pkg/state_control.sv|
+Z9 !s90 -sv|-mfcu|pkg/state_control.sv|rtl/interface/spi_bus_if.sv|rtl/master_send.sv|rtl/slaver_receiver.sv|testbench/wrapper/spi_dut.sv|testbench/top/spi_top.sv|
+!i113 1
+Z10 o-sv -mfcu
+Z11 tCvgOpt 0
+vslaver_receiver
+R1
+R3
+!i10b 1
+!s100 ikB02NOd:mF=6zHkXd=6;1
+I05]CadgH1iHO7S1]477ID1
+R4
+R5
+S1
+R0
+w1790036082
+8rtl/slaver_receiver.sv
+Frtl/slaver_receiver.sv
+L0 3
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+R11
+Yspi_bus_if
+R1
+R3
+!i10b 1
+!s100 QR]T73h0Thoo1;QED;`lm2
+IiRl=4R5VhS1nbSNR1l>PJ1
+R4
+R5
+S1
+R0
+w1790031672
+8rtl/interface/spi_bus_if.sv
+Frtl/interface/spi_bus_if.sv
+L0 1
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+R11
+vspi_dut
+R1
+R2
+R3
+!i10b 1
+!s100 i;F4HQVY8fSckQSOQSdK=3
+Ika]NeC4Ado_>QM`n]WW4d3
+R4
+R5
+S1
+R0
+w1790034358
+8testbench/wrapper/spi_dut.sv
+Ftestbench/wrapper/spi_dut.sv
+L0 3
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+R11
+vspi_top
+R1
+R3
+!i10b 1
+!s100 D<DGQ[P_J3=5d2]9Uc7Qk3
+IH>bQY`]4e>A^b5R@=OV4^0
+R4
+R5
+S1
+R0
+Z12 w1790037417
+Z13 8testbench/top/spi_top.sv
+Z14 Ftestbench/top/spi_top.sv
+L0 3
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+R11
+Xstate_control
+R1
+R3
+!i10b 1
+!s100 EECmc1bh?HeXc;o[JiPf`3
+I4@oG:PeoUIGP7omK>ol;`0
+V4@oG:PeoUIGP7omK>ol;`0
+S1
+R0
+w1790032492
+8pkg/state_control.sv
+Fpkg/state_control.sv
+L0 1
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+R11
+vtb_spi
+R1
+R3
+!i10b 1
+!s100 R1iBLPH8N06E9BbEzg_001
+IffVBQ0c;Ed_mMOV?Nz5cX1
+R4
+R5
+S1
+R0
+R12
+R13
+R14
+L0 35
+R6
+r1
+!s85 0
+31
+R7
+R8
+R9
+!i113 1
+R10
+R11

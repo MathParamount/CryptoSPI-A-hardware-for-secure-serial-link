@@ -89,7 +89,7 @@ module master_send
 					spi_if.mosi <= 0;
 					spi_if.done <= 0;
 					bit_count <= 0;
-                	sck_div <= 0;
+                			sck_div <= 0;
 					ss_delay <= 0;    
 					sr_rx <= 0;
 					//spi_if.miso <= 0;

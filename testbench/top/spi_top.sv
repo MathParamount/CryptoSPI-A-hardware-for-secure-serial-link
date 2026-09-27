@@ -61,26 +61,29 @@ module tb_spi;
     .ss(ss)
   );
 
-  // clock generation (period = 20 ns -> 50 MHz)
   localparam CLK_PERIOD = 20;
-  always #(CLK_PERIOD/2) clk = ~clk;
 
-  // test sequence
-  initial begin
-    reset_n = 0;
-    master_data = 16'hA55A;
-    slave_data_to_send = 16'h1234;
-    start = 0;
+    always #(CLK_PERIOD/2) clk = ~clk;
 
-    #55;             
-    reset_n = 1;
+    initial begin
+        clk = 1'b0;
+        reset_n = 1'b0;
+        start = 1'b0;
+        miso = 1'b0;
+        master_data = 16'hA55A;
+        slave_data_to_send = 16'h1234;
 
-    #25;                 // t = 80, betweeh edges (70 and 90)
-    start = 1;
-    #40;                 // t = 120, wait by 2 clock cycles
-    start = 0;
+        repeat (3) @(negedge clk);
 
-    #1000;
-    $finish;
-end
+        reset_n = 1'b1;
+
+        @(negedge clk);
+        start = 1'b1;
+
+        @(negedge clk);
+        start = 1'b0;
+
+        #1000;
+        $finish;
+    end
 endmodule
