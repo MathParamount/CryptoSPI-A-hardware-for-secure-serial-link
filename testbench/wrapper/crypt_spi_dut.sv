@@ -67,7 +67,7 @@ module crypt_spi_dut (
     master_send u_master (
         .clk(clk),
         .reset_n(reset_n),
-	    .debug_state(debug_state),
+	.debug_state(debug_state),
         .spi_if(spi_if.master_f) 
     );
     
@@ -80,7 +80,7 @@ module crypt_spi_dut (
         .clk(clk),
         .reset_n(reset_n),
         .debug_state_crypt(debug_state_crypt),
-	    .spi_if(spi_if.crypto_f)
+	.spi_if(spi_if.crypto_f)
     );
     
 endmodule

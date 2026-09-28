@@ -59,7 +59,7 @@ module crypto_spi_core
 	//LFSR core
 	always_ff @(posedge clk or negedge reset_n) begin
 		if(!reset_n) begin 
-			spi_if.plaintext <= 64'h0;
+			//spi_if.plaintext <= 64'h0;
 			slave_rx <= 64'h0;
 			state_encr <= IDLE_CRYPT;
 			state_mast <= IDLE;
@@ -70,11 +70,14 @@ module crypto_spi_core
 			cycle_cnt <= 0;
 			lfsr_m <= 64'h0000000000000001;   // LFSR seed Master -> Slave
     		lfsr_s <= 64'h8000000000000000;	  // LFSR seed Slave -> Master
-    		spi_if.ciphertext <= 64'h0;
-			
+    		//spi_if.ciphertext <= 64'h0;
+			spi_if.mosi_encrypted <= 0;
+			spi_if.miso_encrypted <= 0;
 			round_key <= '{42{32'h0}};        // 42 repetitions of 32'h0
 			temp <= 32'h0;
 			sck_prev <= 1'b0;
+			cycle_cnt <= 7'h0;
+			encypt_count <= 6'h0;
 		end
 		else begin
 			debug_state_crypt <= state_mast;
@@ -93,6 +96,7 @@ module crypto_spi_core
 
 					if (spi_if.ss == 1'b0) begin  		// only amostrate if active
 						if (spi_if.sck && !sck_prev) begin
+							$display("[CRYPTO RX] cycle_cnt=%0d, mosi=%b, sck_prev=%b", cycle_cnt, spi_if.mosi, sck_prev);
 							spi_if.plaintext <= {spi_if.plaintext[62:0], spi_if.mosi};      // come from master
 							slave_rx   <= {slave_rx[62:0], spi_if.miso};       // come from slaver
 							cycle_cnt <= cycle_cnt + 1;

@@ -117,10 +117,12 @@ module master_send
                		sck_div <= 0;
 					done_cnt <= 0;
 					ss_delay <= 0;
+					spi_if.sck <= 0;
 
 					if (spi_if.start) begin
 					    sr <= spi_if.data_to_send;  // load data (buffer)
-					    sck_en <= 1;
+						spi_if.mosi <= spi_if.data_to_send[63];
+						sck_en <= 1;
 						spi_if.ss <= 1'b0;			//master sending data
 					    $display("[MASTER] Start transmission, data_to_send=0x%016X", spi_if.data_to_send);
 					    state <= CMD_PARSE;
@@ -131,7 +133,6 @@ module master_send
 				   spi_if.ss <= 1'b0;		//slave activation
 
 					if(spi_if.sck && !sck_prev) begin
-						spi_if.mosi <= sr[63 - bit_count];
 						sr_rx <= {sr_rx[62:0], spi_if.miso_encrypted};
 
 						//$display("[MASTER] CMD_PARSE: data_to_send[0]=%b, full_data=0x%016X",spi_if.data_to_send[0], spi_if.data_to_send);			//debug
@@ -144,16 +145,24 @@ module master_send
 							
 							//sending 64 bits to shift_register
 							if (spi_if.data_to_send[0] == 0) begin
-								sr_tx <= spi_if.data_to_send << 48;
+								sr_tx <= spi_if.data_to_send;
+								spi_if.mosi <= spi_if.data_to_send[63];
 								state <= FILL_BUFFER;  		// Write/Encrypt
 							end
 							else begin		// ODD: READ
 								//sr_tx <= 64'h0;			//sending zero in read
-								sr_tx <= spi_if.data_to_send << 48;  // loading same data after each block
+								sr_tx <= spi_if.data_to_send;  // loading same data after each block
+								spi_if.mosi <= spi_if.data_to_send[63];
 								state <= DRAIN_BUFFER; 		// Read/Decrypt
 							end
 						end		
-				    end			
+				    end
+
+					if(!spi_if.sck && sck_prev) begin
+						if (bit_count < 64) spi_if.mosi <= sr[63 - bit_count];
+
+						bit_count <= bit_count;
+					end			
 				end
 
 				FILL_BUFFER: begin
