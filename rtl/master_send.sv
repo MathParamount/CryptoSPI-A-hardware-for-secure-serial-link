@@ -6,7 +6,7 @@ module master_send
 	input logic reset_n,
 	output logic [2:0] debug_state,
 
-    	spi_bus_if.master_f spi_if
+    spi_bus_if.master_f spi_if
 );
 
 	import state_control::*;
@@ -18,7 +18,6 @@ module master_send
 	logic [63:0] cmd_reg;
 	logic [63:0] sr_tx, sr_rx;
 	/* verilator lint_on UNUSEDSIGNAL */
-
 
 	//counting bit
 	logic [6:0] bit_count;				//to blocks of 127 bits
@@ -125,7 +124,8 @@ module master_send
 						sck_en <= 1;
 						spi_if.ss <= 1'b0;			//master sending data
 					    $display("[MASTER] Start transmission, data_to_send=0x%016X", spi_if.data_to_send);
-					    state <= CMD_PARSE;
+					    //$display("[MASTER] Start transmission, data_to_send=%b", spi_if.data_to_send);
+						state <= CMD_PARSE;
                    	end
 				end
 
@@ -141,7 +141,8 @@ module master_send
 
 						//LSB verfing if odd or even
 						if (bit_count == 63) begin      	// EVEN: WRITE
-							bit_count <= 64;
+							
+							bit_count <= 0;
 							
 							//sending 64 bits to shift_register
 							if (spi_if.data_to_send[0] == 0) begin

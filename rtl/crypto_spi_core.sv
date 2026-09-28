@@ -42,7 +42,7 @@ module crypto_spi_core
 	logic [5:0] count_round;
 	
 	//Simon 64 constant
-	localparam [41:0] Z = 42'b11011011001001101101101100100110110110110;
+	localparam [41:0] Z = 42'b101011110111000000110100100110001010000100;	
 	
 	logic [63:0] Post_SMplaintext;
 	logic decrpt_signal;			//signal control to behavior
@@ -63,13 +63,13 @@ module crypto_spi_core
 			slave_rx <= 64'h0;
 			state_encr <= IDLE_CRYPT;
 			state_mast <= IDLE;
-			//lfsr_m <= 64'h326456754ACCEEF1;			// LFSR seed Master -> Slave
-			//lfsr_s <= 64'h523456789ABCDEd2;			// LFSR seed Slave -> Master
 			//$display("[CRYPTO] lfsr_m initialization  = 0x%016X", lfsr_m);		//debug
 			spi_if.crypto_done <= 0;
 			cycle_cnt <= 0;
-			lfsr_m <= 64'h0000000000000001;   // LFSR seed Master -> Slave
-    		lfsr_s <= 64'h8000000000000000;	  // LFSR seed Slave -> Master
+			//lfsr_m <= 64'h0000000000000001; 
+    		//lfsr_s <= 64'h8000000000000000;	
+			lfsr_m <= 64'hA5A5A5A5A5A5A5A5;   // LFSR seed Master -> Slave
+			lfsr_s <= 64'h5A5A5A5A5A5A5A5A;   // LFSR seed Slave -> Master
     		//spi_if.ciphertext <= 64'h0;
 			spi_if.mosi_encrypted <= 0;
 			spi_if.miso_encrypted <= 0;
@@ -93,7 +93,6 @@ module crypto_spi_core
 				end
 				
 				RECEPTION: begin
-
 					if (spi_if.ss == 1'b0) begin  		// only amostrate if active
 						if (spi_if.sck && !sck_prev) begin
 							$display("[CRYPTO RX] cycle_cnt=%0d, mosi=%b, sck_prev=%b", cycle_cnt, spi_if.mosi, sck_prev);
@@ -101,31 +100,32 @@ module crypto_spi_core
 							slave_rx   <= {slave_rx[62:0], spi_if.miso};       // come from slaver
 							cycle_cnt <= cycle_cnt + 1;
 						end
+					end
 						
 						//order transmission
 						//spi_if.is_write <= ~spi_if.plaintext[0];
-						
-						if(cycle_cnt == 63) begin
-							$display("[CRYPTO RECEPTION] is_write: %d, plain_text: 0x%016X, slaver_rx: 0x%016X, encrypt_text_reg: 0x%016X", spi_if.is_write, spi_if.plaintext, slave_rx, encrypt_text_reg);
-							
-						    cycle_cnt <= 64;
+					if(cycle_cnt == 64) begin
+						cycle_cnt <= 0;
+						$display("\t [CRYPTO RECEPTION] is_write: %d, plain_text: 0x%016X, slaver_rx: 0x%016X", spi_if.is_write, spi_if.plaintext, slave_rx);
+						//$display("[CRYPTO RECEPTION] is_write: %d, plain_text: %b, slaver_rx: %b, encrypt_text_reg: %b", spi_if.is_write, spi_if.plaintext, slave_rx, encrypt_text_reg);
 
-    						if (spi_if.is_write) begin
-								state_encr <= ENCRYPT;		//write
-								decrpt_signal <= 0;
-							end
-							else begin
-								state_encr <= DECRYPT;		//read
-								decrpt_signal <= 1;
-							end
+    					if (spi_if.is_write) begin
+							state_encr <= ENCRYPT;		//write
+							decrpt_signal <= 0;
+						end
+						else begin
+							state_encr <= DECRYPT;		//read
+							decrpt_signal <= 1;
 						end
 					end
 				end
 
 				ENCRYPT: begin
+					logic [63:0] enc_temp;
+
 					//1 keystream by cycle
-					lfsr_m <= {lfsr_m[62:0], lfsr_m[63] ^ lfsr_m[43] ^ lfsr_m[33] ^ lfsr_m[22] ^ lfsr_m[10] ^ lfsr_m[1]};
-					lfsr_s <= {lfsr_s[62:0], lfsr_s[63] ^ lfsr_s[43] ^ lfsr_s[33] ^ lfsr_s[22] ^ lfsr_s[10] ^ lfsr_s[1]};
+					lfsr_m <= {lfsr_m[62:0], lfsr_m[63] ^ lfsr_m[3] ^ lfsr_m[2] ^ lfsr_m[1]};
+					lfsr_s <= {lfsr_s[62:0], lfsr_s[63] ^ lfsr_s[3] ^ lfsr_s[2] ^ lfsr_s[1]};		
 
 					encypt_count <= encypt_count + 1;
 					
@@ -134,16 +134,18 @@ module crypto_spi_core
 						//$display("[ENCRYPT] is_write: %d, plain_text: 0x%016X, lfsr_m: 0x%016X, lfsr_s: 0x%016X", is_write, plain_text, lfsr_m, lfsr_s);
 						
 						// calculate the cryptographic data
-						if(spi_if.is_write) begin
-							encrypt_text_reg <= spi_if.plaintext ^ lfsr_m;		//write
+						if (spi_if.is_write) begin
+							enc_temp = spi_if.plaintext ^ lfsr_m;   // cálculo imediato (bloqueante)
+							encrypt_text_reg <= enc_temp;
+							$display("\t lfsr_m: 0x%016X", lfsr_m);
+							$display("\t [ENCRYPT_WRITE] plaintext=0x%016X	 | 	encrypt=0x%016X", spi_if.plaintext, enc_temp);
 						end
 						else begin 
 							encrypt_text_reg <= slave_rx ^ lfsr_s;			//read
+							encrypt_text_reg <= enc_temp;
+    						$display("\t lfsr_s=0x%016X, encrypt=0x%016X", lfsr_s, enc_temp);
 						end
-						
-						$display("[ENCRYPT] encrypt_text_reg = 0x%016X", encrypt_text_reg);
-						//crypto_if.crypto_done <= 1;
-					
+								
 						state_encr <= SIMON_ENCRYPT;
 					end
 				end
