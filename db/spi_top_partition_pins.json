@@ -1,0 +1,245 @@
+{
+	"partitions" : [
+		{
+			"name" : "Top",
+			"pins" : [
+				{
+					"name" : "miso",
+					"strict" : false
+				},
+				{
+					"name" : "done",
+					"strict" : false
+				},
+				{
+					"name" : "data_received[0]",
+					"strict" : false
+				},
+				{
+					"name" : "data_received[1]",
+					"strict" : false
+				},
+				{
+					"name" : "data_received[2]",
+					"strict" : false
+				},
+				{
+					"name" : "data_received[3]",
+					"strict" : false
+				},
+				{
+					"name" : "data_received[4]",
+					"strict" : false
+				},
+				{
+					"name" : "data_received[5]",
+					"strict" : false
+				},
+				{
+					"name" : "data_received[6]",
+					"strict" : false
+				},
+				{
+					"name" : "data_received[7]",
+					"strict" : false
+				},
+				{
+					"name" : "data_received[8]",
+					"strict" : false
+				},
+				{
+					"name" : "data_received[9]",
+					"strict" : false
+				},
+				{
+					"name" : "data_received[10]",
+					"strict" : false
+				},
+				{
+					"name" : "data_received[11]",
+					"strict" : false
+				},
+				{
+					"name" : "data_received[12]",
+					"strict" : false
+				},
+				{
+					"name" : "data_received[13]",
+					"strict" : false
+				},
+				{
+					"name" : "data_received[14]",
+					"strict" : false
+				},
+				{
+					"name" : "data_received[15]",
+					"strict" : false
+				},
+				{
+					"name" : "sck",
+					"strict" : false
+				},
+				{
+					"name" : "mosi",
+					"strict" : false
+				},
+				{
+					"name" : "debug_state[0]",
+					"strict" : false
+				},
+				{
+					"name" : "debug_state[1]",
+					"strict" : false
+				},
+				{
+					"name" : "debug_state[2]",
+					"strict" : false
+				},
+				{
+					"name" : "ss",
+					"strict" : false
+				},
+				{
+					"name" : "slave_data_to_send[15]",
+					"strict" : false
+				},
+				{
+					"name" : "start",
+					"strict" : false
+				},
+				{
+					"name" : "clk",
+					"strict" : false
+				},
+				{
+					"name" : "reset_n",
+					"strict" : false
+				},
+				{
+					"name" : "slave_data_to_send[14]",
+					"strict" : false
+				},
+				{
+					"name" : "slave_data_to_send[13]",
+					"strict" : false
+				},
+				{
+					"name" : "master_data[15]",
+					"strict" : false
+				},
+				{
+					"name" : "master_data[14]",
+					"strict" : false
+				},
+				{
+					"name" : "master_data[13]",
+					"strict" : false
+				},
+				{
+					"name" : "master_data[12]",
+					"strict" : false
+				},
+				{
+					"name" : "master_data[11]",
+					"strict" : false
+				},
+				{
+					"name" : "master_data[10]",
+					"strict" : false
+				},
+				{
+					"name" : "master_data[9]",
+					"strict" : false
+				},
+				{
+					"name" : "master_data[8]",
+					"strict" : false
+				},
+				{
+					"name" : "master_data[7]",
+					"strict" : false
+				},
+				{
+					"name" : "master_data[6]",
+					"strict" : false
+				},
+				{
+					"name" : "master_data[5]",
+					"strict" : false
+				},
+				{
+					"name" : "master_data[4]",
+					"strict" : false
+				},
+				{
+					"name" : "master_data[3]",
+					"strict" : false
+				},
+				{
+					"name" : "master_data[2]",
+					"strict" : false
+				},
+				{
+					"name" : "master_data[1]",
+					"strict" : false
+				},
+				{
+					"name" : "master_data[0]",
+					"strict" : false
+				},
+				{
+					"name" : "slave_data_to_send[12]",
+					"strict" : false
+				},
+				{
+					"name" : "slave_data_to_send[11]",
+					"strict" : false
+				},
+				{
+					"name" : "slave_data_to_send[10]",
+					"strict" : false
+				},
+				{
+					"name" : "slave_data_to_send[9]",
+					"strict" : false
+				},
+				{
+					"name" : "slave_data_to_send[8]",
+					"strict" : false
+				},
+				{
+					"name" : "slave_data_to_send[7]",
+					"strict" : false
+				},
+				{
+					"name" : "slave_data_to_send[6]",
+					"strict" : false
+				},
+				{
+					"name" : "slave_data_to_send[5]",
+					"strict" : false
+				},
+				{
+					"name" : "slave_data_to_send[4]",
+					"strict" : false
+				},
+				{
+					"name" : "slave_data_to_send[3]",
+					"strict" : false
+				},
+				{
+					"name" : "slave_data_to_send[2]",
+					"strict" : false
+				},
+				{
+					"name" : "slave_data_to_send[1]",
+					"strict" : false
+				},
+				{
+					"name" : "slave_data_to_send[0]",
+					"strict" : false
+				}
+			]
+		}
+	]
+}

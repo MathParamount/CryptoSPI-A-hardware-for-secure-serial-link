@@ -1,0 +1,13 @@
+
+State Machine - |spi_top|spi_dut:u_dut|master_send:u_master|done_counter
+Name done_counter.001 
+done_counter.000 0 
+done_counter.001 1 
+
+State Machine - |spi_top|spi_dut:u_dut|master_send:u_master|state
+Name state.DRAIN_BUFFER state.FILL_BUFFER state.CMD_PARSE state.IDLE state.DONE 
+state.IDLE 0 0 0 0 0 
+state.CMD_PARSE 0 0 1 1 0 
+state.FILL_BUFFER 0 1 0 1 0 
+state.DRAIN_BUFFER 1 0 0 1 0 
+state.DONE 0 0 0 1 1 

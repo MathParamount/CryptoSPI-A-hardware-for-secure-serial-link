@@ -69,7 +69,7 @@ module master_send
 					spi_if.sck <= ~spi_if.sck;  	// Invert SCK
 				end
 				else begin
-					sck_div <= sck_div + 1;
+					sck_div <= sck_div + 7'd1;
 				end
 			end
 			else  begin
@@ -89,7 +89,7 @@ module master_send
 					spi_if.mosi <= 0;
 					spi_if.done <= 0;
 					bit_count <= 0;
-                			sck_div <= 0;
+               sck_div <= 0;
 					ss_delay <= 0;    
 					sr_rx <= 0;
 					//spi_if.miso <= 0;
@@ -114,7 +114,7 @@ module master_send
 						//sr_rx <= {spi_if.miso, sr_rx[15:1]};		//LSB first
 						sr_rx <= {sr_rx[14:0], spi_if.miso};
 
-						bit_count <= bit_count + 1;
+						bit_count <= bit_count + 7'd1;
 
 						if(bit_count == 7) begin
 							bit_count <= 8;					
@@ -153,7 +153,7 @@ module master_send
 							ss_delay <= 1'b1;
 				    	end
 						else begin
-							bit_count <= bit_count + 1;
+							bit_count <= bit_count + 7'd1;
 						end
 				    end
 
@@ -179,7 +179,7 @@ module master_send
 							ss_delay <= 1'b1;
 						end
 						else begin
-							bit_count <= bit_count + 1;
+							bit_count <= bit_count + 7'd1;
 						end
 					end
 		
