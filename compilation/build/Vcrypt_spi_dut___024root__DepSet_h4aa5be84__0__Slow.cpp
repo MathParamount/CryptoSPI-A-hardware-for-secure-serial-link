@@ -59,6 +59,36 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___stl_sequent__TOP__0(Vcrypt_spi_dut_
         = ((IData)(vlSelf->crypt_spi_dut__DOT__u_master__DOT__block_count) 
            == ((IData)(vlSelf->crypt_spi_dut__DOT__u_master__DOT__total_blocks) 
                - (IData)(1U)));
+    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__temp 
+        = ((((0x29U >= (0x3fU & ((IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__count_round) 
+                                 - (IData)(1U)))) ? 
+             vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__round_key
+             [(0x3fU & ((IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__count_round) 
+                        - (IData)(1U)))] : vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d93fe75__3) 
+            << 0x1dU) | (((0x29U >= (0x3fU & ((IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__count_round) 
+                                              - (IData)(1U))))
+                           ? vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__round_key
+                          [(0x3fU & ((IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__count_round) 
+                                     - (IData)(1U)))]
+                           : vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d93fe75__4) 
+                         >> 3U));
+    if ((2U == VL_MODDIV_III(32, (IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__count_round), (IData)(3U)))) {
+        vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__temp 
+            = (vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__temp 
+               ^ ((((0x29U >= (0x3fU & ((IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__count_round) 
+                                        - (IData)(1U))))
+                     ? vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__round_key
+                    [(0x3fU & ((IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__count_round) 
+                               - (IData)(1U)))] : vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d93fe75__5) 
+                   << 0x1cU) | (((0x29U >= (0x3fU & 
+                                            ((IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__count_round) 
+                                             - (IData)(1U))))
+                                  ? vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__round_key
+                                 [(0x3fU & ((IData)(vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__count_round) 
+                                            - (IData)(1U)))]
+                                  : vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d93fe75__6) 
+                                >> 4U)));
+    }
     vlSelf->crypt_spi_dut__DOT__u_slave__DOT__miso_reg 
         = ((1U & (~ (IData)(vlSymsp->TOP__crypt_spi_dut__DOT__spi_if.ss))) 
            && (1U & ((IData)(vlSelf->crypt_spi_dut__DOT__u_slave__DOT__ss_prev_pos)

@@ -74,7 +74,6 @@ module crypto_spi_core
 			spi_if.mosi_encrypted <= 0;
 			spi_if.miso_encrypted <= 0;
 			round_key <= '{42{32'h0}};        // 42 repetitions of 32'h0
-			temp <= 32'h0;
 			sck_prev <= 1'b0;
 			cycle_cnt <= 7'h0;
 			encypt_count <= 6'h0;
@@ -97,7 +96,7 @@ module crypto_spi_core
 						if (spi_if.sck && !sck_prev) begin
 							$display("[CRYPTO RX] cycle_cnt=%0d, mosi=%b, sck_prev=%b", cycle_cnt, spi_if.mosi, sck_prev);
 							spi_if.plaintext <= {spi_if.plaintext[62:0], spi_if.mosi};      // come from master
-							slave_rx   <= {slave_rx[62:0], spi_if.miso};       // come from slaver
+							slave_rx  <= {slave_rx[62:0], spi_if.miso};       // come from slaver
 							cycle_cnt <= cycle_cnt + 1;
 						end
 					end
@@ -143,7 +142,8 @@ module crypto_spi_core
 						else begin 
 							encrypt_text_reg <= slave_rx ^ lfsr_s;			//read
 							encrypt_text_reg <= enc_temp;
-    						$display("\t lfsr_s=0x%016X, encrypt=0x%016X", lfsr_s, enc_temp);
+							$display("\t lfsr_s=0x%016X",lfsr_s);
+    						$display("\t [ENCRYPT_WRITE] plaintext=0x%016X	 | 	encrypt=0x%016X", lfsr_s, enc_temp);
 						end
 								
 						state_encr <= SIMON_ENCRYPT;
@@ -153,61 +153,36 @@ module crypto_spi_core
 				SIMON_ENCRYPT: begin
 					// round key generator
 					//key <= {lfsr_m,lfsr_s};
-					
 					if (count_round == 0) begin
-						//initialization
-						round_key[0] <= lfsr_m[31:0];		//m=1, fisrt word
-						round_key[1] <= lfsr_m[63:32];		//m=2, second word
-						round_key[2] <= lfsr_m[31:0];		//m=3, third word or ([95:64];)
-						
-						ys <= {encrypt_text_reg[63:32]};    	//high
-						xs <= {encrypt_text_reg[31:0]};	    	//low
+						round_key[0] <= lfsr_m[31:0];
+						round_key[1] <= lfsr_m[63:32];
+						round_key[2] <= lfsr_s[31:0];
+						xs <= encrypt_text_reg[31:0];
+						ys <= encrypt_text_reg[63:32];
+						count_round <= 1;
+					end else if (count_round <= 42) begin
+						// subkey generation to next round
+						if (count_round >= 3 && count_round + 1 < 42) begin
+							round_key[count_round] <= 32'hFFFFFFFC ^ {31'b0, Z[count_round-3]} ^ round_key[count_round-3] ^ temp;
+    					end
+
+						// Round function using a subkey
+						rol1 <= {xs[30:0], xs[31]};
+						rol8 <= {xs[27:0], xs[31:28]};
+						rol2 <= {xs[29:0], xs[31:30]};
+						x_new <= ys ^ (rol1 & rol8) ^ rol2 ^ round_key[count_round-1];
+
+						xs <= ys;
+						ys <= x_new;
 						count_round <= count_round + 1;
-					end
-					
-					$display("[SIMON] count_round=%d, xs=0x%08X, ys=0x%08X", count_round, xs, ys);
-					
-					if(count_round < 42) begin						
-						logic [5:0] idx = count_round;	//subkey iteration
-							
-						//key rotation and bit displacement   &&  key generation
-						temp <= {round_key[idx-1][2:0], round_key[idx-1][31:3]};		//rotation (ROR S^-3)
-								
-						if((idx + 1) % 2 == 0) temp <= temp ^ {round_key[idx-1][3:0], round_key[idx-1][31:4]};
-								
-						/* verilator lint_off BLKSEQ */
-						round_key[idx + 1] <= round_key[idx-1] ^ temp ^ {31'b0, Z[idx-1]};	// subkey of 2 rounds ago
-						/* verilator lint_off BLKSEQ */
-						
-						count_round <= count_round + 1;
-					end
-					
-					//encription
 
-					//mixing bits and round function fundation
-					rol1 <= {xs[30:0] , xs[31]};
-
-					rol8 <= {xs[27:0], xs[31:28]};	
-
-					rol2 <= {xs[29:0], xs[31:30]};
-						
-					// new value at the left
-					x_new <= ys ^ (rol1 & rol8) ^ rol2 ^ round_key[count_round];
-						
-					$display("x_new_size: %d", $bits(x_new));
-						
-					xs <= ys;
-					ys <= x_new;
-					
-					count_round <= count_round + 1;
-					
-					if( count_round == 42) begin
-						spi_if.ciphertext <= {ys, xs};		// result
-													
-						$display("[SIMON] Final: ciphertext: 0x%016X , ciphertext_size: %d", spi_if.ciphertext, $bits(spi_if.ciphertext));
-						count_round <= 0;
-						spi_if.crypto_done <= 1;
-						state_encr <= TRANSMISSION;
+						if (count_round == 42) begin
+							spi_if.ciphertext <= {ys, x_new};
+							$display("[SIMON] Final: ciphertext=0x%016X", {ys, x_new});
+							count_round <= 0;
+							spi_if.crypto_done <= 1;
+							state_encr <= TRANSMISSION;
+						end
 					end
 				end
 				
@@ -295,8 +270,15 @@ module crypto_spi_core
 		
 		    	default: state_encr <= IDLE_CRYPT;
 			endcase
-		
-	     	end
+	    end
+	end
+
+	always_comb begin
+		temp = {round_key[count_round-1][2:0], round_key[count_round-1][31:3]};   // ROR3
+        					
+		if ((count_round % 3) == 2) begin
+            temp = temp ^ {round_key[count_round-1][3:0], round_key[count_round-1][31:4]};   // ROR4
+		end
 	end
 
 endmodule

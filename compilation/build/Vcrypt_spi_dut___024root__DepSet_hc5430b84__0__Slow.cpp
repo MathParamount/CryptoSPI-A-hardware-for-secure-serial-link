@@ -20,8 +20,6 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___eval_initial__TOP(Vcrypt_spi_dut___
         = VL_RAND_RESET_I(32);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d93fe75__5 
         = VL_RAND_RESET_I(32);
-    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d96565c__0 
-        = (1U & VL_RAND_RESET_I(1));
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d93fe75__4 
         = VL_RAND_RESET_I(32);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d93fe75__3 
@@ -32,6 +30,8 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___eval_initial__TOP(Vcrypt_spi_dut___
         = VL_RAND_RESET_I(32);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d93fe75__0 
         = VL_RAND_RESET_I(32);
+    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d96565c__0 
+        = (1U & VL_RAND_RESET_I(1));
     VL_WRITEF("Crypto module instantiated\nplain_text bits: 64\n");
 }
 
@@ -97,6 +97,10 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___eval_stl(Vcrypt_spi_dut___024root* 
     // Body
     if ((1ULL & vlSelf->__VstlTriggered.word(0U))) {
         Vcrypt_spi_dut___024root___stl_sequent__TOP__0(vlSelf);
+        vlSelf->__Vm_traceActivity[3U] = 1U;
+        vlSelf->__Vm_traceActivity[2U] = 1U;
+        vlSelf->__Vm_traceActivity[1U] = 1U;
+        vlSelf->__Vm_traceActivity[0U] = 1U;
     }
 }
 
@@ -230,12 +234,12 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___ctor_var_reset(Vcrypt_spi_dut___024
     vlSelf->crypt_spi_dut__DOT__u_slave__DOT__ss_prev_ng = VL_RAND_RESET_I(1);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d93fe75__6 = VL_RAND_RESET_I(32);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d93fe75__5 = VL_RAND_RESET_I(32);
-    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d96565c__0 = VL_RAND_RESET_I(1);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d93fe75__4 = VL_RAND_RESET_I(32);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d93fe75__3 = VL_RAND_RESET_I(32);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d93fe75__2 = VL_RAND_RESET_I(32);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d93fe75__1 = VL_RAND_RESET_I(32);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d93fe75__0 = VL_RAND_RESET_I(32);
+    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vxrand_h8d96565c__0 = VL_RAND_RESET_I(1);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__state_encr = VL_RAND_RESET_I(3);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__state_mast = VL_RAND_RESET_I(3);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__slave_rx = VL_RAND_RESET_Q(64);
@@ -265,9 +269,8 @@ VL_ATTR_COLD void Vcrypt_spi_dut___024root___ctor_var_reset(Vcrypt_spi_dut___024
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__decrpt_signal = VL_RAND_RESET_I(1);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__sck_prev = VL_RAND_RESET_I(1);
     vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk1__DOT__enc_temp = VL_RAND_RESET_Q(64);
-    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk2__DOT__idx = VL_RAND_RESET_I(6);
-    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk3__DOT__r = VL_RAND_RESET_I(32);
-    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vlvbound_h6c02a00f__0 = VL_RAND_RESET_I(32);
+    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT__unnamedblk2__DOT__r = VL_RAND_RESET_I(32);
+    vlSelf->crypt_spi_dut__DOT__u_crypt__DOT____Vlvbound_h66e2bba3__0 = VL_RAND_RESET_I(32);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__sck_div = VL_RAND_RESET_Q(64);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__sck_prev = VL_RAND_RESET_I(1);
     vlSelf->__Vdly__crypt_spi_dut__DOT__u_master__DOT__state = VL_RAND_RESET_I(3);
