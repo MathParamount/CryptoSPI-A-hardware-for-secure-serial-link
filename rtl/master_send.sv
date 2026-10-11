@@ -69,7 +69,7 @@ module master_send
 					spi_if.sck <= ~spi_if.sck;  	// Invert SCK
 				end
 				else begin
-					sck_div <= sck_div + 7'd1;
+					sck_div <= sck_div + 16'd1;
 				end
 			end
 			else  begin
