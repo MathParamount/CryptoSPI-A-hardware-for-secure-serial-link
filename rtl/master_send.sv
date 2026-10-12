@@ -89,7 +89,7 @@ module master_send
 					spi_if.mosi <= 0;
 					spi_if.done <= 0;
 					bit_count <= 0;
-               sck_div <= 0;
+               		sck_div <= 0;
 					ss_delay <= 0;    
 					sr_rx <= 0;
 					//spi_if.miso <= 0;
@@ -188,7 +188,6 @@ module master_send
 						spi_if.mosi <= sr_tx[15];   // send next bit
 						sr_tx <= {sr_tx[14:0], 1'b0};
 					end
-						
 				end
 				
 				DONE: begin

@@ -1,5 +1,5 @@
 Fitter report for spi_top
-Thu Oct  8 18:22:29 2026
+Sun Oct 11 13:01:25 2026
 Quartus Prime Version 24.1std.0 Build 1077 03/04/2025 SC Lite Edition
 
 
@@ -68,7 +68,7 @@ on the Quartus Prime software download page.
 +--------------------------------------------------------------------------------------+
 ; Fitter Summary                                                                       ;
 +------------------------------------+-------------------------------------------------+
-; Fitter Status                      ; Successful - Thu Oct  8 18:22:29 2026           ;
+; Fitter Status                      ; Successful - Sun Oct 11 13:01:25 2026           ;
 ; Quartus Prime Version              ; 24.1std.0 Build 1077 03/04/2025 SC Lite Edition ;
 ; Revision Name                      ; spi_top                                         ;
 ; Top-level Entity Name              ; spi_top                                         ;
@@ -154,12 +154,12 @@ on the Quartus Prime software download page.
 ; Number detected on machine ; 4           ;
 ; Maximum allowed            ; 2           ;
 ;                            ;             ;
-; Average used               ; 1.03        ;
+; Average used               ; 1.04        ;
 ; Maximum used               ; 2           ;
 ;                            ;             ;
 ; Usage by Processor         ; % Time Used ;
 ;     Processor 1            ; 100.0%      ;
-;     Processor 2            ;   3.5%      ;
+;     Processor 2            ;   4.2%      ;
 +----------------------------+-------------+
 
 
@@ -1832,12 +1832,12 @@ Info (334003): Started post-fitting delay annotation
 Info (334004): Delay annotation completed successfully
 Info (334003): Started post-fitting delay annotation
 Info (334004): Delay annotation completed successfully
-Info (11218): Fitter post-fit operations ending: elapsed time is 00:00:01
+Info (11218): Fitter post-fit operations ending: elapsed time is 00:00:02
 Info (144001): Generated suppressed messages file /home/gabriel-cruz/projects/CryptoSPI-A-hardware-for-secure-serial-link/output_files/spi_top.fit.smsg
 Info: Quartus Prime Fitter was successful. 0 errors, 5 warnings
     Info: Peak virtual memory: 800 megabytes
-    Info: Processing ended: Thu Oct  8 18:22:30 2026
-    Info: Elapsed time: 00:00:16
+    Info: Processing ended: Sun Oct 11 13:01:25 2026
+    Info: Elapsed time: 00:00:10
     Info: Total CPU time (on all processors): 00:00:12
 
 

@@ -1,5 +1,5 @@
 Analysis & Synthesis report for spi_top
-Thu Oct  8 18:22:13 2026
+Sun Oct 11 13:01:14 2026
 Quartus Prime Version 24.1std.0 Build 1077 03/04/2025 SC Lite Edition
 
 
@@ -48,7 +48,7 @@ on the Quartus Prime software download page.
 +--------------------------------------------------------------------------------------+
 ; Analysis & Synthesis Summary                                                         ;
 +------------------------------------+-------------------------------------------------+
-; Analysis & Synthesis Status        ; Successful - Thu Oct  8 18:22:13 2026           ;
+; Analysis & Synthesis Status        ; Successful - Sun Oct 11 13:01:14 2026           ;
 ; Quartus Prime Version              ; 24.1std.0 Build 1077 03/04/2025 SC Lite Edition ;
 ; Revision Name                      ; spi_top                                         ;
 ; Top-level Entity Name              ; spi_top                                         ;
@@ -350,15 +350,14 @@ Encoding Type:  One-Hot
 Info: *******************************************************************
 Info: Running Quartus Prime Analysis & Synthesis
     Info: Version 24.1std.0 Build 1077 03/04/2025 SC Lite Edition
-    Info: Processing started: Thu Oct  8 18:22:05 2026
+    Info: Processing started: Sun Oct 11 13:01:06 2026
 Info: Command: quartus_map --read_settings_files=on --write_settings_files=off spi_top -c spi_top
 Warning (18236): Number of processors has not been specified which may cause overloading on shared machines.  Set the global assignment NUM_PARALLEL_PROCESSORS in your QSF to an appropriate value for best performance.
 Info (20030): Parallel compilation is enabled and will use 2 of the 2 processors detected
 Info (12021): Found 1 design units, including 1 entities, in source file testbench/wrapper/spi_dut.sv
     Info (12023): Found entity 1: spi_dut File: /home/gabriel-cruz/projects/CryptoSPI-A-hardware-for-secure-serial-link/testbench/wrapper/spi_dut.sv Line: 3
-Info (12021): Found 2 design units, including 2 entities, in source file testbench/top/spi_top.sv
+Info (12021): Found 1 design units, including 1 entities, in source file testbench/top/spi_top.sv
     Info (12023): Found entity 1: spi_top File: /home/gabriel-cruz/projects/CryptoSPI-A-hardware-for-secure-serial-link/testbench/top/spi_top.sv Line: 3
-    Info (12023): Found entity 2: tb_spi File: /home/gabriel-cruz/projects/CryptoSPI-A-hardware-for-secure-serial-link/testbench/top/spi_top.sv Line: 35
 Info (12021): Found 1 design units, including 0 entities, in source file pkg/state_control.sv
     Info (12022): Found design unit 1: state_control (SystemVerilog) File: /home/gabriel-cruz/projects/CryptoSPI-A-hardware-for-secure-serial-link/pkg/state_control.sv Line: 1
 Info (12021): Found 1 design units, including 1 entities, in source file rtl/interface/spi_bus_if.sv
@@ -385,9 +384,9 @@ Info (21057): Implemented 230 device resources after synthesis - the final resou
     Info (21059): Implemented 24 output pins
     Info (21061): Implemented 171 logic cells
 Info: Quartus Prime Analysis & Synthesis was successful. 0 errors, 3 warnings
-    Info: Peak virtual memory: 388 megabytes
-    Info: Processing ended: Thu Oct  8 18:22:13 2026
+    Info: Peak virtual memory: 376 megabytes
+    Info: Processing ended: Sun Oct 11 13:01:14 2026
     Info: Elapsed time: 00:00:08
-    Info: Total CPU time (on all processors): 00:00:16
+    Info: Total CPU time (on all processors): 00:00:19
 
 

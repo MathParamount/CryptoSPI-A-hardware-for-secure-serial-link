@@ -1,5 +1,7 @@
 `timescale 1ns/1ps
 
+//MOdelSim simulations. No synthesis (flux simulations)
+
 module tb_spi;
 
     // DUT signals
