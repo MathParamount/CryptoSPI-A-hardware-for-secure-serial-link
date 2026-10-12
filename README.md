@@ -223,6 +223,13 @@ The SPI protocol was analyzed during the compilation stage and carefully debugge
 
 <img width="1280" height="857" alt="spi_protocol_transfdata2" src="https://github.com/user-attachments/assets/53c60f7a-47fd-4b5d-8ad4-b3ac7b7a5105" />
 
+We used Quartus to simulate and test the design, evaluating its usability with different tools and its feasibility for future FPGA implementation. The image below shows the correct architecture, with the DUT receiving the specified signals and producing the expected RTL outputs.
+
+<img width="1914" height="879" alt="QuartusRTLViewer" src="https://github.com/user-attachments/assets/b934be0d-6275-4a28-88a1-57e95e15499f" />
+
+<img width="1912" height="702" alt="QuartusFSM" src="https://github.com/user-attachments/assets/0868e2f0-efe2-4976-8116-fc2aad35e7ed" />
+
+
 # Observations
 ...
 
