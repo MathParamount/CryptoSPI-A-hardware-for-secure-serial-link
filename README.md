@@ -64,6 +64,17 @@ branch into either a write (Master sends data) or read (Master receives data) op
 
 5. DONE: Deactivates the slave by driving `ss` high. Asserts the `done` flag, signaling transaction completion and readying the FSM to return to IDLE.
 
+### SPI waveform analysis
+
+1) Transmission 0xFFFF (First transmission with all ones):
+<img width="1862" height="489" alt="spi_compilation1" src="https://github.com/user-attachments/assets/ec4ea9c0-97fe-4e6f-b9a6-00cedcf839cf" />
+
+2) Third transmission with data alternation:
+<img width="1862" height="489" alt="spi_compilation2" src="https://github.com/user-attachments/assets/c1a53908-51b8-49ea-8179-6e9ea018a3fd" />
+
+3) fourth transmission:
+<img width="1862" height="489" alt="spi_compilation3" src="https://github.com/user-attachments/assets/a07a5bfa-3c7a-49bb-8b76-fb936bac5c71" />
+
 ## Crypto digital architecture
 
 The cryptographic core of this system was designed to establish a secure communication channel between the Master (SPI controller) and the Slave (peripheral device). The primary goal is to protect data in transit against common threats such as side-channel attacks, eavesdropping, and data tampering. It is a critical requirement in modern embedded systems.
@@ -107,15 +118,15 @@ The crypto core is controlled by a 7 state FSM, ensuring reliable and determinis
 
 2. RECEPTION: Captures serial data from Master (`mosi`) and Slave (`miso`) simultaneously, concatenating bits into 64‑bit words. Sets `is_write` flag based on the command LSB.
 
-3. ENCRYPT: Generates a keystream using the LFSR (updated every cycle). Performs XOR with the plaintext to produce the LFSR encrypted data
+3. ENCRYPT: Generates a keystream using the LFSR (updated every cycle). Performs XOR with the plaintext to produce the LFSR encrypted data.
 
-4. SIMON_ENCRYPT: Applies the SIMON block cipher to the LFSR encrypted data. Performs key expansion (96 bit master key -> 42 round keys), executes 42 rounds of the SIMON round function (including rotations, bit‑wise AND, and XOR), and produces the final 64 bit ciphertext.
+5. SIMON_ENCRYPT: Applies the SIMON block cipher to the LFSR encrypted data. Performs key expansion (96 bit master key -> 42 round keys), executes 42 rounds of the SIMON round function (including rotations, bit‑wise AND, and XOR), and produces the final 64 bit ciphertext.
 
-5. DECRYPT: decrypt SIMON with a keystream, followed by XOR with the LFSR keystream.
+6. DECRYPT: decrypt SIMON with a keystream, followed by XOR with the LFSR keystream.
 
-6. TRANSMISSION: Serializes the resulting ciphertext (or plaintext) bit‑bit and drives `mosi_encrypted` (to Slave) and `miso_encrypted` (to Master) based on the `is_write` flag.
+7. TRANSMISSION: Serializes the resulting ciphertext (or plaintext) bit‑bit and drives `mosi_encrypted` (to Slave) and `miso_encrypted` (to Master) based on the `is_write` flag.
 
-7. DONE_CRYPT: Asserts the `crypto_done` signal, waits for the Master's `crypto_ack`, then returns to `IDLE_CRYPT`.
+8. DONE_CRYPT: Asserts the `crypto_done` signal, waits for the Master's `crypto_ack`, then returns to `IDLE_CRYPT`.
 
 # Waveform analyses
 
@@ -162,7 +173,9 @@ The project includes a dedicated compilation script, run_verl.sh, which automate
 
 The encrypted data (ciphertext) produced by the SIMON engine is also preserved in internal registers throughout the entire cycle, ensuring that it remains available for subsequent operations (e.g., future encryption rounds, or for Slave decryption). This storage strategy minimises data movement and helps maintain consistency across the system.
 
-![LFSR compilation test](docs/photos/FSMs/2.png)
+We made a cipher algorithm analyses with LFSR(linear feedback shifter-register) output with a test file in Python to debug and made a code validation before go to SIMON cryptography and was possible to determine that encrypted text matched with Python test algorithm.
+
+<img width="1919" height="512" alt="LFSR_test_compilation" src="https://github.com/user-attachments/assets/75fa3a66-89b6-4fef-8fbd-f0f6fe62fbbb" />
 
 
 ## Compilation
@@ -204,8 +217,13 @@ The C++ testbench (`sim_run_cpp/script_test.cpp`) is responsible for:
 - Monitoring the DUT outputs.
 - Producing the `wave.vcd` file for waveform analysis.
 
-# Observations
+The SPI protocol was analyzed during the compilation stage and carefully debugged. Its core functionality was verified to work as expected, with both master and slave devices correctly transmitting and receiving data. The images bellow are showing this work.
 
+<img width="964" height="872" alt="spi_protocol_transfdata1" src="https://github.com/user-attachments/assets/d85f2910-219d-496a-bcb2-523c17b88f28" />
+
+<img width="1280" height="857" alt="spi_protocol_transfdata2" src="https://github.com/user-attachments/assets/53c60f7a-47fd-4b5d-8ad4-b3ac7b7a5105" />
+
+# Observations
 ...
 
 # Status (development)
@@ -254,4 +272,3 @@ In this project was built a hybrid cryptography combining:
 - Full validation with 4 test scenarios (including the official SIMON test vector), achieving 100% pass rate for both encryption and decryption tests.
 
 The project successfully achieved all its objectives, delivering a secure, scalable, and verifiable SPI communication system. The combination of LFSR and SIMON proved effective for embedded applications, balancing security and performance.
-
