@@ -21,17 +21,17 @@ The system employs a classic Master-Slave topology:
 
 The primary data path connects the **Shift Register** to an internal **Buffer**, which is specifically designed to safely store incoming data. This separation ensures data integrity during transmission.
 
-```plaintext
-								+-------------+     SPI Bus     +--------------+
-								|   Master    | <-------------> |    Slaver    |
-								| (Clock Gen) |   (MOSI/MISO)   |  			   |
-								|     		  |      		    |			   |
-								|    T_x      |    (SCK/SS)     |	  R_x      |	
-								|	  ->      |				    |	  ->	   |
-								|	buffer    |				    |	 buffer	   |
-								+-------------+                 +--------------+
-										|                              |
-										|-- Control & Initialization --|
+```
+			+-------------+     SPI Bus     +--------------+
+			|   Master    | <-------------> |    Slaver    |
+			| (Clock Gen) |   (MOSI/MISO)   |  			   |
+			|     		  |      		    |			   |
+			|    T_x      |    (SCK/SS)     |	  R_x      |	
+			|	  ->      |				    |	  ->	   |
+			|	buffer    |				    |	 buffer	   |
+			+-------------+                 +--------------+
+					|                              |
+					|-- Control & Initialization --|
 ```
 
 ### Six stage pipeline:
