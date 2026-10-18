@@ -1,31 +1,40 @@
 `timescale 1ns/1ps
 
 module decodify_display_FPGA(
-   input logic [7:0] digito, //number or character
-   output logic [7:0] segments		//output to the display of 7 segments
+   input logic  [15:0] data, //number or character
+   output logic [7:0] seg0,
+   output logic [7:0] seg1,
+   output logic [7:0] seg2,
+   output logic [7:0] seg3
 );
 
-	always_comb begin
-		unique case(digito)
-			8'd0: segments = 8'b1100_0000; // 0xC0
-        		"1", 8'd1: segments = 8'b1111_1001; // 0xF9
-        		"2", 8'd2: segments = 8'b1010_0100; // 0xA4
-        		"3", 8'd3: segments = 8'b1011_0000; // 0xB0
-         		"4", 8'd4: segments = 8'b1001_1001; // 0x99
-			"5", 8'd5: segments = 8'b1001_0010; // 0x92
-			"6", 8'd6: segments = 8'b1000_0010; // 0x82
-			"7", 8'd7: segments = 8'b1111_1000; // 0xF8
-			"8", 8'd8: segments = 8'b1000_0000; // 0x80
-			"9", 8'd9: segments = 8'b1001_0000; // 0x90
-			"A", "a", 8'd10: segments = 8'b1000_1000; // 0x88  (A)
-			"B", "b", 8'd11: segments = 8'b1000_0011; // 0x83  (b)
-			"C", "c", 8'd12: segments = 8'b1100_0110; // 0xC6  (C)
-			"D","d", 8'd13: segments = 8'b1010_0001; // 0xA1  (d)
-			"E", "e", 8'd14: segments = 8'b1000_0110; // 0x86  (E)
-			"F","f", 8'd15: segments = 8'b1000_1110; // 0x8E  (F)
+	// automatic output function to segmentation declaration
+    function automatic [7:0] segments(input [3:0] val);
+		unique case(val)
+			4'd0: segments = 8'b1100_0000; // 0xC0
+        	4'd1: segments = 8'b1111_1001; // 0xF9
+        	4'd2: segments = 8'b1010_0100; // 0xA4
+        	4'd3: segments = 8'b1011_0000; // 0xB0
+         4'd4: segments = 8'b1001_1001; // 0x99
+			4'd5: segments = 8'b1001_0010; // 0x92
+			4'd6: segments = 8'b1000_0010; // 0x82
+			4'd7: segments = 8'b1111_1000; // 0xF8
+			4'd8: segments = 8'b1000_0000; // 0x80
+			4'd9: segments = 8'b1001_0000; // 0x90
+			4'hA: segments = 8'b1000_1000; // 0x88
+         4'hB: segments = 8'b1000_0011; // 0x83
+         4'hC: segments = 8'b1100_0110; // 0xC6
+         4'hD: segments = 8'b1010_0001; // 0xA1
+         4'hE: segments = 8'b1000_0110; // 0x86
+         4'hF: segments = 8'b1000_1110; // 0x8E
 			default: segments = 8'b1111_1111; // 0xFF - fully clear
 		endcase
-	end
+	endfunction
+
+	 assign seg0 = segments(data[3:0]);    // LSB HEX00
+    assign seg1 = segments(data[7:4]);    // HEX01
+    assign seg2 = segments(data[11:8]);   // HEX02
+    assign seg3 = segments(data[15:12]);  // MSB HEX03
 
 endmodule
 
