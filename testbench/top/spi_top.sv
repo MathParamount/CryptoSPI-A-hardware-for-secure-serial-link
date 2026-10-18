@@ -8,7 +8,7 @@ module spi_top (
     input  logic [15:0] master_data,
     input  logic [15:0] slave_data_to_send,
     input  logic start,
-    input  logic [7:0] digito,
+    input  logic [15:0] data,
     output logic miso,
     output logic done,
     output logic [15:0] data_received,
@@ -16,7 +16,10 @@ module spi_top (
     output logic mosi,
     output logic [2:0] debug_state,
     output logic ss,
-    output logic [7:0] segments
+	 output logic [7:0] seg0,
+	 output logic [7:0] seg1,
+	 output logic [7:0] seg2,
+	 output logic [7:0] seg3
 );
 
     spi_dut u_dut (
@@ -35,8 +38,10 @@ module spi_top (
     );
 
     decodify_display_FPGA u_dec (
-    	.digito({4'b0000, data_received[3:0]}),  // catch the last 4 bits bellow (nibble)
-	.segments(segments)
-    );
-
+      .data(data_received),
+    	.seg0(seg0),
+	   .seg1(seg1),
+    	.seg2(seg2),
+    	.seg3(seg3)
+	 );
 endmodule
