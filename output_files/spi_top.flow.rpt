@@ -1,5 +1,5 @@
 Flow report for spi_top
-Sun Oct 11 13:01:33 2026
+Mon Oct 19 14:06:56 2026
 Quartus Prime Version 24.1std.0 Build 1077 03/04/2025 SC Lite Edition
 
 
@@ -41,18 +41,18 @@ on the Quartus Prime software download page.
 +--------------------------------------------------------------------------------------+
 ; Flow Summary                                                                         ;
 +------------------------------------+-------------------------------------------------+
-; Flow Status                        ; Successful - Sun Oct 11 13:01:33 2026           ;
+; Flow Status                        ; Successful - Mon Oct 19 14:06:56 2026           ;
 ; Quartus Prime Version              ; 24.1std.0 Build 1077 03/04/2025 SC Lite Edition ;
 ; Revision Name                      ; spi_top                                         ;
 ; Top-level Entity Name              ; spi_top                                         ;
 ; Family                             ; MAX 10                                          ;
 ; Device                             ; 10M50DAF484C7G                                  ;
 ; Timing Models                      ; Final                                           ;
-; Total logic elements               ; 163 / 49,760 ( < 1 % )                          ;
-;     Total combinational functions  ; 135 / 49,760 ( < 1 % )                          ;
+; Total logic elements               ; 188 / 49,760 ( < 1 % )                          ;
+;     Total combinational functions  ; 162 / 49,760 ( < 1 % )                          ;
 ;     Dedicated logic registers      ; 118 / 49,760 ( < 1 % )                          ;
 ; Total registers                    ; 118                                             ;
-; Total pins                         ; 59 / 360 ( 16 % )                               ;
+; Total pins                         ; 107 / 360 ( 30 % )                              ;
 ; Total virtual pins                 ; 0                                               ;
 ; Total memory bits                  ; 0 / 1,677,312 ( 0 % )                           ;
 ; Embedded Multiplier 9-bit elements ; 0 / 288 ( 0 % )                                 ;
@@ -67,7 +67,7 @@ on the Quartus Prime software download page.
 +-------------------+---------------------+
 ; Option            ; Setting             ;
 +-------------------+---------------------+
-; Start date & time ; 10/11/2026 13:01:06 ;
+; Start date & time ; 10/19/2026 14:06:12 ;
 ; Main task         ; Compilation         ;
 ; Revision Name     ; spi_top             ;
 +-------------------+---------------------+
@@ -78,7 +78,7 @@ on the Quartus Prime software download page.
 +-------------------------------------+----------------------------------------+---------------+-------------+-----------------------------------+
 ; Assignment Name                     ; Value                                  ; Default Value ; Entity Name ; Section Id                        ;
 +-------------------------------------+----------------------------------------+---------------+-------------+-----------------------------------+
-; COMPILER_SIGNATURE_ID               ; 216009666086314.179173446610315        ; --            ; --          ; --                                ;
+; COMPILER_SIGNATURE_ID               ; 216009666086314.179242957220174        ; --            ; --          ; --                                ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --            ; --          ; eda_board_design_timing           ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --            ; --          ; eda_board_design_boundary_scan    ;
 ; EDA_GENERATE_FUNCTIONAL_NETLIST     ; Off                                    ; --            ; --          ; eda_board_design_signal_integrity ;
@@ -91,6 +91,8 @@ on the Quartus Prime software download page.
 ; PARTITION_COLOR                     ; -- (Not supported for targeted family) ; --            ; --          ; Top                               ;
 ; PARTITION_FITTER_PRESERVATION_LEVEL ; -- (Not supported for targeted family) ; --            ; --          ; Top                               ;
 ; PARTITION_NETLIST_TYPE              ; -- (Not supported for targeted family) ; --            ; --          ; Top                               ;
+; POWER_BOARD_THERMAL_MODEL           ; None (CONSERVATIVE)                    ; --            ; --          ; --                                ;
+; POWER_PRESET_COOLING_SOLUTION       ; 23 MM HEAT SINK WITH 200 LFPM AIRFLOW  ; --            ; --          ; --                                ;
 ; PROJECT_OUTPUT_DIRECTORY            ; output_files                           ; --            ; --          ; --                                ;
 +-------------------------------------+----------------------------------------+---------------+-------------+-----------------------------------+
 
@@ -100,12 +102,12 @@ on the Quartus Prime software download page.
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 ; Module Name          ; Elapsed Time ; Average Processors Used ; Peak Virtual Memory ; Total CPU Time (on all processors) ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
-; Analysis & Synthesis ; 00:00:08     ; 1.0                     ; 363 MB              ; 00:00:18                           ;
-; Fitter               ; 00:00:10     ; 1.0                     ; 800 MB              ; 00:00:12                           ;
-; Assembler            ; 00:00:03     ; 1.0                     ; 380 MB              ; 00:00:02                           ;
-; Timing Analyzer      ; 00:00:02     ; 1.1                     ; 484 MB              ; 00:00:02                           ;
-; EDA Netlist Writer   ; 00:00:00     ; 1.0                     ; 579 MB              ; 00:00:00                           ;
-; Total                ; 00:00:23     ; --                      ; --                  ; 00:00:34                           ;
+; Analysis & Synthesis ; 00:00:09     ; 1.0                     ; 357 MB              ; 00:00:18                           ;
+; Fitter               ; 00:00:12     ; 1.0                     ; 800 MB              ; 00:00:14                           ;
+; Assembler            ; 00:00:06     ; 1.0                     ; 367 MB              ; 00:00:02                           ;
+; Timing Analyzer      ; 00:00:03     ; 1.1                     ; 498 MB              ; 00:00:02                           ;
+; EDA Netlist Writer   ; 00:00:07     ; 1.0                     ; 579 MB              ; 00:00:00                           ;
+; Total                ; 00:00:37     ; --                      ; --                  ; 00:00:36                           ;
 +----------------------+--------------+-------------------------+---------------------+------------------------------------+
 
 

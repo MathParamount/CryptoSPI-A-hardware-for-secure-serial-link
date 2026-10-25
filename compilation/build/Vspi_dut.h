@@ -39,6 +39,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vspi_dut VL_NOT_FINAL : public VerilatedModel
     VL_IN16(&master_data,15,0);
     VL_IN16(&slave_data_to_send,15,0);
     VL_OUT16(&data_received,15,0);
+    VL_OUT16(&text_debug,15,0);
 
     // CELLS
     // Public to allow access to /* verilator public */ items.

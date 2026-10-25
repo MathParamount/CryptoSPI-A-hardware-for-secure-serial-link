@@ -1,13 +1,13 @@
-Analysis & Synthesis Status : Successful - Sun Oct 11 13:01:14 2026
+Analysis & Synthesis Status : Successful - Mon Oct 19 14:06:21 2026
 Quartus Prime Version : 24.1std.0 Build 1077 03/04/2025 SC Lite Edition
 Revision Name : spi_top
 Top-level Entity Name : spi_top
 Family : MAX 10
-Total logic elements : 169
-    Total combinational functions : 134
+Total logic elements : 196
+    Total combinational functions : 161
     Dedicated logic registers : 118
 Total registers : 118
-Total pins : 59
+Total pins : 107
 Total virtual pins : 0
 Total memory bits : 0
 Embedded Multiplier 9-bit elements : 0

@@ -58,7 +58,8 @@ void Vspi_dut___024root__trace_chg_0_sub_0(Vspi_dut___024root* vlSelf, Verilated
     bufp->chgBit(oldp+28,(vlSelf->mosi));
     bufp->chgCData(oldp+29,(vlSelf->debug_state),3);
     bufp->chgBit(oldp+30,(vlSelf->ss));
-    bufp->chgBit(oldp+31,(vlSelf->spi_dut__DOT__u_slave__DOT__miso_reg));
+    bufp->chgSData(oldp+31,(vlSelf->text_debug),16);
+    bufp->chgBit(oldp+32,(vlSelf->spi_dut__DOT__u_slave__DOT__miso_reg));
 }
 
 void Vspi_dut___024root__trace_cleanup(void* voidSelf, VerilatedFst* /*unused*/) {

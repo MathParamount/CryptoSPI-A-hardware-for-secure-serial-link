@@ -22,6 +22,7 @@ Vspi_dut::Vspi_dut(VerilatedContext* _vcontextp__, const char* _vcname__)
     , master_data{vlSymsp->TOP.master_data}
     , slave_data_to_send{vlSymsp->TOP.slave_data_to_send}
     , data_received{vlSymsp->TOP.data_received}
+    , text_debug{vlSymsp->TOP.text_debug}
     , __PVT__spi_dut__DOT__spi_if{vlSymsp->TOP.__PVT__spi_dut__DOT__spi_if}
     , rootp{&(vlSymsp->TOP)}
 {

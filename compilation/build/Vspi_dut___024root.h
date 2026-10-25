@@ -49,6 +49,7 @@ class alignas(VL_CACHE_LINE_BYTES) Vspi_dut___024root final : public VerilatedMo
     VL_IN16(master_data,15,0);
     VL_IN16(slave_data_to_send,15,0);
     VL_OUT16(data_received,15,0);
+    VL_OUT16(text_debug,15,0);
     SData/*15:0*/ spi_dut__DOT__u_master__DOT__sr;
     SData/*15:0*/ spi_dut__DOT__u_master__DOT__cmd_reg;
     SData/*15:0*/ spi_dut__DOT__u_master__DOT__sr_tx;

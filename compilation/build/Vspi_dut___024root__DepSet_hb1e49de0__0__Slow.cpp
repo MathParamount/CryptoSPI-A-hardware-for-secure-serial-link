@@ -176,6 +176,7 @@ VL_ATTR_COLD void Vspi_dut___024root___ctor_var_reset(Vspi_dut___024root* vlSelf
     vlSelf->mosi = VL_RAND_RESET_I(1);
     vlSelf->debug_state = VL_RAND_RESET_I(3);
     vlSelf->ss = VL_RAND_RESET_I(1);
+    vlSelf->text_debug = VL_RAND_RESET_I(16);
     vlSelf->spi_dut__DOT__u_master__DOT__state = VL_RAND_RESET_I(3);
     vlSelf->spi_dut__DOT__u_master__DOT__sr = VL_RAND_RESET_I(16);
     vlSelf->spi_dut__DOT__u_master__DOT__cmd_reg = VL_RAND_RESET_I(16);

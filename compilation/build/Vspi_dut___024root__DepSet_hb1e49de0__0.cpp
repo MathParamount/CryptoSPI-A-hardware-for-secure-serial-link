@@ -43,6 +43,7 @@ void Vspi_dut___024root___eval_act(Vspi_dut___024root* vlSelf) {
 void Vspi_dut___024root___nba_sequent__TOP__0(Vspi_dut___024root* vlSelf);
 void Vspi_dut___024root___nba_sequent__TOP__1(Vspi_dut___024root* vlSelf);
 void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* vlSelf);
+void Vspi_dut___024root___nba_comb__TOP__0(Vspi_dut___024root* vlSelf);
 
 void Vspi_dut___024root___eval_nba(Vspi_dut___024root* vlSelf) {
     if (false && vlSelf) {}  // Prevent unused
@@ -61,7 +62,7 @@ void Vspi_dut___024root___eval_nba(Vspi_dut___024root* vlSelf) {
         vlSelf->__Vm_traceActivity[2U] = 1U;
     }
     if ((3ULL & vlSelf->__VnbaTriggered.word(0U))) {
-        Vspi_dut___024root___ico_sequent__TOP__0(vlSelf);
+        Vspi_dut___024root___nba_comb__TOP__0(vlSelf);
     }
 }
 

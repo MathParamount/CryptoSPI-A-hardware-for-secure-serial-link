@@ -44,6 +44,7 @@ VL_ATTR_COLD void Vspi_dut___024root___stl_sequent__TOP__0(Vspi_dut___024root* v
     vlSelf->sck = vlSymsp->TOP__spi_dut__DOT__spi_if.sck;
     vlSelf->mosi = vlSymsp->TOP__spi_dut__DOT__spi_if.mosi;
     vlSelf->ss = vlSymsp->TOP__spi_dut__DOT__spi_if.ss;
+    vlSelf->text_debug = vlSelf->master_data;
     vlSelf->spi_dut__DOT__u_slave__DOT__miso_reg = 
         ((1U & (~ (IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.ss))) 
          && (1U & ((IData)(vlSelf->spi_dut__DOT__u_slave__DOT__ss_prev)

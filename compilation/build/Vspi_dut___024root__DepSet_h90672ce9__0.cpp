@@ -28,6 +28,7 @@ VL_INLINE_OPT void Vspi_dut___024root___ico_sequent__TOP__0(Vspi_dut___024root* 
     Vspi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
     VL_DEBUG_IF(VL_DBG_MSGF("+    Vspi_dut___024root___ico_sequent__TOP__0\n"); );
     // Body
+    vlSelf->text_debug = vlSelf->master_data;
     vlSelf->spi_dut__DOT__u_slave__DOT__miso_reg = 
         ((1U & (~ (IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.ss))) 
          && (1U & ((IData)(vlSelf->spi_dut__DOT__u_slave__DOT__ss_prev)
@@ -349,4 +350,18 @@ VL_INLINE_OPT void Vspi_dut___024root___nba_sequent__TOP__2(Vspi_dut___024root* 
     vlSelf->data_received = vlSymsp->TOP__spi_dut__DOT__spi_if.data_received;
     vlSelf->mosi = vlSymsp->TOP__spi_dut__DOT__spi_if.mosi;
     vlSelf->ss = vlSymsp->TOP__spi_dut__DOT__spi_if.ss;
+}
+
+VL_INLINE_OPT void Vspi_dut___024root___nba_comb__TOP__0(Vspi_dut___024root* vlSelf) {
+    if (false && vlSelf) {}  // Prevent unused
+    Vspi_dut__Syms* const __restrict vlSymsp VL_ATTR_UNUSED = vlSelf->vlSymsp;
+    VL_DEBUG_IF(VL_DBG_MSGF("+    Vspi_dut___024root___nba_comb__TOP__0\n"); );
+    // Body
+    vlSelf->spi_dut__DOT__u_slave__DOT__miso_reg = 
+        ((1U & (~ (IData)(vlSymsp->TOP__spi_dut__DOT__spi_if.ss))) 
+         && (1U & ((IData)(vlSelf->spi_dut__DOT__u_slave__DOT__ss_prev)
+                    ? ((IData)(vlSelf->slave_data_to_send) 
+                       >> 0xfU) : ((IData)(vlSelf->spi_dut__DOT__u_slave__DOT__sr_tx) 
+                                   >> 0xfU))));
+    vlSelf->miso = vlSelf->spi_dut__DOT__u_slave__DOT__miso_reg;
 }

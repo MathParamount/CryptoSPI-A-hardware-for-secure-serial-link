@@ -12,7 +12,8 @@ module spi_dut (
     output logic sck,
     output logic mosi,
     output logic [2:0] debug_state,
-    output logic ss
+    output logic ss,
+    output logic [15:0] text_debug
 );
     // interface instantiation
     spi_bus_if spi_if ();
@@ -25,6 +26,8 @@ module spi_dut (
 
     assign spi_if.start = start;
 
+    assign text_debug = master_data[15:0]; 	//master data fpga exhibition
+    
     assign data_received = spi_if.data_received;
     assign miso = spi_if.miso;
     assign done = spi_if.done;
