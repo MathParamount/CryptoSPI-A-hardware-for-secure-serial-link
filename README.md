@@ -11,7 +11,6 @@ Hence, this project try to solve some emergency demand which ringes on of a open
 	
 ### High-Level digital design:
 
-
 ![Digital architecture](docs/photos/main/digital_architecture_overview.png)
 
 The system employs a classic Master-Slave topology:
@@ -21,17 +20,18 @@ The system employs a classic Master-Slave topology:
 
 The primary data path connects the **Shift Register** to an internal **Buffer**, which is specifically designed to safely store incoming data. This separation ensures data integrity during transmission.
 
-```plaintext
-								+-------------+     SPI Bus     +--------------+
-								|   Master    | <-------------> |    Slaver    |
-								| (Clock Gen) |   (MOSI/MISO)   |  			   |
-								|     		  |      		    |			   |
-								|    T_x      |    (SCK/SS)     |	  R_x      |	
-								|	  ->      |				    |	  ->	   |
-								|	buffer    |				    |	 buffer	   |
-								+-------------+                 +--------------+
-										|                              |
-										|-- Control & Initialization --|
+```text
+			+-----------------------+                     +-----------------------+
+			|        MASTER         |       SPI Bus       |         SLAVE         |
+			|                       |                     |                       |
+			|    Clock Generator    | --- SCK ----------> |     Clock Input       |
+			|    Slave Select       | --- SS -----------> |     Select Input      |
+			|                       |                     |                       |
+			|       TX Buffer       | --- MOSI ---------> |       RX Buffer       |
+			|       RX Buffer       | <--------- MISO --- |       TX Buffer       |
+			+-----------------------+                     +-----------------------+
+            			|                                             |
+            			+-------- Control & Initialization -----------+
 ```
 
 ### Six stage pipeline:
@@ -207,7 +207,7 @@ Wait until the compilation finishes successfully. The terminal will display simu
 
 After a successful execution, open the generated waveform and analyse in GTKWave.
 
-### Simulation
+## Simulation
 
 The C++ testbench (`sim_run_cpp/script_test.cpp`) is responsible for:
 
@@ -229,27 +229,89 @@ We used Quartus to simulate and test the design, evaluating its usability with d
 
 <img width="1912" height="702" alt="QuartusFSM" src="https://github.com/user-attachments/assets/0868e2f0-efe2-4976-8116-fc2aad35e7ed" />
 
+# Hardware Implementation (FPGA)
+
+The RTL design was successfully synthesized and deployed on an Intel Cyclone V FPGA. The physical setup was used to validate the SPI transmission in real-world hardware with rtl scripts to protocol and code validation.
+
+- slaver transmission:
+
+<img src="https://github.com/user-attachments/assets/c27dbd73-0f84-4e04-95ab-60fbb45840c8" alt="3E" width="320" height="332" />
+
+<img src="https://github.com/user-attachments/assets/c69531f4-340c-4871-b141-868718b89ffc" alt="5A" width="320" height="332" />
+
+<img src="https://github.com/user-attachments/assets/a4873c38-a4e9-46d2-8c38-f293d946c999" alt="F8" width="320" height="332" />
+
+- master transmission:
+
+<img src="https://github.com/user-attachments/assets/c93849d3-3e55-4d33-9ed7-ddffc7fc867c" alt="0_slaver" width="320" height="332" />
+
+<img src="https://github.com/user-attachments/assets/75546629-754d-445e-aaec-e5146d4cb93d" alt="3E_slaver" width="320" height="332" />
+
+<img src="https://github.com/user-attachments/assets/0e558fcc-8f21-4e78-8180-21eeaa9a93b5" alt="FE_slaver" width="320" height="332" />
+
+Validation notes:
+1) Successfully achieved timing closure and synthesis on Quartus Prime;
+2) Proves the RTL moves beyond simulation and is ready for real-world FPGA integration;
+3) Made a tie-off implementation to a serial protocol (SPI) verifications and easy debug methodolgy [link](docs/photos/FPGA/quartus/saved_master.png)
+
+## Synthesis & Physical Mapping (Quartus)
+
+To ensure the design is ready for real-world deployment, the RTL was synthesized and mapped using Intel Quartus Prime. 
+
+| RTL Viewer (Synthesized Netlist) | Pin Planner (Top View) |
+| :---: | :---: |
+| ![RTL Viewer](docs/photos/FPGA/quartus/rtl_viewer.png) | ![Pin Planner](docs/photos/FPGA/quartus/pin_planner.png) |
+| Hardware synthesis view showing the logic blocks generated from the RTL. | Physical pin assignments and I/O constraints from the Cyclone V. |
+
+Notes:
+1) RTL Synthesis: Verified the generated netlist to ensure no unintended latches or redundant logic were inferred by the synthesizer.
+2) Pin Assignment: Assigned specific I/O standards to interface the SPI signals with the physical peripherals on the board.
+
+## Pin table (Cyclone V)
+
+The table below describes how the logical RTL signals were mapped to the physical I/O pins on the FPGA board for validation.
+ 
+| RTL Signal | FPGA Pin (Quartus) | Board Component | I/O Standard | Description |
+| :--- | :---: | :--- | :---: | :--- |
+| clk | PIN_P11 | 50 MHz Oscillator | 3.3V LVCMOS | system clock input |
+| sck | PIN_B10 | Red LED (LEDR[9]) | 3.3V LVCMOS | SPI serial clock (output for debug) |
+| mosi | PIN_A10 | Red LED (LEDR[7]) | 3.3V LVCMOS | Master out slave in |
+| miso | PIN_A9 | Red LED (LEDR[6]) | 3.3V LVCMOS | master in slaver out |
+| done | PIN_A8 | RED LED (LEDR[0]) | 3.3V LVCMOS | final signal of transmission |
+| ss | PIN_D13 | RED LED (LEDR[4]) | 3.3V LVCMOS | slave select signal |
+| start | PIN_C11 | SW0 | Slide Switch | 3.3V LVCMOS | initialization flag |
+| reset_n | PIN_C10 | SW1 | Slide Switch | 3.3V LVCMOS | active-low asynchronous reset |
+| switches[7] | PIN_D12 | SW2 | Slide Switch | 3.3V LVCMOS | MSB data_transmission 1 switch |
+| switches[6] | PIN_C12 | SW3 | Slide Switch | 3.3V LVCMOS | data_transmission 2 switch |
+| switches[5] | PIN_A12 | SW4 | Slide Switch | 3.3V LVCMOS | data_transmission 3 switch |
+| switches[4] | PIN_B12 | SW5 | Slide Switch | 3.3V LVCMOS | data_transmission 4 switch |
+| switches[3] | PIN_A13 | SW6 | Slide Switch | 3.3V LVCMOS | data_transmission 5 switch |
+| switches[2] | PIN_A14 | SW7 | Slide Switch | 3.3V LVCMOS | data_transmission 6 switch |
+| switches[1] | PIN_B14 | SW8 | Slide Switch | 3.3V LVCMOS | data_transmission 7 switch |
+| switches[0] | PIN_F15 | SW9 | Slide Switch | 3.3V LVCMOS | LSB data_transmission 8 switch |
 
 # Observations
 ...
 
 # Status (development)
 
-- SPI architecture design (completed)
+- SPI architecture design (completed ✅️)
 
-- RTL SPI (completed)
+- RTL SPI (completed ✅️)
 
-- Testbench & waveform SPI (completed)
+- Testbench & waveform SPI (completed ✅️)
 
-- SPI + crypto architecture (completed)
+- SPI + crypto architecture (completed ✅️)
 
-- crypto digital control logic (completed)
+- crypto digital control logic (completed ✅️)
 
-- LFSR implementation (completed)
+- LFSR implementation (completed ✅️)
 
 - LFSR key mix SIMON (In progress)
 
-- Documentation SPI RTL (In progress)
+- Documentation SPI RTL (completed ✅️)
+
+- SPI FPGA implementation (completed ✅️)
 
 - Formal verification (In progress)
 
@@ -257,7 +319,7 @@ We used Quartus to simulate and test the design, evaluating its usability with d
 
 - Validation architecture with side-channel attacks (In progress)
 
-- FPGA implementation (In progress)
+- Crypto FPGA implementation (In progress)
 
 - side-channel attacks (power analyses, time analyses,...) in FPGA (In progress)
 
