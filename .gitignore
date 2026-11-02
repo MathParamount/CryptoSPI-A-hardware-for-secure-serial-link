@@ -1,9 +1,13 @@
+# ModelSim / QuestaSim
+transcript
+vsim.wlf
+*.wlf
+work/
+modelsim.ini
+
+# Quartus
+*.qws
+*.rpt
 db/
 incremental_db/
 output_files/
-*.wsf
-*.do
-*.ini
-
-work/
-*.qdb
