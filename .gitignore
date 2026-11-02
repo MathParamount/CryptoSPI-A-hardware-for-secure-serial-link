@@ -4,6 +4,7 @@ vsim.wlf
 *.wlf
 work/
 modelsim.ini
+spi_top_nativelink_simulation.rpt
 
 # Quartus
 *.qws
