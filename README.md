@@ -295,6 +295,16 @@ The table below describes how the logical RTL signals were mapped to the physica
 | switches[0] | PIN_F15 | SW9 | Slide Switch | 3.3V LVCMOS | LSB data_transmission 8 switch |
 
 # Observations
+
+### Development
+This repository is under active development and is organised in three branch of work.
+
+| Branch | Content | Status |
+|---|---|---|
+| `main` | Base protocol in RTL (SPI), simulated | stable baseline |
+| `crypto_release` | Cryptographic variant of the protocol | 70 commits ahead |
+| `modelsim_release` | Physical deployment: pin assignment, on-board validation | 51 commits, merge pending |
+
 ...
 
 # Status (development)
