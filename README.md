@@ -241,6 +241,8 @@ The RTL design was successfully synthesized and deployed on an Intel Cyclone V F
 
 <img src="https://github.com/user-attachments/assets/a4873c38-a4e9-46d2-8c38-f293d946c999" alt="F8" width="320" height="332" />
 
+<img src="https://github.com/user-attachments/assets/cf37ab9d-2148-4ff3-b2b3-5666cd58df72" alt="A" width="320" height="332" />
+
 - master transmission:
 
 <img src="https://github.com/user-attachments/assets/c93849d3-3e55-4d33-9ed7-ddffc7fc867c" alt="0_slaver" width="320" height="332" />
@@ -248,6 +250,8 @@ The RTL design was successfully synthesized and deployed on an Intel Cyclone V F
 <img src="https://github.com/user-attachments/assets/75546629-754d-445e-aaec-e5146d4cb93d" alt="3E_slaver" width="320" height="332" />
 
 <img src="https://github.com/user-attachments/assets/0e558fcc-8f21-4e78-8180-21eeaa9a93b5" alt="FE_slaver" width="320" height="332" />
+
+<img src="https://github.com/user-attachments/assets/5ad03dd6-7c33-4b68-9506-e3b83d4b632a" alt="saved_master" width="320" height="332" />
 
 Validation notes:
 1) Successfully achieved timing closure and synthesis on Quartus Prime;
