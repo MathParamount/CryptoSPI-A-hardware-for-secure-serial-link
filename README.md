@@ -305,8 +305,6 @@ This repository is under active development and is organised in three branch of 
 | `crypto_release` | Cryptographic variant of the protocol | 70 commits ahead |
 | `modelsim_release` | Physical deployment: pin assignment, on-board validation | 51 commits, merge pending |
 
-...
-
 # Status (development)
 
 - SPI architecture design (completed ✅️)
