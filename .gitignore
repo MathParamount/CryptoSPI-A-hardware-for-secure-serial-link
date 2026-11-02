@@ -11,3 +11,4 @@ modelsim.ini
 db/
 incremental_db/
 output_files/
+simulation/
