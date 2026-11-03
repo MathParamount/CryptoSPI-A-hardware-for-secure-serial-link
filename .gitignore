@@ -13,3 +13,6 @@ db/
 incremental_db/
 output_files/
 simulation/*.do
+
+# Verilator
+compilation/build/
