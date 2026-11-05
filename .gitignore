@@ -1,7 +1,15 @@
-# random files 
-wave.vcd
+# ModelSim / QuestaSim
+transcript
+vsim.wlf
+*.wlf
+work/
+modelsim.ini
+spi_top_nativelink_simulation.rpt
 
-# Verilator
-/build/
-/obj_dir/
-/build_ngspice/
+# Quartus
+*.qws
+*.rpt
+db/
+incremental_db/
+output_files/
+simulation/*.do
