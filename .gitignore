@@ -1,18 +1,7 @@
-# ModelSim / QuestaSim
-transcript
-vsim.wlf
-*.wlf
-work/
-modelsim.ini
-spi_top_nativelink_simulation.rpt
-
-# Quartus
-*.qws
-*.rpt
-db/
-incremental_db/
-output_files/
-simulation/*.do
+# random files 
+wave.vcd
 
 # Verilator
-compilation/build/
+/build/
+/obj_dir/
+/build_ngspice/
