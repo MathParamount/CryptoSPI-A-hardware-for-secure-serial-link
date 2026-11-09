@@ -19,6 +19,10 @@ module crypto_spi_core
 	//internal buffers
 	logic [63:0] lfsr_m;
 	logic [63:0] lfsr_s;
+
+	// buffers to avoid shifts
+	logic [63:0] lfsr_m_key;
+	logic [31:0] lfsr_s_key;
 	
 	/* verilator lint_off UNUSEDSIGNAL */
 	logic [63:0] epherm_key_m;       			 // LFSR key
@@ -77,6 +81,7 @@ module crypto_spi_core
 			sck_prev <= 1'b0;
 			cycle_cnt <= 7'h0;
 			encypt_count <= 6'h0;
+			count_round <= 0;
 		end
 		else begin
 			debug_state_crypt <= state_mast;
@@ -132,18 +137,22 @@ module crypto_spi_core
 						encypt_count <= 0;
 						//$display("[ENCRYPT] is_write: %d, plain_text: 0x%016X, lfsr_m: 0x%016X, lfsr_s: 0x%016X", is_write, plain_text, lfsr_m, lfsr_s);
 						
+						lfsr_m_key <= lfsr_m;
+						lfsr_s_key <= lfsr_s[31:0];
+
 						// calculate the cryptographic data
 						if (spi_if.is_write) begin
-							enc_temp = spi_if.plaintext ^ lfsr_m;   // cálculo imediato (bloqueante)
+							enc_temp = spi_if.plaintext ^ lfsr_m;   // immediate calcule (blocking)
 							encrypt_text_reg <= enc_temp;
-							$display("\t lfsr_m: 0x%016X", lfsr_m);
-							$display("\t [ENCRYPT_WRITE] plaintext=0x%016X	 | 	encrypt=0x%016X", spi_if.plaintext, enc_temp);
+							//$display("\t lfsr_m: 0x%016X", lfsr_m);
+							//$display("\t lfsr_s= 0x%016X",lfsr_s);
+							$display("\t [ENCRYPT_WRITE] plaintext=0x%016X	 | 	simon_input(LFSR)= 0x%016X", spi_if.plaintext, enc_temp);
 						end
 						else begin 
 							encrypt_text_reg <= slave_rx ^ lfsr_s;			//read
 							encrypt_text_reg <= enc_temp;
-							$display("\t lfsr_s=0x%016X",lfsr_s);
-    						$display("\t [ENCRYPT_WRITE] plaintext=0x%016X	 | 	encrypt=0x%016X", lfsr_s, enc_temp);
+							//$display("\t lfsr_s=0x%016X",lfsr_s);
+    						$display("\t [ENCRYPT_WRITE] plaintext=0x%016X	 | 	simon_input(LFSR)= 0x%016X", lfsr_s, enc_temp);
 						end
 								
 						state_encr <= SIMON_ENCRYPT;
@@ -154,35 +163,37 @@ module crypto_spi_core
 					// round key generator
 					//key <= {lfsr_m,lfsr_s};
 					if (count_round == 0) begin
-						round_key[0] <= lfsr_m[31:0];
-						round_key[1] <= lfsr_m[63:32];
-						round_key[2] <= lfsr_s[31:0];
+						round_key[0] <= lfsr_m_key[31:0];
+						round_key[1] <= lfsr_m_key[63:32];
+						round_key[2] <= lfsr_s_key[31:0];
 						xs <= encrypt_text_reg[31:0];
 						ys <= encrypt_text_reg[63:32];
 						count_round <= 1;
-					end else if (count_round <= 42) begin
-						// subkey generation to next round
-						if (count_round >= 3 && count_round + 1 < 42) begin
-							round_key[count_round] <= 32'hFFFFFFFC ^ {31'b0, Z[count_round-3]} ^ round_key[count_round-3] ^ temp;
-    					end
+					end
+					else if (count_round < 43) begin
+						// subkey generation
+						if (count_round >= 3 && count_round < 42) begin
+							round_key[count_round] <= 32'hFFFFFFFC ^ {31'b0, Z[44-count_round]} ^ round_key[count_round-3] ^ temp;
+							//round_key[count_round] <= 32'hFFFFFFFC ^ {31'b0, Z[count_round-3]} ^ round_key[count_round-3] ^ temp;
+						end
 
-						// Round function using a subkey
-						rol1 <= {xs[30:0], xs[31]};
-						rol8 <= {xs[27:0], xs[31:28]};
-						rol2 <= {xs[29:0], xs[31:30]};
-						x_new <= ys ^ (rol1 & rol8) ^ rol2 ^ round_key[count_round-1];
+						// updating register to the next round
+						ys <= xs;
+						xs <= x_new; 
 
-						xs <= ys;
-						ys <= x_new;
 						count_round <= count_round + 1;
 
-						if (count_round == 42) begin
-							spi_if.ciphertext <= {ys, x_new};
-							$display("[SIMON] Final: ciphertext=0x%016X", {ys, x_new});
-							count_round <= 0;
-							spi_if.crypto_done <= 1;
-							state_encr <= TRANSMISSION;
-						end
+						$display("Verilog - round %0d: key = 0x%08X", count_round-1, round_key[count_round-1]);
+					end 
+					
+					if (count_round == 42) begin
+						spi_if.ciphertext <= {x_new, xs};
+						$display("[SIMON] Final: ciphertext=0x%016X", {x_new, xs});
+						count_round <= 0;
+						spi_if.crypto_done <= 1;
+						state_encr <= TRANSMISSION;
+					end else begin
+						count_round <= count_round + 1;
 					end
 				end
 				
@@ -191,15 +202,14 @@ module crypto_spi_core
 					if (count_round == 0) begin
 						y <= slave_rx[63:32];		//high
 						x <= slave_rx[31:0];		//low
+
+						$display("\n[INPUT DECRYP] received data inside of slaver_rx buffer: 0x%016X", slave_rx);
+						count_round <= 1;
 					end
-					else if (count_round < 42) begin
+					else if (count_round < 43) begin
 						/* verilator lint_off WIDTHEXPAND */
 						integer r = 42 - count_round;
 						/* verilator lint_off WIDTHEXPAND */
-						
-						rol1 <= {y[30:0] , y[31]};
-						rol8 <= {y[27:0], y[31:28]};	
-						rol2 <= {y[29:0], y[31:30]};
 						
 						f_x <= x ^ (rol1 & rol8) ^ rol2 ^ round_key[r];
 						
@@ -208,17 +218,26 @@ module crypto_spi_core
 						
 						count_round <= count_round + 1;
 					end
+
+					if (count_round == 42) begin	
+						Post_SMplaintext <= {y,x};	// decripted SIMON output
 						
-					Post_SMplaintext <= {y,x};	// decripted SIMON output
-					
-					$display("\n[CRYPTO DECRYPT] Post simon decription: 0x%016X", Post_SMplaintext);
-					
-					//LFSR decription
-					if(spi_if.is_write) spi_if.plaintext <= Post_SMplaintext ^ lfsr_m;		//write
-					else spi_if.plaintext <= Post_SMplaintext ^ lfsr_s;		//read
-								
-					$display("\n[CRYPTO DECRYPT] Plaintext from master: 0x%016X",spi_if.plaintext);	
-					state_encr <= TRANSMISSION;
+        				$display("\n[SIMON -> LFSR (DECRYPT)] Decrypt Simon output: 0x%016X", {y, x});						
+						
+						//LFSR decription
+						if (spi_if.is_write) begin
+            				spi_if.plaintext <= {y, x} ^ lfsr_m;
+						end
+						else begin
+            				spi_if.plaintext <= {y, x} ^ lfsr_s;
+						end					
+										
+						$display("\n[LFSR -> PLAINTEXT (DECRYPT)] Original plaintext received from master: 0x%016X",spi_if.plaintext);	
+						state_encr <= TRANSMISSION;
+					end
+					else begin
+						count_round <= count_round + 1;
+					end
 				end
 
 				TRANSMISSION: begin
@@ -272,13 +291,29 @@ module crypto_spi_core
 			endcase
 	    end
 	end
-
+	
+	// Round function using a subkey
 	always_comb begin
-		temp = {round_key[count_round-1][2:0], round_key[count_round-1][31:3]};   // ROR3
-        					
-		if ((count_round % 3) == 2) begin
-            temp = temp ^ {round_key[count_round-1][3:0], round_key[count_round-1][31:4]};   // ROR4
-		end
+		temp  = 32'b0;
+		rol1  = 32'b0;
+		rol8  = 32'b0;
+		rol2  = 32'b0;
+		x_new = 32'b0;
+
+		if (count_round >= 1 && count_round <= 42) begin
+        
+        // temp generation
+        temp = {round_key[count_round-1][2:0], round_key[count_round-1][31:3]}; // ROR3
+        if ((count_round % 3) == 2) begin
+            temp = temp ^ {round_key[count_round-1][3:0], round_key[count_round-1][31:4]}; // ROR4
+        end
+        
+        // rotation calcule and x_new
+        rol1 = {xs[30:0], xs[31]};
+        rol8 = {xs[23:0], xs[31:24]};
+        rol2 = {xs[29:0], xs[31:30]};
+        x_new = ys ^ (rol1 & rol8) ^ rol2 ^ round_key[count_round-1];
+    	end
 	end
 
 endmodule
