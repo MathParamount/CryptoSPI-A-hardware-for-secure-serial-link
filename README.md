@@ -9,7 +9,7 @@ Hence, this project try to solve some emergency demand which ringes on of a open
 
 # Architecture
 	
-### High-Level digital design:
+## SPI high-Level digital design:
 
 ![Digital architecture](docs/photos/main/digital_architecture_overview.png)
 
@@ -66,6 +66,8 @@ branch into either a write (Master sends data) or read (Master receives data) op
 
 ### SPI waveform analysis
 
+The original system was configured for Master‑to‑Slave communication. At 106.9 ns, the following events were observed:
+
 1) Transmission 0xFFFF (First transmission with all ones):
 <img width="1862" height="489" alt="spi_compilation1" src="https://github.com/user-attachments/assets/ec4ea9c0-97fe-4e6f-b9a6-00cedcf839cf" />
 
@@ -74,6 +76,24 @@ branch into either a write (Master sends data) or read (Master receives data) op
 
 3) fourth transmission:
 <img width="1862" height="489" alt="spi_compilation3" src="https://github.com/user-attachments/assets/a07a5bfa-3c7a-49bb-8b76-fb936bac5c71" />
+
+- activation of the internal SPI clock `sck`.
+- assertion of the `miso` line (data from slaver to master).
+- transition of the control signal `ss`, which triggers the start of a transaction.
+
+The measured propagation delay through the crypto pipeline is approximately 1.1 ns, which is for the combinational logic and register setup times.
+
+The start signal remains active for 400 clock cycles – a deliberate design choice that ensures the Slave has sufficient time to:
+
+- Detect falling edge of `ss`.
+- Prepare its iternal register and shift buffers.
+- Stabilize its outputs before first data bit is sampled.
+
+The total time required to transmit a complete data block is denoted as T_total.
+
+``` 
+T_total = N_bits * T_bit ->  24 bits * (10 ns) -> T_total = 240 ns
+```
 
 ## Crypto digital architecture
 
@@ -128,36 +148,38 @@ The crypto core is controlled by a 7 state FSM, ensuring reliable and determinis
 
 8. DONE_CRYPT: Asserts the `crypto_done` signal, waits for the Master's `crypto_ack`, then returns to `IDLE_CRYPT`.
 
-# Waveform analyses
+### Crypto waveform analysis
 
-![cpp initialz & transmission test](docs/photos/main/SPI_1_test.png)
+<img width="1864" height="540" alt="Crypto_Mast_Slav_W1" src="https://github.com/user-attachments/assets/6e80a38f-4780-480b-8b20-38bcd0047a4a"/>
 
 A comprehensive set of test cases was executed to validate the architectural behavior and signal integrity of the system. The test was designed to process six independent transmissions, with a total simulation time sufficient to cover all data patterns defined in the testbench.
 
-![SPI wave test](docs/photos/main/propag_delay_1.png)
+The crypto core is designed to implement a secure, full-duplex SPI transmission system. The master sends data via the `mosi` (master out slave in) line, while the crypto module processes the data synchronized with the `sck` (SPI Clock). The module manages two distinct encrypted data streams: `mosi_encrypted` (output to the Slave) and `miso_encrypted` (output to the Master).
 
-The original system was configured for Master‑to‑Slave communication. At 106.9 ns, the following events were observed:
+<img width="1864" height="542" alt="Crypto_Mast_Slav_W2" src="https://github.com/user-attachments/assets/e9a93fc6-4a51-44e8-be98-e09f71f9340e" />
 
-- activation of the internal SPI clock `sck`.
-- assertion of the `miso` line (data from slaver to master).
-- transition of the control signal `ss`, which triggers the start of a transaction.
+<img width="1864" height="542" alt="Crypto_Mast_Slav_W3" src="https://github.com/user-attachments/assets/b1b7999a-af88-4e5f-b979-aa4f16f994c2" />
 
-The measured propagation delay through the crypto pipeline is approximately 1.1 ns, which is for the combinational logic and register setup times.
+<img width="1864" height="542" alt="Crypto_Mast_Slav_W4" src="https://github.com/user-attachments/assets/fcb901bd-4af8-4e9e-a32d-d5c0289c0ed0" />
 
-The start signal remains active for 400 clock cycles – a deliberate design choice that ensures the Slave has sufficient time to:
+Because the architecture operates in full-duplex mode, it is possible to observe data flowing in both directions simultaneously (data_to_send and slave_data_to_send) in the simulation waveforms.
 
-- Detect falling edge of `ss`.
-- Prepare its iternal register and shift buffers.
-- Stabilize its outputs before first data bit is sampled.
+During simulation, several key timing metrics were observed. Before the Crypto Core completes its operation, the plaintext is formed bit-by-bit due to the shift register architecture (requiring 20 shift activations during the first transmission).
 
-The total time required to transmit a complete data block is denoted as T_total.
+1) Clock Frequencies:
 
-``` 
-T_total = N_bits * T_bit ->  24 bits * (10 ns) -> T_total = 240 ns
-```
+- System Clock (`clk`) Period: 15.12 ns (~66 MHz);
+- SPI Clock (`sck`) Period: 331 ns (~3 MHz);
 
-![SPI wave delay test](docs/photos/main/time_delay_start&receiv.png)
+2) Transmission Latency:
 
+- It takes 15,167 ns to activate the `ss` (Slave Select) and `crypto_done` signals, and to initiate data transmission via `mosi_encrypted`;
+- The `block_ready` signal is fully activated at 28,165 ns;
+
+3) Signal Propagation Delays:
+
+- 19.91 ns delay between the crypto_done assertion and the `mosi_encrypted` data output;
+- 10.08 ns delay between the crypto_done assertion and the final `sck` edge;
 
 # Installing and compilation
 
@@ -176,6 +198,11 @@ The encrypted data (ciphertext) produced by the SIMON engine is also preserved i
 We made a cipher algorithm analyses with LFSR(linear feedback shifter-register) output with a test file in Python to debug and made a code validation before go to SIMON cryptography and was possible to determine that encrypted text matched with Python test algorithm.
 
 <img width="1919" height="512" alt="LFSR_test_compilation" src="https://github.com/user-attachments/assets/75fa3a66-89b6-4fef-8fbd-f0f6fe62fbbb" />
+
+The SIMON cryptographic algorithm was rigorously validated using the same cross-verification methodology applied to the LFSR module. T
+he final results demonstrate a highly consistent encryption process, proving the architecture is scalable to arbitrary data payloads and capable of handling bidirectional (full-duplex) transmissions. To guarantee correctness, a hardware/software co-verification approach was adopted. A reference model was developed in Python that follows the official SIMON specification. 
+
+<img width="1399" height="223" alt="Debug_SimonCrypt_1" src="https://github.com/user-attachments/assets/fc5b75f0-4f6a-4e19-ab2b-226b6e97094b" />
 
 
 ## Compilation
@@ -295,7 +322,15 @@ The table below describes how the logical RTL signals were mapped to the physica
 | switches[0] | PIN_F15 | SW9 | Slide Switch | 3.3V LVCMOS | LSB data_transmission 8 switch |
 
 # Observations
-...
+
+### Development
+This repository is under active development and is organised in three branch of work.
+
+| Branch | Content | Status |
+|---|---|---|
+| `main` | Base protocol in RTL (SPI), simulated | stable baseline |
+| `crypto_release` | Cryptographic variant of the protocol | 70 commits ahead |
+| `modelsim_release` | Physical deployment: pin assignment, on-board validation | 51 commits, merge pending |
 
 # Status (development)
 
