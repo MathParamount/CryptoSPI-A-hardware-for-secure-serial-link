@@ -69,13 +69,16 @@ branch into either a write (Master sends data) or read (Master receives data) op
 The original system was configured for Master‑to‑Slave communication. At 106.9 ns, the following events were observed:
 
 1) Transmission 0xFFFF (First transmission with all ones):
-<img width="1862" height="489" alt="spi_compilation1" src="https://github.com/user-attachments/assets/ec4ea9c0-97fe-4e6f-b9a6-00cedcf839cf" />
+<img width="1863" height="455" alt="SPI_Mast_Slav_W1" src="https://github.com/user-attachments/assets/3c74004d-9cd2-468a-8413-1b446730e536" />
 
-2) Third transmission with data alternation:
-<img width="1862" height="489" alt="spi_compilation2" src="https://github.com/user-attachments/assets/c1a53908-51b8-49ea-8179-6e9ea018a3fd" />
+2) fourth transmission with data alternation:
+<img width="1863" height="455" alt="SPI_Mast_Slav_W2" src="https://github.com/user-attachments/assets/301c09a1-d4ab-4399-a4ca-bb79276b4c54" />
 
-3) fourth transmission:
-<img width="1862" height="489" alt="spi_compilation3" src="https://github.com/user-attachments/assets/a07a5bfa-3c7a-49bb-8b76-fb936bac5c71" />
+3) AAAA transmission with terminal comparition:
+<img width="1902" height="874" alt="SPI_Mast_Slav_W3" src="https://github.com/user-attachments/assets/624d6981-d074-4595-a72b-d5a1312cab47" />
+
+4) Final transmission:
+<img width="1902" height="874" alt="SPI_Mast_Slav_W4" src="https://github.com/user-attachments/assets/fb3dc214-9c3e-457b-8c2c-9642c3f65492" />
 
 - activation of the internal SPI clock `sck`.
 - assertion of the `miso` line (data from slaver to master).
