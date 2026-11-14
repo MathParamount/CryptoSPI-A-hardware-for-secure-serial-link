@@ -51,17 +51,12 @@ module slaver_receiver (
         end 
         else begin     
             if(spi_if.ss) begin
-                sr_tx <= 0;
+                sr_tx <= spi_if.slave_data_to_send; 
                 ss_prev_ng <= 1;
             end
             else begin
-                if(ss_prev_ng) begin
-                    sr_tx <= {spi_if.slave_data_to_send[62:0], 1'b0};
-                    ss_prev_ng <= 0;
-                end
-                else begin
-		        	sr_tx <= {sr_tx[62:0], 1'b0};  // displacement
-                end
+                sr_tx <= {sr_tx[62:0], 1'b0};  // displacement
+                ss_prev_ng <= 0;
             end
         end
     end
@@ -71,11 +66,8 @@ module slaver_receiver (
         if(spi_if.ss) begin
             miso_reg = 0;
         end
-        else if (ss_prev_pos) begin
-            miso_reg = spi_if.slave_data_to_send[63];       //first bit
-        end
         else begin
-            miso_reg = sr_tx[63];
+            miso_reg = (ss_prev_ng) ? spi_if.slave_data_to_send[63] : sr_tx[63];
         end
     end
 

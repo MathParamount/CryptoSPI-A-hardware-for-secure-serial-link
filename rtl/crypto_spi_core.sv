@@ -37,9 +37,13 @@ module crypto_spi_core
 	
 	//simon buffers
 	logic [31:0] rol2,rol8,rol1, f_x;
-	logic [31:0] ys, xs, x_new, y, x;
+	logic [31:0] ys, xs, x_new, ys_dec, xs_dec;
 	logic [31:0] round_key [0:41];		// expanded key 42 words of 32 bits
 	logic [127:0] key;
+
+	//simon buffer decipher variables
+	logic [31:0] rol2_decrp, rol8_decrp, rol1_decrp;
+	logic [31:0] xs_ancient, ys_ancient;
 
 	//simon temporal variable
 	logic [31:0] temp;
@@ -74,6 +78,7 @@ module crypto_spi_core
     		//lfsr_s <= 64'h8000000000000000;	
 			lfsr_m <= 64'hA5A5A5A5A5A5A5A5;   // LFSR seed Master -> Slave
 			lfsr_s <= 64'h5A5A5A5A5A5A5A5A;   // LFSR seed Slave -> Master
+
     		//spi_if.ciphertext <= 64'h0;
 			spi_if.mosi_encrypted <= 0;
 			spi_if.miso_encrypted <= 0;
@@ -200,44 +205,49 @@ module crypto_spi_core
 				DECRYPT: begin
 					//simon decriptography
 					if (count_round == 0) begin
-						y <= slave_rx[63:32];		//high
-						x <= slave_rx[31:0];		//low
+						// initializing keys
+        				round_key[0] <= lfsr_m[31:0];
+						round_key[1] <= lfsr_m[63:32];
+						round_key[2] <= lfsr_s[31:0];
 
-						$display("\n[INPUT DECRYP] received data inside of slaver_rx buffer: 0x%016X", slave_rx);
+						xs_dec <= slave_rx[63:32];
+						ys_dec <= slave_rx[31:0];		
+
+						$display("\n[INPUT DECRYP] received data inside of slaver_rx buffer: 0x%016X", {xs,ys});
 						count_round <= 1;
 					end
-					else if (count_round < 43) begin
-						/* verilator lint_off WIDTHEXPAND */
-						integer r = 42 - count_round;
-						/* verilator lint_off WIDTHEXPAND */
-						
-						f_x <= x ^ (rol1 & rol8) ^ rol2 ^ round_key[r];
-						
-						x <= y;
-						y <= f_x;
-						
-						count_round <= count_round + 1;
-					end
+					else if (count_round <= 42) begin
 
-					if (count_round == 42) begin	
-						Post_SMplaintext <= {y,x};	// decripted SIMON output
-						
-        				$display("\n[SIMON -> LFSR (DECRYPT)] Decrypt Simon output: 0x%016X", {y, x});						
+						if (count_round >= 3 && count_round < 42) begin
+            				round_key[count_round] <= 32'hFFFFFFFC ^ {31'b0, Z[44-count_round]} ^ round_key[count_round-3] ^ temp;
+						end
+
+						//invert round_key
+						xs_dec <= ys_dec;
+        				ys_dec <= xs_dec ^ (rol1_decrp & rol8_decrp) ^ rol2_decrp ^ round_key[42 - count_round];
+
+					if (count_round == 42) begin
+            			//Post_SMplaintext <= { (xs_dec ^ (rol1_decrp & rol8_decrp) ^ rol2_decrp ^ round_key[42 - count_round]), ys_dec };
+						Post_SMplaintext <= { (xs_dec ^ (rol1_decrp & rol8_decrp) ^ rol2_decrp ^ round_key[0]), ys_dec};		
 						
 						//LFSR decription
 						if (spi_if.is_write) begin
-            				spi_if.plaintext <= {y, x} ^ lfsr_m;
-						end
-						else begin
-            				spi_if.plaintext <= {y, x} ^ lfsr_s;
-						end					
+                			spi_if.plaintext <= Post_SMplaintext ^ lfsr_m;
+            			end else begin
+                			spi_if.plaintext <= Post_SMplaintext ^ lfsr_s;
+            			end				
 										
-						$display("\n[LFSR -> PLAINTEXT (DECRYPT)] Original plaintext received from master: 0x%016X",spi_if.plaintext);	
+						$display("\n[SIMON -> LFSR (DECRYPT)] Decrypt Simon output: 0x%016X", { (xs_dec ^ (rol1_decrp & rol8_decrp) ^ rol2_decrp ^ round_key[0]), ys_dec});
+            			$display("\n[LFSR -> PLAINTEXT (DECRYPT)] Original plaintext: 0x%016X", spi_if.is_write ? ({ ys_dec, (xs_dec ^ (rol1_decrp & rol8_decrp) ^ rol2_decrp ^ round_key[0]) } ^ lfsr_m) : ({ ys_dec, (xs_dec ^ (rol1_decrp & rol8_decrp) ^ rol2_decrp ^ round_key[0]) } ^ lfsr_s));
+						count_round <= 0;
 						state_encr <= TRANSMISSION;
 					end
 					else begin
+						xs_dec <= ys_dec;
+						ys_dec <= xs_dec ^ (rol1_decrp & rol8_decrp) ^ rol2_decrp ^ round_key[42 - count_round];
 						count_round <= count_round + 1;
-					end
+    				end
+				  end
 				end
 
 				TRANSMISSION: begin
@@ -300,6 +310,10 @@ module crypto_spi_core
 		rol2  = 32'b0;
 		x_new = 32'b0;
 
+		rol1_decrp = 32'b0;
+		rol8_decrp = 32'b0;
+		rol2_decrp = 32'b0;	
+
 		if (count_round >= 1 && count_round <= 42) begin
         
         // temp generation
@@ -307,11 +321,17 @@ module crypto_spi_core
         if ((count_round % 3) == 2) begin
             temp = temp ^ {round_key[count_round-1][3:0], round_key[count_round-1][31:4]}; // ROR4
         end
-        
+    
         // rotation calcule and x_new
         rol1 = {xs[30:0], xs[31]};
         rol8 = {xs[23:0], xs[31:24]};
         rol2 = {xs[29:0], xs[31:30]};
+
+		//rotation to decript
+		rol1_decrp = {ys_dec[30:0], ys_dec[31]};
+		rol8_decrp = {ys_dec[23:0], ys_dec[31:24]};
+		rol2_decrp = {ys_dec[29:0], ys_dec[31:30]};
+
         x_new = ys ^ (rol1 & rol8) ^ rol2 ^ round_key[count_round-1];
     	end
 	end
