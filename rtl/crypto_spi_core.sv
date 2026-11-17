@@ -149,8 +149,8 @@ module crypto_spi_core
 						if (spi_if.is_write) begin
 							enc_temp = spi_if.plaintext ^ lfsr_m;   // immediate calcule (blocking)
 							encrypt_text_reg <= enc_temp;
-							//$display("\t lfsr_m: 0x%016X", lfsr_m);
-							//$display("\t lfsr_s= 0x%016X",lfsr_s);
+							$display("\t lfsr_m: 0x%016X", lfsr_m);
+							$display("\t lfsr_s= 0x%016X",lfsr_s);
 							$display("\t [ENCRYPT_WRITE] plaintext=0x%016X	 | 	simon_input(LFSR)= 0x%016X", spi_if.plaintext, enc_temp);
 						end
 						else begin 
