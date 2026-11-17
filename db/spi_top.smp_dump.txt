@@ -1,13 +1,24 @@
 
-State Machine - |spi_top|spi_dut:u_dut|master_send:u_master|done_counter
-Name done_counter.001 
-done_counter.000 0 
-done_counter.001 1 
+State Machine - |spi_top|crypt_spi_dut:u_dut|crypto_spi_core:u_crypt|state_encr
+Name state_encr.DONE_CRYPT state_encr.DECRYPT state_encr.TRANSMISSION state_encr.SIMON_ENCRYPT state_encr.ENCRYPT state_encr.RECEPTION state_encr.IDLE_CRYPT 
+state_encr.IDLE_CRYPT 0 0 0 0 0 0 0 
+state_encr.RECEPTION 0 0 0 0 0 1 1 
+state_encr.ENCRYPT 0 0 0 0 1 0 1 
+state_encr.SIMON_ENCRYPT 0 0 0 1 0 0 1 
+state_encr.TRANSMISSION 0 0 1 0 0 0 1 
+state_encr.DECRYPT 0 1 0 0 0 0 1 
+state_encr.DONE_CRYPT 1 0 0 0 0 0 1 
 
-State Machine - |spi_top|spi_dut:u_dut|master_send:u_master|state
-Name state.DRAIN_BUFFER state.FILL_BUFFER state.CMD_PARSE state.IDLE state.DONE 
-state.IDLE 0 0 0 0 0 
-state.CMD_PARSE 0 0 1 1 0 
-state.FILL_BUFFER 0 1 0 1 0 
-state.DRAIN_BUFFER 1 0 0 1 0 
-state.DONE 0 0 0 1 1 
+State Machine - |spi_top|crypt_spi_dut:u_dut|master_send:u_master|done_cnt
+Name done_cnt.01 
+done_cnt.00 0 
+done_cnt.01 1 
+
+State Machine - |spi_top|crypt_spi_dut:u_dut|master_send:u_master|state
+Name state.DONE state.EXEC_ENCRYPT state.DRAIN_BUFFER state.FILL_BUFFER state.CMD_PARSE state.IDLE 
+state.IDLE 0 0 0 0 0 0 
+state.CMD_PARSE 0 0 0 0 1 1 
+state.FILL_BUFFER 0 0 0 1 0 1 
+state.DRAIN_BUFFER 0 0 1 0 0 1 
+state.EXEC_ENCRYPT 0 1 0 0 0 1 
+state.DONE 1 0 0 0 0 1 

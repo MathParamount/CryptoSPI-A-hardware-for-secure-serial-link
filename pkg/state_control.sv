@@ -1,6 +1,6 @@
 package state_control;
 
-	typedef enum [2:0]
+	typedef enum logic [2:0]
 	{
 		IDLE = 3'b000,
 		CMD_PARSE = 3'b001,
@@ -10,7 +10,7 @@ package state_control;
 		DONE = 3'b101
 	} state_t;
 	
-	typedef enum [2:0]
+	typedef enum logic [2:0]
 	{
 		IDLE_CRYPT,
 		RECEPTION,
