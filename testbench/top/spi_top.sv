@@ -25,14 +25,46 @@ module spi_top (
     logic [63:0] slave_data_hardcoded;
     logic [63:0] data_received_wire;
     logic [63:0] display_data;
-
-    // Hardcode: amarra os 8 bits de cima em zero e usa as alavancas embaixo
-    assign master_data_hardcoded = {56'h0, switches};
+	 logic [63:0] ciphertext_wire;
+	 logic [63:0] plaintext;
+	 
+	 // LFSR encryption -> encrypt_text
+	 // Simon encryption -> ciphertext
+	 // 50 MHz -> 25.000.000 ciclos = 1 segundo
+    logic [24:0] display_timer;
+    logic show_ciphertext;
+	 
+	 localparam [24:0] Max_timer = 25'd25_000_000;
+	 
+	 always_ff @(posedge clk or negedge reset_n) begin
+		
+		if(!reset_n) begin
+			display_timer <= 0;
+			show_ciphertext <= 0;
+		end
+		else begin
+			if(display_timer == Max_timer) begin
+				display_timer <= 0;
+			   show_ciphertext <= ~show_ciphertext; 		// Alternating at 1s;
+			end
+			else begin
+				display_timer <= display_timer + 25'd1;
+			end
+		end
+		
+	 end
+	 
+    // Hardcode: tightly 8 bits above zero and using switches below
+	 assign master_data_hardcoded = {56'h0, switches};
+    // tightly slave data
+    assign slave_data_hardcoded = 64'h0123456789ABCDEF; 
 
     crypt_spi_dut u_dut (
         .clk(clk),
 		  .reset_n(reset_n),
-		  .switches(switches),
+		  .master_data (master_data_hardcoded),
+        .slaver_data (slave_data_hardcoded),
+		  .data_received (data_received_wire),
 		  .start(start),
 		  .miso(miso),
 		  .mosi(mosi),
@@ -40,11 +72,15 @@ module spi_top (
 		  .sck(sck),
 		  .debug_state(debug_state),
 		  .ss(ss),
-		  .block_ready(block_ready)
+		  .block_ready(block_ready),
+		  .ciphertext (ciphertext_wire),
+		  .plaintext (plaintext)
     );
 	 
-	 decodify_display_FPGA u_dec (
-        .data (data_received_wire[15:0]), // Mostra os 16 bits de baixo
+	 assign display_data = show_ciphertext ? ciphertext_wire[15:0] : data_received_wire[15:0];
+	 
+	 decodify_Script_display_FPGA u_dec (
+        .data (display_data),
         .seg0 (seg0),
         .seg1 (seg1),
         .seg2 (seg2),

@@ -43,13 +43,6 @@ set_global_assignment -name TOP_LEVEL_ENTITY spi_top
 set_global_assignment -name ORIGINAL_QUARTUS_VERSION 24.1STD.0
 set_global_assignment -name PROJECT_CREATION_TIME_DATE "16:33:39  NOVEMBER 17, 2026"
 set_global_assignment -name LAST_QUARTUS_VERSION "24.1std.0 Lite Edition"
-set_global_assignment -name SYSTEMVERILOG_FILE pkg/state_control.sv
-set_global_assignment -name SYSTEMVERILOG_FILE testbench/wrapper/crypt_spi_dut.sv
-set_global_assignment -name SYSTEMVERILOG_FILE testbench/top/spi_top.sv
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/interface/spi_bus_if.sv
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/slaver_receiver.sv
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/master_send.sv
-set_global_assignment -name SYSTEMVERILOG_FILE rtl/crypto_spi_core.sv
 set_global_assignment -name PROJECT_OUTPUT_DIRECTORY output_files
 set_global_assignment -name MIN_CORE_JUNCTION_TEMP 0
 set_global_assignment -name MAX_CORE_JUNCTION_TEMP 85
@@ -64,4 +57,14 @@ set_global_assignment -name EDA_GENERATE_FUNCTIONAL_NETLIST OFF -section_id eda_
 set_global_assignment -name PARTITION_NETLIST_TYPE SOURCE -section_id Top
 set_global_assignment -name PARTITION_FITTER_PRESERVATION_LEVEL PLACEMENT_AND_ROUTING -section_id Top
 set_global_assignment -name PARTITION_COLOR 16764057 -section_id Top
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/decodify_Script_display_FPGA.sv
+set_global_assignment -name SYSTEMVERILOG_FILE pkg/state_control.sv
+set_global_assignment -name SYSTEMVERILOG_FILE testbench/wrapper/crypt_spi_dut.sv
+set_global_assignment -name SYSTEMVERILOG_FILE testbench/top/spi_top.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/interface/spi_bus_if.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/slaver_receiver.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/master_send.sv
+set_global_assignment -name SYSTEMVERILOG_FILE rtl/crypto_spi_core.sv
+set_global_assignment -name POWER_PRESET_COOLING_SOLUTION "23 MM HEAT SINK WITH 200 LFPM AIRFLOW"
+set_global_assignment -name POWER_BOARD_THERMAL_MODEL "NONE (CONSERVATIVE)"
 set_instance_assignment -name PARTITION_HIERARCHY root_partition -to | -section_id Top

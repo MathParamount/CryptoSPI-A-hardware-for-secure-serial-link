@@ -1,0 +1,101 @@
+------------------------------------------------------------
+Timing Analyzer Summary
+------------------------------------------------------------
+
+Type  : Slow 1100mV 85C Model Setup 'clk'
+Slack : -12.343
+TNS   : -19759.645
+
+Type  : Slow 1100mV 85C Model Setup 'crypt_spi_dut:u_dut|master_send:u_master|spi_if.sck'
+Slack : -5.090
+TNS   : -304.660
+
+Type  : Slow 1100mV 85C Model Hold 'clk'
+Slack : 0.215
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Hold 'crypt_spi_dut:u_dut|master_send:u_master|spi_if.sck'
+Slack : 0.264
+TNS   : 0.000
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'clk'
+Slack : -0.724
+TNS   : -2177.942
+
+Type  : Slow 1100mV 85C Model Minimum Pulse Width 'crypt_spi_dut:u_dut|master_send:u_master|spi_if.sck'
+Slack : -0.724
+TNS   : -76.497
+
+Type  : Slow 1100mV 0C Model Setup 'clk'
+Slack : -12.714
+TNS   : -20205.009
+
+Type  : Slow 1100mV 0C Model Setup 'crypt_spi_dut:u_dut|master_send:u_master|spi_if.sck'
+Slack : -5.064
+TNS   : -309.615
+
+Type  : Slow 1100mV 0C Model Hold 'clk'
+Slack : -0.146
+TNS   : -0.637
+
+Type  : Slow 1100mV 0C Model Hold 'crypt_spi_dut:u_dut|master_send:u_master|spi_if.sck'
+Slack : 0.245
+TNS   : 0.000
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'clk'
+Slack : -0.724
+TNS   : -2175.642
+
+Type  : Slow 1100mV 0C Model Minimum Pulse Width 'crypt_spi_dut:u_dut|master_send:u_master|spi_if.sck'
+Slack : -0.724
+TNS   : -74.470
+
+Type  : Fast 1100mV 85C Model Setup 'clk'
+Slack : -4.947
+TNS   : -7473.807
+
+Type  : Fast 1100mV 85C Model Setup 'crypt_spi_dut:u_dut|master_send:u_master|spi_if.sck'
+Slack : -1.998
+TNS   : -111.818
+
+Type  : Fast 1100mV 85C Model Hold 'clk'
+Slack : -0.026
+TNS   : -0.026
+
+Type  : Fast 1100mV 85C Model Hold 'crypt_spi_dut:u_dut|master_send:u_master|spi_if.sck'
+Slack : 0.045
+TNS   : 0.000
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'clk'
+Slack : -0.440
+TNS   : -168.402
+
+Type  : Fast 1100mV 85C Model Minimum Pulse Width 'crypt_spi_dut:u_dut|master_send:u_master|spi_if.sck'
+Slack : 0.034
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Setup 'clk'
+Slack : -4.335
+TNS   : -6796.607
+
+Type  : Fast 1100mV 0C Model Setup 'crypt_spi_dut:u_dut|master_send:u_master|spi_if.sck'
+Slack : -1.918
+TNS   : -109.083
+
+Type  : Fast 1100mV 0C Model Hold 'clk'
+Slack : -0.178
+TNS   : -16.737
+
+Type  : Fast 1100mV 0C Model Hold 'crypt_spi_dut:u_dut|master_send:u_master|spi_if.sck'
+Slack : 0.053
+TNS   : 0.000
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'clk'
+Slack : -0.404
+TNS   : -168.078
+
+Type  : Fast 1100mV 0C Model Minimum Pulse Width 'crypt_spi_dut:u_dut|master_send:u_master|spi_if.sck'
+Slack : 0.050
+TNS   : 0.000
+
+------------------------------------------------------------

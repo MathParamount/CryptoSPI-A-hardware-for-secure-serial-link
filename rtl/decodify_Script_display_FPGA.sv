@@ -1,6 +1,6 @@
 `timescale 1ns/1ps
 
-module decodify_display_FPGA(
+module decodify_Script_display_FPGA(
    input logic  [15:0] data, //number or character
    output logic [7:0] seg0,
    output logic [7:0] seg1,
