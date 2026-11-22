@@ -1,1 +1,0 @@
-Warning (10268): Verilog HDL information at crypto_spi_core.sv(68): always construct contains both blocking and non-blocking assignments File: /home/gabriel-cruz/projects/CryptoSPI-A-hardware-for-secure-serial-link/rtl/crypto_spi_core.sv Line: 68
