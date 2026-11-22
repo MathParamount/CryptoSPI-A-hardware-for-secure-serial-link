@@ -1,2 +1,7 @@
-#verilator
-compilation/build/
+# Quartus
+*.qws
+*.rpt
+db/
+incremental_db/
+output_files/
+simulation/*.do
