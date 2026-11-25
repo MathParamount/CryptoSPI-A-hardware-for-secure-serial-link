@@ -21,10 +21,10 @@ module spi_top (
 );
 
 	 // Sinais internos
-    logic [63:0] master_data_hardcoded;
-    logic [63:0] slave_data_hardcoded;
-    logic [63:0] data_received_wire;
-    logic [63:0] display_data;
+        logic [63:0] master_data_hardcoded;
+        logic [63:0] slave_data_hardcoded;
+        logic [63:0] data_received_wire;
+        logic [63:0] display_data;
 	 logic [63:0] ciphertext_wire;
 	 logic [63:0] plaintext;
 	 
@@ -55,15 +55,16 @@ module spi_top (
 	 end
 	 
     // Hardcode: tightly 8 bits above zero and using switches below
-	 assign master_data_hardcoded = {56'h0, switches};
+    assign master_data_hardcoded = {56'h0, switches};
+    
     // tightly slave data
     assign slave_data_hardcoded = 64'h0123456789ABCDEF; 
 
     crypt_spi_dut u_dut (
-        .clk(clk),
+        	  .clk(clk),
 		  .reset_n(reset_n),
 		  .master_data (master_data_hardcoded),
-        .slaver_data (slave_data_hardcoded),
+        	  .slaver_data (slave_data_hardcoded),
 		  .data_received (data_received_wire),
 		  .start(start),
 		  .miso(miso),
@@ -76,8 +77,10 @@ module spi_top (
 		  .ciphertext (ciphertext_wire),
 		  .plaintext (plaintext)
     );
+	 	 
+	 assign display_data = show_ciphertext ? ciphertext_wire[15:0]: plaintext[15:0];
 	 
-	 assign display_data = show_ciphertext ? ciphertext_wire[15:0] : data_received_wire[15:0];
+	 //assign display_data = {8'h00, switches};		//test to switch use
 	 
 	 decodify_Script_display_FPGA u_dec (
         .data (display_data),
